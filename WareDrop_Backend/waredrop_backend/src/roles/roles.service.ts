@@ -21,7 +21,7 @@ export class RolesService {
     constructor(private readonly db: PrismaService) {}
 
     async getUserRole(user: Prisma.usersWhereUniqueInput) {
-        const role = await this.db.user_has_role.findMany({
+        const roles = await this.db.user_has_role.findMany({
             select: {
                 roles: {
                     select: {
@@ -31,7 +31,7 @@ export class RolesService {
             },
             where: {user_user_id: user.user_id}
         })
-        return role;
+        return roles;
     }
 
     async addRoleToUser(input: AddRoleInput){

@@ -29,4 +29,9 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3001/roles/list
+POST http://localhost:3001/roles/userRole
+Content-Type: application/json
+
+{
+  "user_id": 1
+}
