@@ -21,12 +21,12 @@ model permissions {
 }
 
 model role_has_permission {
-  permisson_permission_id Int
-  role_role_id            Int
-  permissions             permissions @relation(fields: [permisson_permission_id], references: [permission_id], onDelete: NoAction, onUpdate: NoAction, map: "relation_7_permisson_fk")
-  roles                   roles       @relation(fields: [role_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "relation_7_role_fk")
+  permission_permission_id Int
+  role_role_id             Int
+  permissions              permissions @relation(fields: [permission_permission_id], references: [permission_id], onDelete: NoAction, onUpdate: NoAction, map: "relation_7_permisson_fk")
+  roles                    roles       @relation(fields: [role_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "relation_7_role_fk")
 
-  @@id([permisson_permission_id, role_role_id], map: "relation_7_pk")
+  @@id([permission_permission_id, role_role_id], map: "relation_7_pk")
 }
 
 model roles {
@@ -70,7 +70,7 @@ model users {
   user_id                    Int                          @id(map: "users_pk") @default(autoincrement())
   user_name                  String                       @unique(map: "user_name_uk") @db.VarChar(30)
   user_email                 String                       @unique(map: "user_email_uk") @db.VarChar(50)
-  user_password              String                       @unique(map: "user_password_uk") @db.VarChar(34)
+  user_password              String                       @db.VarChar(34)
   user_assigned_to_warehouse user_assigned_to_warehouse[]
   user_has_role              user_has_role[]
 }

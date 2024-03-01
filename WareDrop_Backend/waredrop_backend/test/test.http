@@ -6,3 +6,24 @@ Content-Type: application/json
   "user_email": "teszt.elek@teszt.hu",
   "user_password": "titkos123"
 }
+
+###
+POST http://localhost:3001/user/register
+Content-Type: application/json
+
+{
+  "user_email": "hunor.donko@teszt.hu",
+  "user_password": "titkos321",
+  "user_name": "Hunor Donko"
+}
+
+###
+POST http://localhost:3001/user/update
+Content-Type: application/json
+
+{
+  "data": {
+    "user_email": "jhone.done@teszt.hu"
+  },
+  "where": 2
+}
