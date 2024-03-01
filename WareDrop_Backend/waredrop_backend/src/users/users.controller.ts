@@ -1,8 +1,7 @@
-import {Body, Controller, Post, Res} from "@nestjs/common";
-import {PrismaService} from "../database/prisma.service";
+import {Body, Controller, Post,} from "@nestjs/common";
 import {Prisma} from "@prisma/client";
 import {UsersService} from "./users.service";
-import {Response} from "express";
+import {RolesService} from "../roles/roles.service";
 
 export interface UpdateInput {
     data: {
@@ -15,7 +14,7 @@ export interface UpdateInput {
 
 @Controller('/user')
 export class UsersController {
-    constructor(private users: UsersService) {}
+    constructor(private users: UsersService, private roles: RolesService) {}
 
 
     @Post('/login')
@@ -29,7 +28,7 @@ export class UsersController {
     }
     @Post('/role')
     async userRole(@Body() user: Prisma.usersWhereUniqueInput) {
-        return this.users.getUserRole(user);
+        return this.roles.getUserRole(user);
     }
 
     @Post('/update')
