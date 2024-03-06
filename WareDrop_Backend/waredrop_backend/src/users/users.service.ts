@@ -2,26 +2,38 @@ import {Injectable,} from "@nestjs/common";
 import {PrismaService} from "../database/prisma.service";
 import {Prisma} from "@prisma/client"
 import {UpdateInput} from "./users.controller";
+import * as bcrypt from 'bcrypt'
+
+
+export interface CreateUserDto {
+    name: string;
+    email: string;
+    password: string;
+}
 
 @Injectable()
 export class UsersService {
     constructor(private db: PrismaService) {}
 
-    async registerUser(createInput: Prisma.usersCreateInput){
+    async createUser(createInput: CreateUserDto){
+        const salt = await bcrypt.genSalt();
+        createInput.password = await bcrypt.hash(createInput.password, salt);
         const result = await this.db.users.create({
-            data: createInput,
+            data: {
+                user_name: createInput.name,
+                user_email: createInput.email,
+                user_password: createInput.password,
+            }
         });
         return result;
     }
-    
-    async loginUser(loginInput: Prisma.usersWhereUniqueInput) {
+
+    async findUser(email: string){
         const result = await this.db.users.findFirst({
-            select: {user_id: true},
-            where: loginInput
+            where: {
+                user_email: email
+            }
         })
-        if(result === undefined || result === null){
-            return {errorMessage: 'Email and password pair not found, or is incorrect!'}
-        }
         return result;
     }
 

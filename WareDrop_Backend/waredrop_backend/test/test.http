@@ -1,20 +1,20 @@
 ###
-POST http://localhost:3001/login
+POST http://localhost:3001/user/login
 Content-Type: application/json
 
 {
-  "user_email": "teszt.elek@teszt.hu",
+  "user_email": "jhon.doe@teszt.hu",
   "user_password": "titkos123"
 }
 
 ###
-POST http://localhost:3001/user/register
+POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
-  "user_email": "hunor.donko@teszt.hu",
-  "user_password": "titkos321",
-  "user_name": "Hunor Donko"
+  "user_email": "jhon.doe@teszt.hu",
+  "user_password": "titkos123",
+  "user_name": "Jhon Doe"
 }
 
 ###
@@ -27,3 +27,23 @@ Content-Type: application/json
   },
   "where": 2
 }
+
+###
+POST http://localhost:3001/roles/userRole
+Content-Type: application/json
+
+{
+  "user_id": 1
+}
+###
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "jhon.doe@teszt.hu",
+  "password": "titkos123"
+}
+
+###
+GET http://localhost:3001/auth/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjN9LCJlbWFpbCI6Impob24uZG9lQHRlc3p0Lmh1IiwiaWF0IjoxNzA5NzEzMTQwLCJleHAiOjE3MTIzMDUxNDB9.LTp38CEvoSd1PH4fXYVkM_fRfL09hUPFR2TVIhsgNFs
