@@ -12,9 +12,9 @@ POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
-  "user_email": "jhon.doe@teszt.hu",
-  "user_password": "titkos123",
-  "user_name": "Jhon Doe"
+  "email": "jhon.doe@teszt.hu",
+  "password": "titkos123",
+  "name": "Jhon Doe"
 }
 
 ###
