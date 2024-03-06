@@ -10,7 +10,7 @@ export class RolesController {
     }
     @Post('/userRole')
     getRole(@Body() user: Prisma.usersWhereUniqueInput){
-        return this.service.getUserRole(user);
+        return this.service.getUserRoles(user);
     }
 
     @Post('/addRole')

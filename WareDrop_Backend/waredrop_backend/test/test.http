@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/user/register
+POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
@@ -35,3 +35,15 @@ Content-Type: application/json
 {
   "user_id": 1
 }
+###
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "jhon.doe@teszt.hu",
+  "password": "titkos123"
+}
+
+###
+GET http://localhost:3001/auth/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjN9LCJlbWFpbCI6Impob24uZG9lQHRlc3p0Lmh1IiwiaWF0IjoxNzA5NzEzMTQwLCJleHAiOjE3MTIzMDUxNDB9.LTp38CEvoSd1PH4fXYVkM_fRfL09hUPFR2TVIhsgNFs

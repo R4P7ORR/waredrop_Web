@@ -5,41 +5,36 @@ import {UpdateInput} from "./users.controller";
 import * as bcrypt from 'bcrypt'
 
 
-export interface CreateUserInput{
-    user_name: string;
-    user_email: string;
-    user_password: string;
+export interface CreateUserDto {
+    name: string;
+    email: string;
+    password: string;
 }
 
 @Injectable()
 export class UsersService {
     constructor(private db: PrismaService) {}
 
-    async registerUser(createInput: CreateUserInput){
+    async createUser(createInput: CreateUserDto){
         const salt = await bcrypt.genSalt();
-        createInput.user_password = await bcrypt.hash(createInput.user_password, salt);
+        createInput.password = await bcrypt.hash(createInput.password, salt);
         const result = await this.db.users.create({
-            data: createInput,
+            data: {
+                user_name: createInput.name,
+                user_email: createInput.email,
+                user_password: createInput.password,
+            }
         });
         return result;
     }
-    
-    async loginUser(loginInput: Prisma.usersWhereUniqueInput) {
-        const salt = await bcrypt.genSalt();
-        console.log(loginInput);
-        const user = await this.db.users.findFirst({
+
+    async findUser(email: string){
+        const result = await this.db.users.findFirst({
             where: {
-                user_email: loginInput.user_email
+                user_email: email
             }
         })
-        if(user === undefined || user === null){
-            return {errorMessage: 'Email not found, or is incorrect!'}
-        }
-        const hash = await bcrypt.hash(user.user_password, salt);
-        if(!await bcrypt.compare(user.user_password, hash)){
-            return {errorMessage: 'Wrong password!'}
-        }
-        return user;
+        return result;
     }
 
     async updateUser(updateInput: UpdateInput){

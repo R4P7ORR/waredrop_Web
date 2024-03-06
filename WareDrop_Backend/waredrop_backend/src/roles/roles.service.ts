@@ -20,7 +20,7 @@ export interface Role {
 export class RolesService {
     constructor(private readonly db: PrismaService) {}
 
-    async getUserRole(user: Prisma.usersWhereUniqueInput) {
+    async getUserRoles(user: Prisma.usersWhereUniqueInput) {
         const roles = await this.db.user_has_role.findMany({
             select: {
                 roles: {
