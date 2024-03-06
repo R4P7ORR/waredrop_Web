@@ -31,12 +31,12 @@ export class AuthService {
 
     async register(newUser: CreateUserDto){
         const user = await this.usersService.findUser(newUser.email)
-        if(!user){
-            const result = await this.usersService.createUser(newUser);
-            return result;
+        if(user){
+            return {errorMessage: 'User already exist'}
         }
         else {
-            return {errorMessage: 'User already exist'}
+            const result = await this.usersService.createUser(newUser);
+            return result;
         }
     }
 }
