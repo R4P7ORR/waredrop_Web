@@ -70,7 +70,7 @@ model users {
   user_id                    Int                          @id(map: "users_pk") @default(autoincrement())
   user_name                  String                       @unique(map: "user_name_uk") @db.VarChar(30)
   user_email                 String                       @unique(map: "user_email_uk") @db.VarChar(50)
-  user_password              String                       @db.VarChar(34)
+  user_password              String                       @db.VarChar(500)
   user_assigned_to_warehouse user_assigned_to_warehouse[]
   user_has_role              user_has_role[]
 }
