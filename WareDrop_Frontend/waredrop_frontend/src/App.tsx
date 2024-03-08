@@ -1,22 +1,28 @@
-import axios from "axios";
+import './App.css';
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Login from "./Routes/Login";
+import Home from "./Routes/Home";
+import Register from "./Routes/Register";
+import NotFound from "./Routes/NotFound";
 import {useState} from "react";
+import Control from "./Routes/Control";
 
-const App: React.FC = () =>{
-    const [emailInput, setEmailInput] = useState<string>('');
-    const [passwordInput, setPasswordInput] = useState<string>('');
+export default function App(){
+    const [loginToken, setLoginToken] = useState<number | undefined>();
+
+    function handleToken(id: number) {
+        setLoginToken(id);
+    }
 
     return (
-        <div className="app">
-            <input type="text" value={emailInput} onChange={(e) => {
-                const email = e.target.value;
-                setEmailInput(email);
-            }}/>
-            <input type="password" value={passwordInput} onChange={(e) => {
-                const password = e.target.value;
-                setPasswordInput(password);
-            }}/>
-        </div>
-    );
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="*" element={<NotFound/>}/>
+                    <Route path="login" element={<Login setLoginToken={handleToken}/>}/>
+                    <Route path="register" element={<Register/>}/>
+                    <Route path="control" element={<Control loginToken={loginToken}/>}/>
+                </Routes>
+            </BrowserRouter>
+    )
 }
-
-export default App;
