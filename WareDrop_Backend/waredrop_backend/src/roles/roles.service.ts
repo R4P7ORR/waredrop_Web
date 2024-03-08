@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
-import {Prisma} from "@prisma/client";
+import {UserDto} from "../users/users.service";
 
 export interface AddRoleInput {
     role_id: number,
@@ -30,8 +30,9 @@ export class RolesService {
         return result;
     }
 
-    async getUserRoles(userId: number) {
-        const roles = await this.db.user_has_role.findMany({
+    async getUserRoles(userId: UserDto) {
+        if (!userId) return {errorMessage: "Anyádért üres"}
+        const role = await this.db.user_has_role.findMany({
             select: {
                 roles: {
                     select: {
@@ -39,9 +40,11 @@ export class RolesService {
                     }
                 }
             },
-            where: {user_user_id: userId}
+            where: {
+                user_user_id: userId.userId
+            }
         })
-        return roles;
+        return role;
     }
 
     async addRoleToUser(input: AddRoleInput){

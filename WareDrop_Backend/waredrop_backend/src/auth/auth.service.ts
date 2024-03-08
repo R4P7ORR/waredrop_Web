@@ -22,11 +22,11 @@ export class AuthService {
                 sub: {
                     id: user.user_id,
                     email: user.user_email,
-                    roles: await this.rolesService.getUserRoles(user.user_id),
+                    userRoles: await this.rolesService.getUserRoles({userId: user.user_id})
                 },
             }
             return {
-                accessToken: this.jwtService.sign(payload)
+                accessToken: this.jwtService.sign(payload),
             }
         } else {
             throw new NotFoundException

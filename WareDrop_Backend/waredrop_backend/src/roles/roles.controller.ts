@@ -1,6 +1,6 @@
 import {Body, Controller, Get, Post} from '@nestjs/common';
 import {AddPermissionInput, AddRoleInput, Role, RolesService} from "./roles.service";
-import {Prisma} from "@prisma/client";
+import {UserDto} from "../users/users.service";
 
 
 
@@ -15,8 +15,8 @@ export class RolesController {
     }
 
     @Post('/userRole')
-    getRole(@Body() user: number){
-        return this.service.getUserRoles(user);
+    getRole(@Body() userId: UserDto){
+        return this.service.getUserRoles(userId);
     }
 
     @Post('/addRoleToUser')
