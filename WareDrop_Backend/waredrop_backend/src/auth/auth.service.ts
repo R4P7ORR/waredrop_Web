@@ -2,6 +2,7 @@ import {Injectable, NotFoundException,} from '@nestjs/common';
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt'
 import {CreateUserDto, UsersService} from "../users/users.service";
+import {RolesService} from "../roles/roles.service";
 
 export class AuthPayloadDto{
     email: string;
@@ -10,16 +11,19 @@ export class AuthPayloadDto{
 @Injectable()
 export class AuthService {
     constructor(private jwtService: JwtService,
-                private usersService: UsersService) { }
+                private usersService: UsersService,
+                private rolesService: RolesService,
+    ) { }
 
     async validateUser(input: AuthPayloadDto){
         const user = await this.usersService.findUser(input.email);
         if(user && await bcrypt.compare(input.password, user.user_password)) {
             const payload = {
                 sub: {
-                    id: user.user_id
+                    id: user.user_id,
+                    email: user.user_email,
+                    roles: await this.rolesService.getUserRoles(user.user_id),
                 },
-                email: user.user_email
             }
             return {
                 accessToken: this.jwtService.sign(payload)

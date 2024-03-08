@@ -17,8 +17,8 @@ export class UsersController {
     constructor(private users: UsersService, private roles: RolesService) {}
 
     @Post('/role')
-    async userRole(@Body() user: Prisma.usersWhereUniqueInput) {
-        return this.roles.getUserRoles(user);
+    async userRole(@Body() userId: number) {
+        return this.roles.getUserRoles(userId);
     }
 
     @Post('/update')

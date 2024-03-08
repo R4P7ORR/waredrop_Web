@@ -3,12 +3,12 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import {JwtModule,} from "@nestjs/jwt";
 import {ConfigModule} from "@nestjs/config";
-import {UsersService} from "../users/users.service";
 import * as process from "process";
 import {PassportModule} from "@nestjs/passport";
 import {LocalStrategy} from "./strategies/local.strategy";
 import {JwtStrategy} from "./strategies/jwt.strategy";
 import {UsersModule} from "../users/users.module";
+import {RolesModule} from "../roles/roles.module";
 
 @Module({
   imports: [
@@ -20,7 +20,8 @@ import {UsersModule} from "../users/users.module";
       ConfigModule.forRoot({
         isGlobal: true,
       }),
-      UsersModule
+      UsersModule,
+      RolesModule
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController]
