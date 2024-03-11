@@ -32,7 +32,7 @@ export class RolesService {
 
     async getUserRoles(userId: UserDto) {
         if (!userId) return {errorMessage: "Anyádért üres"}
-        const role = await this.db.user_has_role.findMany({
+        const roles = await this.db.user_has_role.findMany({
             select: {
                 roles: {
                     select: {
@@ -44,7 +44,8 @@ export class RolesService {
                 user_user_id: userId.userId
             }
         })
-        return role;
+        const rolesResult: string[] = roles.map((roles) => roles.roles.role_name)
+        return rolesResult;
     }
 
     async addRoleToUser(input: AddRoleInput){
