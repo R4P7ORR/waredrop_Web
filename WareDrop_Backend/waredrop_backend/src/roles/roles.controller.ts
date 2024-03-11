@@ -1,6 +1,6 @@
 import {Body, Controller, Get, Post} from '@nestjs/common';
-import {AddPermissionInput, AddRoleInput, RolesService} from "./roles.service";
-import {Prisma} from "@prisma/client";
+import {AddPermissionInput, AddRoleInput, Role, RolesService} from "./roles.service";
+import {UserDto} from "../users/users.service";
 
 
 
@@ -8,12 +8,18 @@ import {Prisma} from "@prisma/client";
 export class RolesController {
     constructor(private service: RolesService) {
     }
-    @Post('/userRole')
-    getRole(@Body() user: Prisma.usersWhereUniqueInput){
-        return this.service.getUserRoles(user);
+
+    @Post('/createRole')
+    createRole(@Body() newRole: Role){
+        return this.service.createRole(newRole);
     }
 
-    @Post('/addRole')
+    @Post('/userRole')
+    getRole(@Body() userId: UserDto){
+        return this.service.getUserRoles(userId);
+    }
+
+    @Post('/addRoleToUser')
     addRole(@Body() input: AddRoleInput){
         return this.service.addRoleToUser(input);
     }

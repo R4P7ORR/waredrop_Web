@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
-import {Prisma} from "@prisma/client";
+import {UserDto} from "../users/users.service";
 
 export interface AddRoleInput {
     role_id: number,
@@ -13,14 +13,25 @@ export interface AddPermissionInput {
 }
 
 export interface Role {
+    role_id?: number,
     role_name: string;
-    permissions: string[];
+    permissions?: string[];
 }
 @Injectable()
 export class RolesService {
     constructor(private readonly db: PrismaService) {}
 
-    async getUserRoles(user: Prisma.usersWhereUniqueInput) {
+    async createRole(newRole: Role){
+        const result = await this.db.roles.create({
+            data: {
+                role_name: newRole.role_name,
+            }
+        })
+        return result;
+    }
+
+    async getUserRoles(userId: UserDto) {
+        if (!userId) return {errorMessage: "Anyádért üres"}
         const roles = await this.db.user_has_role.findMany({
             select: {
                 roles: {
@@ -29,9 +40,12 @@ export class RolesService {
                     }
                 }
             },
-            where: {user_user_id: user.user_id}
+            where: {
+                user_user_id: userId.userId
+            }
         })
-        return roles;
+        const rolesResult: string[] = roles.map((roles) => roles.roles.role_name)
+        return rolesResult;
     }
 
     async addRoleToUser(input: AddRoleInput){
@@ -58,6 +72,7 @@ export class RolesService {
         const roleList: Role[] = [];
         const roles = await this.db.roles.findMany({
             select: {
+                role_id: true,
                 role_name: true,
                 role_has_permission: {
                     select: {
@@ -73,9 +88,12 @@ export class RolesService {
             }
         })
         for (const role of roles) {
-            var roleItem: Role = {role_name: role.role_name, permissions: []}
+            var roleItem: Role = {role_id: role.role_id,role_name: role.role_name, permissions: []}
             for (const permission of permissions) {
-                if (role.role_has_permission[0].permission_permission_id === permission.permission_id){
+                if(role.role_has_permission[0] === undefined){
+                    break;
+                }
+                else if (role.role_has_permission[0].permission_permission_id === permission.permission_id){
                     roleItem.permissions.push(permission.permission_name);
                 }
             }

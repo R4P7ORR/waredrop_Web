@@ -1,6 +1,6 @@
 import {Body, Controller, Post,} from "@nestjs/common";
 import {Prisma} from "@prisma/client";
-import {CreateUserDto, UsersService} from "./users.service";
+import {UserDto, UsersService} from "./users.service";
 import {RolesService} from "../roles/roles.service";
 
 export interface UpdateInput {
@@ -17,8 +17,8 @@ export class UsersController {
     constructor(private users: UsersService, private roles: RolesService) {}
 
     @Post('/role')
-    async userRole(@Body() user: Prisma.usersWhereUniqueInput) {
-        return this.roles.getUserRoles(user);
+    async userRole(@Body() userId: UserDto) {
+        return this.roles.getUserRoles(userId);
     }
 
     @Post('/update')

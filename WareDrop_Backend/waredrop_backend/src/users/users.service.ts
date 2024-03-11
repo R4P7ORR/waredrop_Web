@@ -11,6 +11,10 @@ export interface CreateUserDto {
     password: string;
 }
 
+export interface UserDto{
+    userId: number,
+}
+
 @Injectable()
 export class UsersService {
     constructor(private db: PrismaService) {}
