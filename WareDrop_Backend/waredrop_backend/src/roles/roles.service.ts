@@ -22,16 +22,14 @@ export class RolesService {
     constructor(private readonly db: PrismaService) {}
 
     async createRole(newRole: Role){
-        const result = await this.db.roles.create({
+        return this.db.roles.create({
             data: {
                 role_name: newRole.role_name,
             }
         })
-        return result;
     }
 
     async getUserRoles(userId: UserDto) {
-        if (!userId) return {errorMessage: "Anyádért üres"}
         const roles = await this.db.user_has_role.findMany({
             select: {
                 roles: {
@@ -49,23 +47,21 @@ export class RolesService {
     }
 
     async addRoleToUser(input: AddRoleInput){
-        const result = await this.db.user_has_role.create({
+        return this.db.user_has_role.create({
             data: {
                 user_user_id: input.user_id,
                 role_role_id: input.role_id
             }
         })
-        return result;
     }
 
     async addPermissionToRole(input: AddPermissionInput){
-        const result = await this.db.role_has_permission.create({
+        return this.db.role_has_permission.create({
             data: {
                 role_role_id: input.role_id,
                 permission_permission_id: input.permission_id
             }
         })
-        return result;
     }
 
     async listRoles(){
@@ -88,7 +84,7 @@ export class RolesService {
             }
         })
         for (const role of roles) {
-            var roleItem: Role = {role_id: role.role_id,role_name: role.role_name, permissions: []}
+            const roleItem: Role = {role_id: role.role_id,role_name: role.role_name, permissions: []}
             for (const permission of permissions) {
                 if(role.role_has_permission[0] === undefined){
                     break;

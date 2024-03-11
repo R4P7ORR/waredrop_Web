@@ -22,14 +22,13 @@ export class UsersService {
     async createUser(createInput: CreateUserDto){
         const salt = await bcrypt.genSalt();
         createInput.password = await bcrypt.hash(createInput.password, salt);
-        const result = await this.db.users.create({
-            data: {
-                user_name: createInput.name,
-                user_email: createInput.email,
-                user_password: createInput.password,
-            }
-        });
-        return result;
+        return this.db.users.create({
+                data: {
+                    user_name: createInput.name,
+                    user_email: createInput.email,
+                    user_password: createInput.password,
+                }
+            });
     }
 
     async findUser(email: string){
@@ -51,9 +50,8 @@ export class UsersService {
     }
 
     async deleteUser(deleteInput: Prisma.usersWhereUniqueInput){
-        const result = await this.db.users.delete({
+        return this.db.users.delete({
             where: deleteInput
         });
-        return result;
     }
 }
