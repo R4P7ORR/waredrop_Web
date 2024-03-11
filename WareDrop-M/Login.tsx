@@ -1,8 +1,8 @@
-import {View, Text, TextInput, Button, TouchableOpacity} from "react-native"
+import {View, Text, TextInput, Button, TouchableOpacity, Platform, Image, StyleSheet} from "react-native"
 import React, {useState} from "react";
 import axios from "axios";
+import styles from "./StyleSheet";
 const baseUrl="http://192.168.56.1:3001";
-
 
 
 const Login= () => {
@@ -42,32 +42,42 @@ const Login= () => {
 
     return (
 
-        <View>
+        <View style={styles.container}>
+            <Image
+                style={styles.img}
+                source={require("./assets/WareDrop_logo.png")} />
             <View>
                 <Text>Sign in</Text>
             </View>
-            <View>
+            <View style={styles.inputView}>
                 <TextInput
-                    placeholder="Your Email"
+                    style={styles.TextInput}
+                    placeholder="Email"
+                    placeholderTextColor="#003f5c"
                     value={email}
                     onChangeText={(text)=>setEmail(text)}
                 />
             </View>
-            <View>
+            <View style={styles.inputView}>
                 <TextInput
-                    placeholder="Your Password"
+                    style={styles.TextInput}
+                    placeholder="Password"
+                    placeholderTextColor="#003f5c"
                     value={password}
+                    secureTextEntry={true}
                     onChangeText={(text)=>setPassword(text)}
                 />
             </View>
-            <View>
-                <Button
-                    title="Submit"
-                    onPress={()=>loginFunction()}
-                />
-            </View>
+            <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={loginFunction}>
+                <Text>Login</Text>
+            </TouchableOpacity>
         </View>
 
     )
+
 }
+
+
 export default Login
