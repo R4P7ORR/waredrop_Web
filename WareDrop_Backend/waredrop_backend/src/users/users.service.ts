@@ -32,16 +32,15 @@ export class UsersService {
     }
 
     async findUser(email: string){
-        const result = await this.db.users.findFirst({
+        return this.db.users.findFirst({
             where: {
                 user_email: email
             }
         })
-        return result;
     }
 
     async updateUser(updateInput: UpdateInput){
-        const result = await this.db.users.update({
+        return this.db.users.update({
             data: updateInput.data,
             where: {
                 user_id: updateInput.where
