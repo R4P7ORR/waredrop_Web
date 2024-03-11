@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 
-export interface PermissionDto{
-    permission_id: number,
+export interface Permission{
+    permission_id?: number,
     permission_name: string
 }
 
@@ -17,5 +17,29 @@ export class PermissionsService {
                 role_role_id: role_id,
             }
         });
+    }
+
+    async getPermissions(user_id: number){
+        return this.db.roles.findMany({
+            select: {
+                role_name: true,
+                role_has_permission: {
+                    select: {
+                        permissions: {
+                            select: {
+                                permission_name: true
+                            }
+                        }
+                    }
+                }
+            },
+            where:{
+                user_has_role: {
+                    some: {
+                        user_user_id: user_id
+                    }
+                }
+            }
+        })
     }
 }

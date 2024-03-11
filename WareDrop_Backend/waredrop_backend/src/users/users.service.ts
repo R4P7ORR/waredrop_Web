@@ -53,4 +53,15 @@ export class UsersService {
             where: deleteInput
         });
     }
+
+    async getUserName(user_id: number){
+        return this.db.users.findFirst({
+            select: {
+                user_name: true,
+            },
+            where: {
+                user_id: user_id,
+            }
+        })
+    }
 }
