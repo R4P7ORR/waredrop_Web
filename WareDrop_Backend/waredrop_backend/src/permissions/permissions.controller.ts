@@ -3,6 +3,4 @@ import {PermissionsService} from "./permissions.service";
 
 @Controller('permissions')
 export class PermissionsController {
-    constructor(private service: PermissionsService,
-    ){}
 }
