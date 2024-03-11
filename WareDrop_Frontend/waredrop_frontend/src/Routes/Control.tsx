@@ -1,17 +1,15 @@
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 
-interface ControlProps{
-    loginToken: number | undefined;
-}
-function Control(props: ControlProps){
+function Control(){
+    const loginToken: string | null = 'JSON.parse(localStorage.getItem())';
     const navigate = useNavigate();
     useEffect(() => {
-        if (props.loginToken === undefined) {
+        if (loginToken === undefined) {
             navigate("/unauthorized");
         }
-    }, [props.loginToken, navigate]);
-    console.log(props.loginToken)
+    }, [loginToken, navigate]);
+    console.log(loginToken)
 
     return (
         <div className="app">

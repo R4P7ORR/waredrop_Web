@@ -1,6 +1,6 @@
 import HomeDisplay from "../Displays/HomeDisplay";
 
-const Home: React.FC = () => {
+function Home(){
     return (
         <HomeDisplay/>
     )

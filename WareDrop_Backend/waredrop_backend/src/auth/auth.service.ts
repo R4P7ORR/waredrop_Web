@@ -25,7 +25,7 @@ export class AuthService {
                 accessToken: this.jwtService.sign(payload)
             }
         } else {
-            throw new NotFoundException
+            return {errorMessage: "User not found"}
         }
     }
 
@@ -36,7 +36,9 @@ export class AuthService {
         }
         else {
             const result = await this.usersService.createUser(newUser);
-            return result;
+            if (result) {
+                return {message: "User created"}
+            }
         }
     }
 }

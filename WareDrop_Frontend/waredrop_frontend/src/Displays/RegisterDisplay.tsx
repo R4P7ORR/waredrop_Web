@@ -1,20 +1,28 @@
-interface LoginDisplayProps{
+interface RegisterDisplayProps{
+    fullNameInput: string;
+    setFullNameInput: (fullName: string) => void;
+
     emailInput: string;
     setEmailInput: (email: string) => void;
 
     passwordInput: string;
     setPasswordInput: (password: string) => void;
 
-    sendLoginRequest: () => void;
+    sendRegisterRequest: () => void;
 }
 
-function LoginDisplay(props: LoginDisplayProps) {
+function RegisterDisplay(props: RegisterDisplayProps) {
     return(
         <div className="form-block">
-            <h1>Login</h1>
+            <h1>Register</h1>
             <input placeholder="Email" type="email" value={props.emailInput} onChange={(e) => {
                 const email = e.target.value;
                 props.setEmailInput(email);
+            }}/>
+            <hr/>
+            <input placeholder="Full Name" type="text" value={props.fullNameInput} onChange={(e) => {
+                const fullName = e.target.value;
+                props.setFullNameInput(fullName);
             }}/>
             <hr/>
             <input placeholder="Password" type="password" value={props.passwordInput} onChange={(e) => {
@@ -23,9 +31,11 @@ function LoginDisplay(props: LoginDisplayProps) {
             }}/>
             <hr/>
             <button onClick={() => {
-                props.sendLoginRequest()
-            }}>Login</button>
+                props.sendRegisterRequest()
+            }}>Register
+            </button>
         </div>
     )
 }
-export default LoginDisplay
+
+export default RegisterDisplay
