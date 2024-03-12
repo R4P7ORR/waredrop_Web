@@ -40,11 +40,6 @@ export class UsersController {
         return this.users.getUserName(decodedJwt.sub.id);
     }
 
-    @Post('/role')
-    async userRole(@Body() userId: UserDto) {
-        return this.roles.getUserRoles(userId);
-    }
-
     @Post('/update')
     async updateUser(@Body() updateInput: UpdateInput){
         return this.users.updateUser(updateInput);
