@@ -1,7 +1,11 @@
-import {Body, Controller, Post,} from "@nestjs/common";
+import {Body, Controller, Get, Post, Req, UseGuards,} from "@nestjs/common";
 import {Prisma} from "@prisma/client";
 import {UserDto, UsersService} from "./users.service";
 import {RolesService} from "../roles/roles.service";
+import {PermissionsService} from "../permissions/permissions.service";
+import {Request} from "express";
+import {JwtAuthGuard} from "../auth/guards/jwt.guard";
+import JwtDecoder from "../auth/jwt.decoder";
 
 export interface UpdateInput {
     data: {
@@ -12,13 +16,28 @@ export interface UpdateInput {
     where: number;
 }
 
+
 @Controller('/user')
 export class UsersController {
-    constructor(private users: UsersService, private roles: RolesService) {}
+    constructor(private users: UsersService,
+                private roles: RolesService,
+                private permissions: PermissionsService,
+                private jwt: JwtDecoder,
+    ) {}
 
-    @Post('/role')
-    async userRole(@Body() userId: UserDto) {
-        return this.roles.getUserRoles(userId);
+
+    @Get('permissions')
+    @UseGuards(JwtAuthGuard)
+    async userPermissions(@Req() req: Request){
+        const decodedJwt = this.jwt.decodeToken(req);
+        return this.permissions.getPermissions(decodedJwt.sub.id);
+    }
+
+    @Get('getUserName')
+    @UseGuards(JwtAuthGuard)
+    async getUserName(@Req() req: Request){
+        const decodedJwt = this.jwt.decodeToken(req);
+        return this.users.getUserName(decodedJwt.sub.id);
     }
 
     @Post('/update')

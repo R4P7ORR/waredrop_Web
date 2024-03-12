@@ -22,27 +22,25 @@ export class UsersService {
     async createUser(createInput: CreateUserDto){
         const salt = await bcrypt.genSalt();
         createInput.password = await bcrypt.hash(createInput.password, salt);
-        const result = await this.db.users.create({
-            data: {
-                user_name: createInput.name,
-                user_email: createInput.email,
-                user_password: createInput.password,
-            }
-        });
-        return result;
+        return this.db.users.create({
+                data: {
+                    user_name: createInput.name,
+                    user_email: createInput.email,
+                    user_password: createInput.password,
+                }
+            });
     }
 
     async findUser(email: string){
-        const result = await this.db.users.findFirst({
+        return this.db.users.findFirst({
             where: {
                 user_email: email
             }
         })
-        return result;
     }
 
     async updateUser(updateInput: UpdateInput){
-        const result = await this.db.users.update({
+        return this.db.users.update({
             data: updateInput.data,
             where: {
                 user_id: updateInput.where
@@ -51,9 +49,19 @@ export class UsersService {
     }
 
     async deleteUser(deleteInput: Prisma.usersWhereUniqueInput){
-        const result = await this.db.users.delete({
+        return this.db.users.delete({
             where: deleteInput
         });
-        return result;
+    }
+
+    async getUserName(user_id: number){
+        return this.db.users.findFirst({
+            select: {
+                user_name: true,
+            },
+            where: {
+                user_id: user_id,
+            }
+        })
     }
 }

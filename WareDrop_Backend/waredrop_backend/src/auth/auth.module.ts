@@ -9,21 +9,24 @@ import {LocalStrategy} from "./strategies/local.strategy";
 import {JwtStrategy} from "./strategies/jwt.strategy";
 import {UsersModule} from "../users/users.module";
 import {RolesModule} from "../roles/roles.module";
+import JwtDecoder from "./jwt.decoder";
 
 @Module({
-  imports: [
+    imports: [
       PassportModule,
       JwtModule.register({
         secret: `${process.env.JWT_SECRET}`,
         signOptions: { expiresIn: '30d', },
+          global: true,
       }),
       ConfigModule.forRoot({
         isGlobal: true,
       }),
       UsersModule,
       RolesModule
-  ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  controllers: [AuthController]
+    ],
+    providers: [AuthService, LocalStrategy, JwtStrategy, JwtDecoder],
+    controllers: [AuthController],
+    exports: [JwtDecoder]
 })
 export class AuthModule {}
