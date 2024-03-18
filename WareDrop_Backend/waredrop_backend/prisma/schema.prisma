@@ -76,7 +76,7 @@ model users {
 }
 
 model warehouses {
-  warehouse_id               Int                          @id(map: "warehouses_pk")
+  warehouse_id               Int                          @id(map: "warehouses_pk") @default(autoincrement())
   warehouse_name             String                       @unique(map: "warehouse_name_uk") @db.VarChar(30)
   location                   String                       @db.VarChar(30)
   transactions               transactions[]
