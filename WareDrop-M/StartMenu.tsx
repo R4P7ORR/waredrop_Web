@@ -1,8 +1,14 @@
 import {Text, TouchableOpacity, View} from "react-native";
 import React from "react";
 import styles from "./StyleSheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function StartMenu({navigation}){
+
+    const handleLogout=async ()=>{
+        await AsyncStorage.removeItem('token')
+        navigation.navigate('Login')
+    }
 
     return(
         <View style={styles.container}>
@@ -28,7 +34,7 @@ function StartMenu({navigation}){
 
             <TouchableOpacity
                 style={styles.loginBtn}
-            onPress={()=>navigation.navigate('Login')}
+            onPress={()=>handleLogout()}
             >
                 <Text style={styles.TextInput}>Log out</Text>
             </TouchableOpacity>
