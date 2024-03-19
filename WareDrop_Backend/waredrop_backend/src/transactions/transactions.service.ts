@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 
-export interface Transaction{
+export interface Transaction {
     trans_id?: number,
     trans_post_date: string,
     trans_arrived_date?: string,
@@ -9,6 +9,13 @@ export interface Transaction{
     trans_target: string,
     warehouse_warehouse_id: number,
     item_item_id: number,
+    worker_id?: number,
+}
+
+export interface WorkerUpdateInput {
+    worker_id: number,
+    trans_id: number,
+    date?: string,
 }
 
 @Injectable()
@@ -21,7 +28,16 @@ export class TransactionsService {
         })
     }
 
-
+    async addWorkerToTrans(addInput: WorkerUpdateInput ){
+        return this.db.transactions.update({
+            data: {
+                worker_id: addInput.worker_id,
+            },
+            where: {
+                trans_id: addInput.trans_id,
+            }
+        })
+    }
     async getAllTransByUser(user_id: number){
         return this.db.transactions.findMany({
             where: {
@@ -36,7 +52,26 @@ export class TransactionsService {
         });
     }
 
+    async getAllTransByWorker(worker_id: number){
+        return this.db.transactions.findMany({
+            where:{
+                worker_id: worker_id
+            }
+        });
+    }
+
     async getAllTrans(){
         return this.db.transactions.findMany();
+    }
+
+    async updateTrans(updateInput: WorkerUpdateInput){
+        return this.db.transactions.update({
+            data: {
+                trans_arrived_date: updateInput.date,
+            },
+            where: {
+                trans_id: updateInput.trans_id,
+            }
+        })
     }
 }
