@@ -1,5 +1,5 @@
-import {Controller, Get, Post} from '@nestjs/common';
-import {Transaction, TransactionsService} from "./transactions.service";
+import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {WorkerUpdateInput, Transaction, TransactionsService} from "./transactions.service";
 
 @Controller('transactions')
 export class TransactionsController {
@@ -11,8 +11,23 @@ export class TransactionsController {
         return this.service.createTrans(newTrans);
     }
 
+    @Post('/addWorkerToTrans')
+    async addWorker(@Body() addInput: WorkerUpdateInput){
+        return this.service.addWorkerToTrans(addInput);
+    }
+
     @Get()
     getAllTrans(){
-        return this.service.getAllTrans()
+        return this.service.getAllTrans();
+    }
+
+    @Get('/user/:id')
+    getAllTransByUser(@Param('id') id: number){
+        return this.service.getAllTransByUser(id);
+    }
+
+    @Get('/worker/:id')
+    getAllTransByWorker(@Param('id') id: number){
+        return this.service.getAllTransByWorker(id);
     }
 }
