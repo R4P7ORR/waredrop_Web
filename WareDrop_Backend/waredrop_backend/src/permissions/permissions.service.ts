@@ -20,7 +20,8 @@ export class PermissionsService {
     }
 
     async getPermissions(user_id: number){
-        return this.db.roles.findMany({
+        const permissions: Permission[] = [];
+        const result = await this.db.roles.findMany({
             select: {
                 role_name: true,
                 role_has_permission: {
@@ -41,5 +42,12 @@ export class PermissionsService {
                 }
             }
         })
+        for (const permission of result) {
+           permission.role_has_permission.map((item) => {
+               permissions.push({permission_name: item.permissions.permission_name});
+           });
+        }
+
+        return permissions;
     }
 }

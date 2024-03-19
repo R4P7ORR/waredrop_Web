@@ -10,6 +10,8 @@ import {JwtStrategy} from "./strategies/jwt.strategy";
 import {UsersModule} from "../users/users.module";
 import {RolesModule} from "../roles/roles.module";
 import JwtDecoder from "./jwt.decoder";
+import {PermissionsService} from "../permissions/permissions.service";
+import {PermissionsModule} from "../permissions/permissions.module";
 
 @Module({
     imports: [
@@ -23,9 +25,9 @@ import JwtDecoder from "./jwt.decoder";
         isGlobal: true,
       }),
       UsersModule,
-      RolesModule
+      PermissionsModule,
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, JwtDecoder],
+    providers: [AuthService, LocalStrategy, JwtStrategy, JwtDecoder,],
     controllers: [AuthController],
     exports: [JwtDecoder]
 })

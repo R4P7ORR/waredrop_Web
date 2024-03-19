@@ -3,26 +3,35 @@ import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt'
 import {CreateUserDto, UsersService} from "../users/users.service";
 import {RolesService} from "../roles/roles.service";
+import {Permission, PermissionsService} from "../permissions/permissions.service";
 
 export class AuthPayloadDto{
     email: string;
     password: string;
 }
+
+export interface TokenData{
+    sub: {
+        id: number,
+        email: string,
+        userPermissions: Permission[],
+    }
+}
 @Injectable()
 export class AuthService {
     constructor(private jwtService: JwtService,
                 private usersService: UsersService,
-                private rolesService: RolesService,
+                private permissionService: PermissionsService,
     ) { }
 
     async validateUser(input: AuthPayloadDto){
         const user = await this.usersService.findUser(input.email);
         if(user && await bcrypt.compare(input.password, user.user_password)) {
-            const payload = {
+            const payload :TokenData = {
                 sub: {
                     id: user.user_id,
                     email: user.user_email,
-                    userRoles: await this.rolesService.getUserRoles({userId: user.user_id})
+                    userPermissions: await this.permissionService.getPermissions(user.user_id)
                 },
             }
             return {
