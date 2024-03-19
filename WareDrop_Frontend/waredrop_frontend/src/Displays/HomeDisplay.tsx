@@ -1,12 +1,12 @@
-import {Link, Outlet} from "react-router-dom";
 import {useState} from "react";
 import Login from "../Components/Login";
 import Register from "../Components/Register";
+import '../Styles/LogRegForm.css';
 
 function HomeDisplay() {
     const [classList, setClassList] = useState('container');
     return(
-        <div className="homeDiv">
+        <div className="home-container">
             <div className={classList}>
                 <div className="form-container register-container">
                     <Register handleRegister={setClassList}/>

@@ -17,6 +17,7 @@ function Login() {
                 password: passwordInput,
             }).then(res => {
                 if (res.data.hasOwnProperty("accessToken")) {
+                    localStorage.setItem("loginToken", res.data.accessToken);
                     navigate('/Control');
                 } else if (res.data.hasOwnProperty("errorMessage")) {
                     const errorMessage = res.data.errorMessage;

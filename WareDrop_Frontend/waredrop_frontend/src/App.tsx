@@ -1,8 +1,6 @@
-import './App.css';
+import './Styles/App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Login from "./Components/Login";
 import Home from "./Routes/Home";
-import Register from "./Components/Register";
 import NotFound from "./Routes/NotFound";
 import Control from "./Routes/Control";
 

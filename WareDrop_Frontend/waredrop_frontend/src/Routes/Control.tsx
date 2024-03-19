@@ -1,18 +1,28 @@
 import {useNavigate} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import WarehouseDisplay from "../Displays/WarehouseDisplay";
+import Navbar from "../Components/Navbar";
 
 function Control(){
-    const loginToken: string | null = 'JSON.parse(localStorage.getItem())';
     const navigate = useNavigate();
+    const [loginToken, setLoginToken] = useState("none");
     useEffect(() => {
-        if (loginToken === undefined) {
+        const token = localStorage.getItem("loginToken");
+        if (token === null || token === "") {
             navigate("/unauthorized");
         }
-    }, [loginToken, navigate]);
-    console.log(loginToken)
-
+        else {
+            setLoginToken(token);
+        }
+    });
     return (
-        <div className="app">
+        <div>
+            <>
+                <Navbar/>
+            </>
+            <>
+                <WarehouseDisplay loginToken={loginToken}/>
+            </>
         </div>
     )
 }

@@ -1,0 +1,19 @@
+body{
+    margin: 0;
+}
+.item-container {
+    display: flex;
+    height: 50px;
+    align-items: center;
+
+}
+.item-name {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+.item-name:hover {
+    overflow: visible;
+}
