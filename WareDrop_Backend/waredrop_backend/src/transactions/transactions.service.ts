@@ -36,7 +36,7 @@ export class TransactionsService {
         });
     }
 
-    async getTrans(){
-        return this.db.transactions.findMany()
+    async getAllTrans(){
+        return this.db.transactions.findMany();
     }
 }
