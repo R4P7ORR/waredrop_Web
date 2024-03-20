@@ -10,12 +10,14 @@ function Register(props: RegisterProps) {
     const [fullNameInput, setFullNameInput] = useState<string>('');
     const [emailInput, setEmailInput] = useState<string>('');
     const [passwordInput, setPasswordInput] = useState<string>('');
-    const navigate = useNavigate();
+    const [passwordAgainInput, setPasswordAgainInput] = useState<string>('');
 
     function sendRegisterRequest() {
-        if (!fullNameInput || !emailInput || !passwordInput){
+        if (!fullNameInput || !emailInput || !passwordInput) {
             console.log("Must NOT be empty!")
-        } else{
+        }else if(passwordInput !== passwordAgainInput){
+            console.log("Must match!")
+        }else{
             axios.post('http://localhost:3001/auth/register', {
                 name: fullNameInput,
                 email: emailInput,
@@ -35,7 +37,7 @@ function Register(props: RegisterProps) {
         }
     }
     return (
-        <RegisterDisplay fullNameInput={fullNameInput} setFullNameInput={setFullNameInput} emailInput={emailInput} setEmailInput={setEmailInput} passwordInput={passwordInput} setPasswordInput={setPasswordInput} sendRegisterRequest={() => sendRegisterRequest()}/>
+        <RegisterDisplay fullNameInput={fullNameInput} setFullNameInput={setFullNameInput} emailInput={emailInput} setEmailInput={setEmailInput} passwordInput={passwordInput} setPasswordInput={setPasswordInput} passwordAgainInput={passwordAgainInput} setPasswordAgainInput={setPasswordAgainInput} sendRegisterRequest={() => sendRegisterRequest()}/>
     )
 }
 export default Register;

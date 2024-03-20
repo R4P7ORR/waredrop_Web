@@ -9,11 +9,12 @@ function Navbar(){
                 </label>
 
                 <ul className="menu-box">
-                    <input type="button" value="Warehouses"/>
-                    <input type="button" value="Transactions"/>
-                    <input type="button" value="Users"/>
-                    <input type="button" value="Contact Us"/>
+                    <button className="menu-item">Warehouses</button>
+                    <button className="menu-item">Transactions</button>
+                    <button className="menu-item">Users</button>
+                    <button className="menu-item">Contact Us</button>
                 </ul>
+                <div className="lower-box"/>
             </div>
         </nav>
     )

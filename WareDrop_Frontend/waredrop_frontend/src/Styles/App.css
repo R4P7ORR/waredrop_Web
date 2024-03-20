@@ -3,6 +3,8 @@
 :root{
   --main-color: #ffa600;
   --secondary-color: #381ac0;
+  --dark-gray: #171717;
+  --dar-blue: #2e1372;
   background-color: #2a2a2a;
   font-size: 1.5rem;
   font-family: 'Montserrat', sans-serif;
