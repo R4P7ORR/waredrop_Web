@@ -7,7 +7,6 @@ function Navbar(){
                 <label className="menu-btn" htmlFor="menu-toggle">
                     <span/>
                 </label>
-
                 <ul className="menu-box">
                     <button className="menu-item">Warehouses</button>
                     <button className="menu-item">Transactions</button>

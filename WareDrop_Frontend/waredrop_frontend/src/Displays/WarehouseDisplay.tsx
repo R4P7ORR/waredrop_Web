@@ -22,7 +22,7 @@ function WarehouseDisplay(props: WarehouseDisplayProps) {
         }
     }
     return (
-        <div>
+        <div className="main-container">
             <WarehouseListItem itemName={"Item1"} handleChecked={() => handleCheckBox("Item1")}/>
             <WarehouseListItem itemName={"Item2"} handleChecked={() => handleCheckBox("Item2")}/>
             <WarehouseListItem itemName={"Item3"} handleChecked={() => handleCheckBox("Item3")}/>
