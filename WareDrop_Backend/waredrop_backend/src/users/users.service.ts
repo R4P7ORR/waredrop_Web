@@ -31,6 +31,10 @@ export class UsersService {
             });
     }
 
+    async listUsers(){
+        return this.db.users.findMany();
+    }
+
     async findUser(email: string){
         return this.db.users.findFirst({
             where: {
