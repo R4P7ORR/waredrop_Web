@@ -4,15 +4,21 @@ import React from "react";
 
 function Avaliable({navigation}){
 
-    return(
-        <View>
-        <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={navigation.navigate('StartMenu')} >
-            <Text style={styles.TextInput}>Go back</Text>
-        </TouchableOpacity>
-        </View>
-    )
 
-}
-export default Avaliable
+
+        const goBackToStartMenu = () => {
+            navigation.navigate('StartMenu');
+        };
+
+        return(
+            <View>
+                <TouchableOpacity
+                    style={styles.loginBtn}
+                    onPress={goBackToStartMenu} >
+                    <Text style={styles.TextInput}>Go back</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    export default Avaliable

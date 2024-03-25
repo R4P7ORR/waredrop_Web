@@ -4,15 +4,19 @@ import styles from "./StyleSheet";
 
 function My_Deliveries({navigation}){
 
+    const goBackToStartMenu = () => {
+        navigation.navigate('StartMenu');
+    };
+
     return(
         <View>
             <TouchableOpacity
                 style={styles.loginBtn}
-                onPress={navigation.navigate('StartMenu')} >
-              <Text style={styles.TextInput}>Go back</Text>
+                onPress={goBackToStartMenu} >
+                <Text style={styles.TextInput}>Go back</Text>
             </TouchableOpacity>
         </View>
-    )
-
+    );
 }
+
 export default My_Deliveries
