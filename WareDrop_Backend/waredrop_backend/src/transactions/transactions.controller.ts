@@ -21,6 +21,11 @@ export class TransactionsController {
         return this.service.getAllTrans();
     }
 
+    @Get()
+    getAvailable(){
+        return this.service.getAvailableTrans();
+    }
+
     @Get('/user/:id')
     getAllTransByUser(@Param('id') id: number){
         return this.service.getAllTransByUser(id);
