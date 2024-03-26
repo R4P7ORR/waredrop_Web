@@ -19,10 +19,6 @@ export class PermissionGuard implements CanActivate{
             'permission',[context.getHandler(), context.getClass()]
         );
 
-        /*if(token.sub.userRoles){
-
-        }*/
-
-        return false;
+        return token.sub.userPermissions.includes(permission);
     }
 }
