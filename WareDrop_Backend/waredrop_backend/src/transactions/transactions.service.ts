@@ -64,6 +64,14 @@ export class TransactionsService {
         return this.db.transactions.findMany();
     }
 
+    async getAvailableTrans(){
+        return this.db.transactions.findMany({
+            where: {
+                worker_id: null
+            }
+        })
+    }
+
     async updateTrans(updateInput: WorkerUpdateInput){
         return this.db.transactions.update({
             data: {
