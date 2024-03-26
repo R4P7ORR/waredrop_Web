@@ -1,14 +1,17 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
 import {WorkerUpdateInput, Transaction, TransactionsService} from "./transactions.service";
+import JwtDecoder from "../auth/jwt.decoder";
+import {JwtAuthGuard} from "../auth/guards/jwt.guard";
+import {Request} from "express";
 
 @Controller('transactions')
 export class TransactionsController {
-    constructor(private readonly service: TransactionsService) {
+    constructor(private readonly service: TransactionsService, private readonly jwt: JwtDecoder) {
     }
 
     @Post('/newTrans')
-    addTrans(newTrans: Transaction){
-        return this.service.createTrans(newTrans);
+    async addTrans(@Body() newTrans: Transaction){
+        return await this.service.createTrans(newTrans);
     }
 
     @Post('/addWorkerToTrans')
@@ -26,14 +29,18 @@ export class TransactionsController {
         return this.service.getAvailableTrans();
     }
 
-    @Get('/user/:id')
-    getAllTransByUser(@Param('id') id: number){
-        return this.service.getAllTransByUser(id);
+    @Get('/user')
+    @UseGuards(JwtAuthGuard)
+    async getAllTransByUser(@Req() req : Request){
+        const user = this.jwt.decodeToken(req);
+        return this.service.getAllTransByUser(user.sub.id);
     }
 
-    @Get('/worker/:id')
-    getAllTransByWorker(@Param('id') id: number){
-        return this.service.getAllTransByWorker(id);
+    @Get('/worker')
+    @UseGuards(JwtAuthGuard)
+    async getAllTransByWorker(@Req() req : Request){
+        const user = this.jwt.decodeToken(req);
+        return this.service.getAllTransByWorker(user.sub.id);
     }
 
     @Post('/update')

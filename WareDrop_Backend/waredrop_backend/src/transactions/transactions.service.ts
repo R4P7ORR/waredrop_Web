@@ -24,7 +24,13 @@ export class TransactionsService {
 
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
-            data: newTrans
+            data: {
+                trans_post_date: newTrans.trans_post_date,
+                trans_origin: newTrans.trans_origin,
+                trans_target: newTrans.trans_target,
+                warehouse_warehouse_id: newTrans.warehouse_warehouse_id,
+                item_item_id: newTrans.item_item_id
+            }
         })
     }
 

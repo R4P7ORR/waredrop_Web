@@ -54,4 +54,13 @@ export class AuthService {
             }
         }
     }
+
+    async isAdmin(user_permissions: string[]){
+        for (const permission of user_permissions) {
+            if (permission === 'All'){
+                return true;
+            }
+        }
+        return false;
+    }
 }

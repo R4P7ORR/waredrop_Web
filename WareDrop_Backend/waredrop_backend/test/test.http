@@ -47,3 +47,15 @@ Content-Type: application/json
 ###
 GET http://localhost:3001/auth/status
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjF9LCJlbWFpbCI6Impob24uZG9lQHRlc3p0Lmh1IiwiaWF0IjoxNzA5NzE5MzMwLCJleHAiOjE3MTIzMTEzMzB9.-MCyUFaLKHQgqW8H90MNg0D5ytBE6XyokZynzeCDqt4
+
+###
+POST http://localhost:3001/transactions/newTrans
+Content-Type: application/json
+
+{
+  "trans_post_date": "2024.03.26",
+  "trans_origin": "Innen",
+  "trans_target": "Oda",
+  "warehouse_warehouse_id": 1,
+  "item_item_id": 1
+}

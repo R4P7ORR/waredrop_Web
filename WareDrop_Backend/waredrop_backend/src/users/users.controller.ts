@@ -38,7 +38,7 @@ export class UsersController {
         return this.users.getUserName(decodedJwt.sub.id);
     }
 
-    @Get()
+    @Get('/listAll')
     async getAllUsers(){
         return this.users.listUsers();
     }
