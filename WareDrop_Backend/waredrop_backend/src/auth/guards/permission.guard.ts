@@ -9,9 +9,9 @@ export class PermissionGuard implements CanActivate{
 
     constructor(private readonly jwt: JwtDecoder, private readonly reflector: Reflector) {}
     canActivate(context: ExecutionContext
-    ): boolean | Promise<boolean> | Observable<boolean> {
+    ): boolean {
         const request = context.switchToHttp().getRequest();
-        const token: TokenData = this.jwt.decodeToken(request)
+        const token: TokenData = this.jwt.decodeToken(request);
 
         if (!token) return false;
 

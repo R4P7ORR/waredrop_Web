@@ -19,10 +19,15 @@ export class WarehousesController {
         return this.service.addWarehouseToUser(user_id, warehouse_name);
     }
 
-    @Get()
+    @Get('/byUser')
     @UseGuards(JwtAuthGuard)
-    async userPermissions(@Req() req: Request){
+    async getWarehousesByUser(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
-        return this.service.getWarehouses(decodedJwt.sub.id);
+        return this.service.getWarehousesByUser(decodedJwt.sub.id);
+    }
+
+    @Get()
+    async getWarehouses(){
+        return this.service.getWarehouses();
     }
 }

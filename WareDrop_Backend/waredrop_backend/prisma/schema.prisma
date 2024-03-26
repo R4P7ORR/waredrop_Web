@@ -38,12 +38,13 @@ model roles {
 
 model transactions {
   trans_id               Int        @id(map: "transactions_pk") @default(autoincrement())
-  trans_post_date        DateTime   @db.Date
-  trans_arrived_date     DateTime?  @db.Date
+  trans_post_date        String     @db.VarChar(20)
+  trans_arrived_date     String?    @db.VarChar(20)
   trans_origin           String?    @db.VarChar(30)
   trans_target           String     @db.VarChar(30)
   warehouse_warehouse_id Int
   item_item_id           Int
+  worker_id              Int?
   items                  items      @relation(fields: [item_item_id], references: [item_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_item_fk")
   warehouses             warehouses @relation(fields: [warehouse_warehouse_id], references: [warehouse_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_warehouse_fk")
 }
@@ -68,7 +69,7 @@ model user_has_role {
 
 model users {
   user_id                    Int                          @id(map: "users_pk") @default(autoincrement())
-  user_name                  String                       @unique(map: "user_name_uk") @db.VarChar(30)
+  user_name                  String                       @db.VarChar(30)
   user_email                 String                       @unique(map: "user_email_uk") @db.VarChar(50)
   user_password              String                       @db.VarChar(500)
   user_assigned_to_warehouse user_assigned_to_warehouse[]

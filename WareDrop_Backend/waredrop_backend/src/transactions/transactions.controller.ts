@@ -7,8 +7,8 @@ export class TransactionsController {
     }
 
     @Post('/newTrans')
-    addTrans(newTrans: Transaction){
-        return this.service.createTrans(newTrans);
+    async addTrans(@Body() newTrans: Transaction){
+        return await this.service.createTrans(newTrans);
     }
 
     @Post('/addWorkerToTrans')

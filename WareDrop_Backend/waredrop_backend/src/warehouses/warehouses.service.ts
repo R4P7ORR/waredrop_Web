@@ -17,7 +17,11 @@ export class WarehousesService {
         })
     }
 
-    async getWarehouses(user_id: number){
+    async getWarehouses(){
+        return this.db.warehouses.findMany();
+    }
+
+    async getWarehousesByUser(user_id: number){
         const list: Warehouse[]= await this.db.warehouses.findMany({
             select: {
                 warehouse_name: true,
