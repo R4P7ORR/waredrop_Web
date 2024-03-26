@@ -9,7 +9,7 @@ export interface Transaction {
     trans_target: string,
     warehouse_warehouse_id: number,
     item_item_id: number,
-    worker_id: number,
+    worker_id?: number,
 }
 
 export interface WorkerUpdateInput {

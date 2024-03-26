@@ -30,4 +30,9 @@ export class TransactionsController {
     getAllTransByWorker(@Param('id') id: number){
         return this.service.getAllTransByWorker(id);
     }
+
+    @Post('/update')
+    async updateTrans(@Body() input: WorkerUpdateInput){
+        return this.service.updateTrans(input)
+    }
 }

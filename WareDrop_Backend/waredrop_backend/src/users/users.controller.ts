@@ -38,6 +38,11 @@ export class UsersController {
         return this.users.getUserName(decodedJwt.sub.id);
     }
 
+    @Get()
+    async getAllUsers(){
+        return this.users.listUsers();
+    }
+
     @Post('/update')
     async updateUser(@Body() updateInput: UpdateInput){
         return this.users.updateUser(updateInput);
