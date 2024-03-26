@@ -9,9 +9,10 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.22.3",
     "@react-navigation/native": "^6.1.12",
     "@react-navigation/native-stack": "^6.9.20",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "axios-auth-refresh": "^3.3.6",
     "expo": "~50.0.6",
     "expo-status-bar": "~1.11.1",
