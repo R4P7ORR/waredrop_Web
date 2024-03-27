@@ -1,5 +1,14 @@
 import '../Styles/Navbar.css';
-function Navbar(){
+interface NavbarProps {
+    setCurrentPage: (page: string) => void;
+}
+
+function Navbar({setCurrentPage}: NavbarProps){
+    const handlePageChange = (newPage: string) => {
+        document.getElementById("menu-toggle")!.click();
+        setCurrentPage(newPage);
+    };
+
     return (
         <nav>
             <div className="hamburger-menu">
@@ -8,10 +17,10 @@ function Navbar(){
                     <span/>
                 </label>
                 <ul className="menu-box">
-                    <button className="menu-item">Warehouses</button>
-                    <button className="menu-item">Transactions</button>
-                    <button className="menu-item">Users</button>
-                    <button className="menu-item">Contact Us</button>
+                    <button onClick={() => handlePageChange("control")} className="menu-item">Warehouses</button>
+                    <button onClick={() => handlePageChange("transactions")} className="menu-item">Transactions</button>
+                    <button onClick={() => handlePageChange("users")} className="menu-item">Users</button>
+                    <button onClick={() => handlePageChange("contact")} className="menu-item">Contact Us</button>
                 </ul>
                 <div className="lower-box"/>
             </div>

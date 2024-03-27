@@ -41,7 +41,6 @@ export class UsersController {
 
     @Get('/listAll')
     @UseGuards(JwtAuthGuard)
-    @PermissionGuard({permission_name: 'All'})
     async getAllUsers(){
         return this.users.listUsers();
     }
