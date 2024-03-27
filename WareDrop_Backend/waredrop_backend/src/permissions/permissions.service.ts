@@ -19,7 +19,7 @@ export class PermissionsService {
         });
     }
 
-    async getPermissions(user_id: number){
+    async getPermissionsByUser(user_id: number){
         const permissions: Permission[] = [];
         const result = await this.db.roles.findMany({
             select: {

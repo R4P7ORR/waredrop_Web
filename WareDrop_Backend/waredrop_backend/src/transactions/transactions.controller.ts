@@ -24,7 +24,7 @@ export class TransactionsController {
         return this.service.getAllTrans();
     }
 
-    @Get()
+    @Get('/available')
     getAvailable(){
         return this.service.getAvailableTrans();
     }

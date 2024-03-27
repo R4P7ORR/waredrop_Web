@@ -3,7 +3,6 @@ import {PrismaService} from "../database/prisma.service";
 
 export interface Transaction {
     trans_id?: number,
-    trans_post_date: string,
     trans_arrived_date?: string,
     trans_origin: string,
     trans_target: string,
@@ -25,7 +24,7 @@ export class TransactionsService {
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
             data: {
-                trans_post_date: newTrans.trans_post_date,
+                trans_post_date: Date.now().toString(),
                 trans_origin: newTrans.trans_origin,
                 trans_target: newTrans.trans_target,
                 warehouse_warehouse_id: newTrans.warehouse_warehouse_id,

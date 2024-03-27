@@ -5,6 +5,7 @@ import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import JwtDecoder from "../auth/jwt.decoder";
+import {PermissionGuard} from "../auth/permission.decoarator";
 
 export interface UpdateInput {
     data: {
@@ -28,7 +29,7 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     async userPermissions(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
-        return this.permissions.getPermissions(decodedJwt.sub.id);
+        return this.permissions.getPermissionsByUser(decodedJwt.sub.id);
     }
 
     @Get('/getUserName')
@@ -39,6 +40,8 @@ export class UsersController {
     }
 
     @Get('/listAll')
+    @UseGuards(JwtAuthGuard)
+    @PermissionGuard({permission_name: 'All'})
     async getAllUsers(){
         return this.users.listUsers();
     }
