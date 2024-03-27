@@ -10,6 +10,12 @@ export interface Permission{
 export class PermissionsService {
     constructor(private readonly db: PrismaService) {}
 
+    async createPermission(newPermission: Permission){
+        return this.db.permissions.create({
+            data: newPermission
+        })
+    }
+
     async givePermission(permission_id: number, role_id: number){
         return this.db.role_has_permission.create({
             data: {

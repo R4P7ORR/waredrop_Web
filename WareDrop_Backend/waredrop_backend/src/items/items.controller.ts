@@ -1,7 +1,6 @@
-import {Body, Controller, Delete, Get, Param, Post, Req} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Post} from '@nestjs/common';
 import {Item, ItemsService} from "./items.service";
 import JwtDecoder from "../auth/jwt.decoder";
-import {Request} from "express";
 
 @Controller('items')
 export class ItemsController {
@@ -21,12 +20,6 @@ export class ItemsController {
     @Post('/assignToWarehouse')
     async assignItemToWarehouse(@Body() {user_id, warehouse_name}:{user_id: number, warehouse_name: string}){
         return this.service.assignItemToWarehouse(user_id, warehouse_name)
-    }
-
-    @Get('/userItem')
-    async getUserItem(@Req() req: Request){
-        const user = this.jwt.decodeToken(req);
-        return this.service.getUserItem(user.sub.id);
     }
 
     @Delete('/delete')
