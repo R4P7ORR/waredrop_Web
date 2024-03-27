@@ -22,23 +22,6 @@ export class ItemsService {
         return this.db.items.findMany()
     }
 
-    async getUserItem(user_id: number){
-        return this.db.transactions.findFirst({
-            select: {
-                items:{}
-            },
-            where: {
-                warehouses: {
-                    user_assigned_to_warehouse: {
-                        some: {
-                            user_user_id: user_id
-                        }
-                    }
-                }
-            }
-        })
-    }
-
     async assignItemToWarehouse(item_id: number, warehouse_name: string){
         const warehouse = await this.db.warehouses.findFirst({
             select: {
