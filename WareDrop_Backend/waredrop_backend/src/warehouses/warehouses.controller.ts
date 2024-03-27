@@ -30,4 +30,9 @@ export class WarehousesController {
     async getWarehouses(){
         return this.service.getWarehouses();
     }
+
+    @Post('/ItemsInWarehouse')
+    async getItemsInWarehouse(@Body() warehouse_id: number){
+        return this.service.getItemsInWarehouse(warehouse_id);
+    }
 }

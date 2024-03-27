@@ -38,6 +38,17 @@ export class WarehousesService {
         return list
     }
 
+    async getItemsInWarehouse(warehouse_id: number){
+        return this.db.transactions.findMany({
+            select:{
+                items: true,
+            },
+            where: {
+                warehouse_warehouse_id: warehouse_id,
+            }
+        })
+    }
+
     async addWarehouseToUser(user_id: number, warehouse_name: string){
         const result = await this.db.warehouses.findFirst({
             select: {

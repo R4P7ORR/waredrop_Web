@@ -39,6 +39,28 @@ export class ItemsService {
         })
     }
 
+    async assignItemToWarehouse(item_id: number, warehouse_name: string){
+        const warehouse = await this.db.warehouses.findFirst({
+            select: {
+                warehouse_id: true,
+                location: true,
+            },
+            where: {
+                warehouse_name: warehouse_name,
+            }
+        })
+        return this.db.transactions.create({
+            data:{
+                trans_post_date: Date.now().toString(),
+                trans_arrived_date: Date.now().toString(),
+                warehouse_warehouse_id: warehouse.warehouse_id,
+                item_item_id: item_id,
+                trans_origin: warehouse.location,
+                trans_target: warehouse.location,
+            }
+        })
+    }
+
     async deleteItem(item_id: number){
         return this.db.items.delete({
             where: {

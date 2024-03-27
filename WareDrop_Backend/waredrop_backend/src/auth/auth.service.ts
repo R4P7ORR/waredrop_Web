@@ -31,7 +31,7 @@ export class AuthService {
                 sub: {
                     id: user.user_id,
                     email: user.user_email,
-                    userPermissions: await this.permissionService.getPermissions(user.user_id)
+                    userPermissions: await this.permissionService.getPermissionsByUser(user.user_id)
                 },
             }
             return {
