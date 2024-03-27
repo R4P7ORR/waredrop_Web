@@ -5,7 +5,8 @@ import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import JwtDecoder from "../auth/jwt.decoder";
-import {PermissionGuard} from "../auth/permission.decoarator";
+import {PermissionGuard} from "../auth/guards/permission.guard";
+import {RequiredPermission} from "../auth/guards/permission.decorator";
 
 export interface UpdateInput {
     data: {
@@ -40,8 +41,8 @@ export class UsersController {
     }
 
     @Get('/listAll')
-    @UseGuards(JwtAuthGuard)
-    @PermissionGuard({permission_name: 'All'})
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission({permission_name: 'All'})
     async getAllUsers(){
         return this.users.listUsers();
     }

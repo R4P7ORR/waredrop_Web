@@ -59,3 +59,7 @@ Content-Type: application/json
   "warehouse_warehouse_id": 1,
   "item_item_id": 1
 }
+
+###
+GET http://localhost:3001/user/listAll
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5hc2QiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25fbmFtZSI6IkFsbCJ9XX0sImlhdCI6MTcxMTUzNzI3MywiZXhwIjoxNzE0MTI5MjczfQ.5OcSsWIap-YmbTUDhil9jQbH9naN_9fElgMqA-hBpEw
