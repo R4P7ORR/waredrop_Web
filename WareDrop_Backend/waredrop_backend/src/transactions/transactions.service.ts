@@ -20,7 +20,7 @@ export interface WorkerUpdateInput {
 
 @Injectable()
 export class TransactionsService {
-    constructor(private readonly db: PrismaService) {}
+    constructor(private readonly db: PrismaService) { }
 
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({

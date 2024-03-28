@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
+import {UserDto} from "../users/users.service";
 
 export interface Permission{
     permission_id?: number,
     permission_name: string
+}
+
+export interface AssignPermissionDto {
+    permissionId: number,
+    roleId: number
 }
 
 @Injectable()
@@ -16,16 +22,11 @@ export class PermissionsService {
         })
     }
 
-    async givePermission(permissionId: number, roleId: number){
-        return this.db.role_has_permission.create({
-            data: {
-                permission_permission_id: permissionId,
-                role_role_id: roleId,
-            }
-        });
+    async getAllPermissions(){
+        return this.db.permissions.findMany();
     }
 
-    async getPermissionsByUser(userId: number){
+    async getPermissionsByUser(userDto: UserDto){
         const permissions: Permission[] = [];
         const result = await this.db.roles.findMany({
             select: {
@@ -43,7 +44,7 @@ export class PermissionsService {
             where:{
                 user_has_role: {
                     some: {
-                        user_user_id: userId
+                        user_user_id: userDto.userId
                     }
                 }
             }
@@ -55,5 +56,13 @@ export class PermissionsService {
         }
 
         return permissions;
+    }
+    async givePermission(assignInput: AssignPermissionDto){
+        return this.db.role_has_permission.create({
+            data: {
+                permission_permission_id: assignInput.permissionId,
+                role_role_id: assignInput.roleId,
+            }
+        });
     }
 }

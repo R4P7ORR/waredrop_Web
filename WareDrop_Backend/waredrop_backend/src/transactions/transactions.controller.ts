@@ -9,12 +9,12 @@ import {RequiredPermission} from "../auth/guards/permission.decorator";
 @Controller('transactions')
 export class TransactionsController {
     constructor(private readonly service: TransactionsService,
-                private readonly jwt: JwtDecoder
+                private readonly jwt: JwtDecoder,
     ) { }
 
     @Post('/new')
-    async addTrans(@Body() newTrans: Transaction){
-        return await this.service.createTrans(newTrans);
+    addTrans(@Body() newTrans: Transaction){
+        return this.service.createTrans(newTrans);
     }
 
     @Get()
@@ -31,25 +31,25 @@ export class TransactionsController {
 
     @Get('/user')
     @UseGuards(JwtAuthGuard)
-    async getAllTransByUser(@Req() req : Request){
+    getAllTransByUser(@Req() req : Request){
         const user = this.jwt.decodeToken(req);
         return this.service.getAllTransByUser(user.sub.id);
     }
 
     @Get('/worker')
     @UseGuards(JwtAuthGuard)
-    async getAllTransByWorker(@Req() req : Request){
+    getAllTransByWorker(@Req() req : Request){
         const user = this.jwt.decodeToken(req);
         return this.service.getAllTransByWorker(user.sub.id);
     }
 
     @Patch('/update')
-    async updateTrans(@Body() updateInput: WorkerUpdateInput){
+    updateTrans(@Body() updateInput: WorkerUpdateInput){
         return this.service.updateTrans(updateInput)
     }
 
     @Patch('/assignWorker')
-    async addWorker(@Body() addInput: WorkerUpdateInput){
+    addWorker(@Body() addInput: WorkerUpdateInput){
         return this.service.addWorkerToTrans(addInput);
     }
 }

@@ -1,28 +1,33 @@
-import {Body, Controller, Get, Post, Req, UseGuards} from '@nestjs/common';
-import {Permission, PermissionsService} from "./permissions.service";
+import {Body, Controller, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {AssignPermissionDto, Permission, PermissionsService} from "./permissions.service";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
-import {Request} from "express";
-import JwtDecoder from "../auth/jwt.decoder";
+import {PermissionGuard} from "../auth/guards/permission.guard";
+import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {UserDto} from "../users/users.service";
 
 @Controller('permissions')
+@UseGuards(JwtAuthGuard, PermissionGuard)
+@RequiredPermission({permission_name: 'All'})
 export class PermissionsController {
-    constructor(private readonly service: PermissionsService, private readonly jwt: JwtDecoder, ) {
-    }
+    constructor(private readonly service: PermissionsService,) { }
 
-    @Post('newPermission')
-    async createNewPermission(@Body() newPermission: Permission){
+    @Post('/new')
+    createNewPermission(@Body() newPermission: Permission){
         return this.service .createPermission(newPermission);
     }
 
-    @Get('/user')
-    @UseGuards(JwtAuthGuard)
-    async getPermissionsByUser(@Req() req : Request){
-        const user = this.jwt.decodeToken(req);
-        return this.service.getPermissionsByUser(user.sub.id)
+    @Get('/user/:id')
+    getPermissionsByUser(@Param() userId: UserDto){
+        return this.service.getPermissionsByUser(userId);
     }
 
-    @Post('/giveToRole')
-    async givePermission(@Body() {role_id, permission_id}:{role_id: number, permission_id: number}){
-        return this.service.givePermission(role_id, permission_id);
+    @Get('/list')
+    listPermissions(){
+        return this.service.getAllPermissions();
+    }
+
+    @Patch('/give')
+    givePermission(@Body() assignInput: AssignPermissionDto){
+        return this.service.givePermission(assignInput);
     }
 }
