@@ -5,6 +5,10 @@ export interface Warehouse {
     warehouse_name: string,
     location: string,
 }
+export interface AddWarehouseDto {
+    user_id: number,
+    warehouse_name: string
+}
 
 @Injectable()
 export class WarehousesService {
@@ -49,18 +53,18 @@ export class WarehousesService {
         })
     }
 
-    async addWarehouseToUser(user_id: number, warehouse_name: string){
+    async addWarehouseToUser(addInput){
         const result = await this.db.warehouses.findFirst({
             select: {
                 warehouse_id: true,
             },
             where: {
-                warehouse_name: warehouse_name,
+                warehouse_name: addInput.warehouse_name,
             }
         })
         return this.db.user_assigned_to_warehouse.create({
             data: {
-                user_user_id: user_id,
+                user_user_id: addInput.user_id,
                 warehouse_warehouse_id: result.warehouse_id
             }
         })

@@ -44,7 +44,7 @@ export class TransactionsController {
     }
 
     @Post('/update')
-    async updateTrans(@Body() input: WorkerUpdateInput){
-        return this.service.updateTrans(input)
+    async updateTrans(@Body() updateInput: WorkerUpdateInput){
+        return this.service.updateTrans(updateInput)
     }
 }

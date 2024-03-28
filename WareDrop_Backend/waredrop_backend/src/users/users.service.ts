@@ -1,7 +1,6 @@
 import {Injectable,} from "@nestjs/common";
 import {PrismaService} from "../database/prisma.service";
 import {Prisma} from "@prisma/client"
-import {UpdateInput} from "./users.controller";
 import * as bcrypt from 'bcrypt'
 
 
@@ -9,6 +8,15 @@ export interface CreateUserDto {
     name: string;
     email: string;
     password: string;
+}
+
+export interface UpdateInput {
+    data: {
+        user_name?: string,
+        user_password?: string,
+        user_email?: string,
+    }
+    where: number;
 }
 
 export interface UserDto{

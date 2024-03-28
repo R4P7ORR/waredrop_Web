@@ -16,16 +16,16 @@ export class PermissionsService {
         })
     }
 
-    async givePermission(permission_id: number, role_id: number){
+    async givePermission(permissionId: number, roleId: number){
         return this.db.role_has_permission.create({
             data: {
-                permission_permission_id: permission_id,
-                role_role_id: role_id,
+                permission_permission_id: permissionId,
+                role_role_id: roleId,
             }
         });
     }
 
-    async getPermissionsByUser(user_id: number){
+    async getPermissionsByUser(userId: number){
         const permissions: Permission[] = [];
         const result = await this.db.roles.findMany({
             select: {
@@ -43,7 +43,7 @@ export class PermissionsService {
             where:{
                 user_has_role: {
                     some: {
-                        user_user_id: user_id
+                        user_user_id: userId
                     }
                 }
             }

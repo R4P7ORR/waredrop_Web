@@ -43,13 +43,13 @@ export class TransactionsService {
             }
         })
     }
-    async getAllTransByUser(user_id: number){
+    async getAllTransByUser(userId: number){
         return this.db.transactions.findMany({
             where: {
                 warehouses: {
                     user_assigned_to_warehouse: {
                         some: {
-                            user_user_id: user_id
+                            user_user_id: userId
                         }
                     }
                 }
@@ -57,10 +57,10 @@ export class TransactionsService {
         });
     }
 
-    async getAllTransByWorker(worker_id: number){
+    async getAllTransByWorker(workerId: number){
         return this.db.transactions.findMany({
             where:{
-                worker_id: worker_id
+                worker_id: workerId
             }
         });
     }

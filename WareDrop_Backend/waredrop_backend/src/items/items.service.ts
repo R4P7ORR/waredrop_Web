@@ -22,14 +22,14 @@ export class ItemsService {
         return this.db.items.findMany()
     }
 
-    async assignItemToWarehouse(item_id: number, warehouse_name: string){
+    async assignItemToWarehouse(itemId: number, warehouseName: string){
         const warehouse = await this.db.warehouses.findFirst({
             select: {
                 warehouse_id: true,
                 location: true,
             },
             where: {
-                warehouse_name: warehouse_name,
+                warehouse_name: warehouseName,
             }
         })
         return this.db.transactions.create({
@@ -37,17 +37,17 @@ export class ItemsService {
                 trans_post_date: Date.now().toString(),
                 trans_arrived_date: Date.now().toString(),
                 warehouse_warehouse_id: warehouse.warehouse_id,
-                item_item_id: item_id,
+                item_item_id: itemId,
                 trans_origin: warehouse.location,
                 trans_target: warehouse.location,
             }
         })
     }
 
-    async deleteItem(item_id: number){
+    async deleteItem(itemId: number){
         return this.db.items.delete({
             where: {
-                item_id: item_id
+                item_id: itemId
             }
         })
     }
