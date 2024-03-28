@@ -10,6 +10,8 @@ function Control(){
     const [loginToken, setLoginToken] = useState("none");
     const [currentPage, setCurrentPage] = useState("control");
     const [overlayType, setOverlayType] = useState("none");
+    const [selectedId, setSelectedId] = useState(0);
+
 
     useEffect(() => {
         const token = localStorage.getItem("loginToken");
@@ -25,24 +27,26 @@ function Control(){
         <div>
             {overlayType!== "none"&&
                 <div className="overlay-fullscreen">
-                    <Overlay getType={overlayType} setType={setOverlayType}/>
+                    <Overlay id={selectedId} getType={overlayType} setType={setOverlayType}/>
                 </div>
             }
             <>
                 <Navbar setCurrentPage={setCurrentPage}/>
             </>
-            {currentPage === "control"?
-                <WarehouseDisplay setType={setOverlayType} loginToken={loginToken}/> : null
-            }
-            {currentPage === "transactions"?
-                <>transactions</> : null
-            }
-            {currentPage === "users"?
-                <Users/> : null
-            }
-            {currentPage === "contact"?
-                <>contact</> : null
-            }
+            <div className="main-container">
+                {currentPage === "control"?
+                    <WarehouseDisplay setType={setOverlayType} loginToken={loginToken}/> : null
+                }
+                {currentPage === "transactions"?
+                    <>transactions</> : null
+                }
+                {currentPage === "users"?
+                    <Users/> : null
+                }
+                {currentPage === "contact"?
+                    <>contact</> : null
+                }
+            </div>
         </div>
     )
 }

@@ -1,4 +1,4 @@
 export default class Item {
-    constructor(public id: number, public name: string, public category: string ) {
+    constructor(public warehouseId: number, public itemName: string, public itemQuantity: string ) {
     }
 }

@@ -1,6 +1,7 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import WarehouseListItem from "./WarehouseListItem";
 import Item from "./Item";
+import axios from "axios";
 
 interface WarehouseListProps {
     warehouse_id: number;
@@ -9,11 +10,20 @@ interface WarehouseListProps {
     setType: (type: string) => void;
 }
 
-function WarehouseList({setType}: WarehouseListProps, props: WarehouseListProps){
+function WarehouseList({setType, warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
-    const [selectedItems, setSelectedItems] = useState<Item[]>([])
+    const [selectedItems, setSelectedItems] = useState<Item[]>([]);
+
+    useEffect(() => {
+        if (warehouse_id !== null){
+            axios.get('http://localhost:3001/warehouses/items/' + warehouse_id, {
+            }).then(res => {
+                setItemList(res.data);
+            });
+        }}, [warehouse_id]);
+
     function handleCheckBox(item: Item){
-        if (selectedItems.filter(selected => selected.name === item.name).length === 0){
+        if (selectedItems.filter(selected => selected.itemName === item.itemName).length === 0){
             selectedItems.push(item);
         }else {
             setSelectedItems(selectedItems.filter(items => items !== item));
@@ -21,16 +31,12 @@ function WarehouseList({setType}: WarehouseListProps, props: WarehouseListProps)
         console.log(selectedItems)
     }
 
-    function addItem(){
-        setType("itemForm");
-    }
-
     return (
         <div className="warehouse-container">
             <div className="container-header">
-                <h1>{props.warehouse_name}</h1>
-                <h3>id: {props.warehouse_id}</h3>
-                <button onClick={addItem}>Add item</button>
+                <h1>{warehouse_name}</h1>
+                <h3>id: {warehouse_id}</h3>
+                <button onClick={() => setType("itemForm")}>Add item</button>
             </div>
             <div className="container-body">
                 {itemList.length === 0?
@@ -38,7 +44,7 @@ function WarehouseList({setType}: WarehouseListProps, props: WarehouseListProps)
                     :
                     <>
                     {itemList.map((item) => (
-                        <WarehouseListItem key={item.id} itemName={item.name} handleChecked={() =>handleCheckBox(item)}/>
+                        <WarehouseListItem key={item.itemName} itemName={item.itemName} handleChecked={() => handleCheckBox(item)}/>
                     ))}
                     </>
                 }

@@ -30,3 +30,16 @@ body{
     left:0;
     background: rgba(0,0,0,0.5);
 }
+.overlay-fullscreen-container{
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: rgba(0,0,0,0.5);
+    padding: 1rem;
+    border: 2px var(--main-color) solid;
+    border-radius: 0.5rem;
+}
