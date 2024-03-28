@@ -14,7 +14,6 @@ export class UsersController {
                 private jwt: JwtDecoder,
     ) {}
 
-
     @Get('/permissions')
     @UseGuards(JwtAuthGuard)
     userPermissions(@Req() req: Request){
@@ -22,14 +21,14 @@ export class UsersController {
         return this.permissions.getPermissionsByUser(decodedJwt.sub.id);
     }
 
-    @Get('/getUserName')
+    @Get('/userName')
     @UseGuards(JwtAuthGuard)
     getUserName(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
-        return this.service.getUserName({ userId: decodedJwt.sub.id});
+        return this.service.getUserName({ userId: decodedJwt.sub.id, userEmail: decodedJwt.sub.email});
     }
 
-    @Get('/listAll')
+    @Get('/list')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission({permission_name: 'All'})
     getAllUsers(){
