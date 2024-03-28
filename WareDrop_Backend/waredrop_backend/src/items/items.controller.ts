@@ -1,5 +1,8 @@
-import {Body, Controller, Delete, Get, Post} from '@nestjs/common';
-import {CreateItemDto, ItemsService} from "./items.service";
+import {Body, Controller, Delete, Get, Post, UseGuards} from '@nestjs/common';
+import {CreateItemDto, ItemDto, ItemsService} from "./items.service";
+import {JwtAuthGuard} from "../auth/guards/jwt.guard";
+import {PermissionGuard} from "../auth/guards/permission.guard";
+import {RequiredPermission} from "../auth/guards/permission.decorator";
 
 @Controller('items')
 export class ItemsController {
@@ -12,12 +15,14 @@ export class ItemsController {
     }
 
     @Get()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission({permission_name: 'All'})
     async getItems(){
         return this.service.getItems();
     }
 
     @Delete('/delete')
-    async delete(@Body() itemId: number){
-        return this.service.deleteItem(itemId);
+    async delete(@Body() deleteItem: ItemDto){
+        return this.service.deleteItem(deleteItem);
     }
 }

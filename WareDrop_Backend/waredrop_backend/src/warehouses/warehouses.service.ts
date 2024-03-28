@@ -52,7 +52,13 @@ export class WarehousesService {
     async getItemsInWarehouse(warehouseDto: WarehouseDto){
         return this.db.transactions.findMany({
             select:{
-                items: true,
+                items: {
+                    select: {
+                        item_id: true,
+                        item_name: true,
+                        item_quantity: true,
+                    }
+                },
             },
             where: {
                 warehouse_warehouse_id: warehouseDto.warehouseId,
