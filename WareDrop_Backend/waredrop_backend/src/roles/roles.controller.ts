@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Post} from '@nestjs/common';
 import {AddPermissionInput, AddRoleInput, Role, RolesService} from "./roles.service";
 import {UserDto} from "../users/users.service";
 
@@ -32,5 +32,10 @@ export class RolesController {
     @Get('/list')
     getRoles(){
         return this.service.listRoles();
+    }
+
+    @Delete('/delete')
+    deleteRole(){
+
     }
 }

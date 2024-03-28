@@ -1,25 +1,19 @@
 import {Body, Controller, Delete, Get, Post} from '@nestjs/common';
-import {Item, ItemsService} from "./items.service";
-import JwtDecoder from "../auth/jwt.decoder";
+import {CreateItemDto, ItemsService} from "./items.service";
 
 @Controller('items')
 export class ItemsController {
-    constructor( private readonly service: ItemsService, private readonly jwt: JwtDecoder) {
+    constructor( private readonly service: ItemsService,) {
     }
 
-    @Post('/newItem')
-    async addItem(@Body() newItem: Item){
+    @Post('/new')
+    async addItem(@Body() newItem: CreateItemDto){
         return this.service.addItem(newItem);
     }
 
     @Get()
     async getItems(){
         return this.service.getItems();
-    }
-
-    @Post('/assignToWarehouse')
-    async assignItemToWarehouse(@Body() {user_id, warehouse_name}:{user_id: number, warehouse_name: string}){
-        return this.service.assignItemToWarehouse(user_id, warehouse_name)
     }
 
     @Delete('/delete')

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 
-export interface Item{
-    item_id?: number,
-    item_name: string,
-    item_quantity: number,
+export interface CreateItemDto{
+    itemName: string,
+    itemQuantity: number,
+    warehouseId: number,
 }
 
 @Injectable()
@@ -12,24 +12,36 @@ export class ItemsService {
     constructor(private readonly db: PrismaService) {
     }
 
-    async addItem(newItem: Item){
-        return this.db.items.create({
-            data: newItem
-        })
+    async addItem(newItem: CreateItemDto){
+        try {
+            const createdItem = await this.db.items.create({
+                data: {
+                    item_name: newItem.itemName,
+                    item_quantity: newItem.itemQuantity
+                }
+            })
+
+            await this.assignItemToWarehouse(createdItem.item_id, newItem.warehouseId);
+
+            return {Massage: 'Added a new item to the warehouse'}
+
+        } catch (e) {
+            return {errorMassage: 'Something went wrong'}
+        }
     }
 
     async getItems(){
         return this.db.items.findMany()
     }
 
-    async assignItemToWarehouse(itemId: number, warehouseName: string){
+    async assignItemToWarehouse(itemId: number, warehouseId: number){
         const warehouse = await this.db.warehouses.findFirst({
             select: {
                 warehouse_id: true,
                 location: true,
             },
             where: {
-                warehouse_name: warehouseName,
+                warehouse_id: warehouseId,
             }
         })
         return this.db.transactions.create({

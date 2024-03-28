@@ -62,7 +62,7 @@ export class UsersService {
     async deleteUser(deleteInput: UserDto){
         try {
 
-            //If the user got any assigned roles, those will be deleted as well
+            //If the user got any assigned roles, the relation will be deleted as well
             const hasRole = await this.db.user_has_role.findFirst({
                 where: {
                     user_user_id: deleteInput.userId
@@ -77,7 +77,7 @@ export class UsersService {
                 })
             }
 
-            //If the user got any warehouses, those will be deleted as well
+            //If the user got any warehouses, the relation will be deleted as well
             const assignedToWarehouse = await this.db.user_assigned_to_warehouse.findFirst({
                 where: {
                     user_user_id: deleteInput.userId
