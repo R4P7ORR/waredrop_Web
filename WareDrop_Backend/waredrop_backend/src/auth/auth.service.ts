@@ -30,7 +30,8 @@ export class AuthService {
                 sub: {
                     id: user.user_id,
                     email: user.user_email,
-                    userPermissions: await this.permissionService.getPermissionsByUser(user.user_id)
+                    userPermissions: await this.permissionService
+                        .getPermissionsByUser({userId: user.user_id, userEmail: user.user_email}),
                 },
             }
             return {
@@ -54,9 +55,9 @@ export class AuthService {
         }
     }
 
-    async isAdmin(user_permissions: string[]){
+    async isAdmin(user_permissions: Permission[]){
         for (const permission of user_permissions) {
-            if (permission === 'All'){
+            if (permission.permission_name === 'All'){
                 return true;
             }
         }

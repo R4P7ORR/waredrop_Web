@@ -7,6 +7,10 @@ export interface CreateItemDto{
     warehouseId: number,
 }
 
+export interface ItemDto {
+    itemId: number,
+}
+
 @Injectable()
 export class ItemsService {
     constructor(private readonly db: PrismaService) {
@@ -23,15 +27,15 @@ export class ItemsService {
 
             await this.assignItemToWarehouse(createdItem.item_id, newItem.warehouseId);
 
-            return {Massage: 'Added a new item to the warehouse'}
+            return {Massage: 'Added a new item to the warehouse'};
 
         } catch (e) {
-            return {errorMassage: 'Something went wrong'}
+            return {errorMassage: 'Something went wrong'};
         }
     }
 
     async getItems(){
-        return this.db.items.findMany()
+        return this.db.items.findMany();
     }
 
     async assignItemToWarehouse(itemId: number, warehouseId: number){
@@ -52,14 +56,6 @@ export class ItemsService {
                 item_item_id: itemId,
                 trans_origin: warehouse.location,
                 trans_target: warehouse.location,
-            }
-        })
-    }
-
-    async deleteItem(itemId: number){
-        return this.db.items.delete({
-            where: {
-                item_id: itemId
             }
         })
     }

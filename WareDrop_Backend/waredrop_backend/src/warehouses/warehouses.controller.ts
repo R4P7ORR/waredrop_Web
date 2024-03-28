@@ -31,9 +31,11 @@ export class WarehousesController {
     }
 
     @Get('/items/:id')
-    async getItemsInWarehouse(@Param('id') warehouseId: WarehouseDto){
+    async getItemsInWarehouse(@Param('id') warehouseString: string){
+        const warehouseId: WarehouseDto = {warehouseId: parseInt(warehouseString)};
         return this.service.getItemsInWarehouse(warehouseId);
     }
+
     @Patch('/assignUser')
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission({permission_name: 'All'})

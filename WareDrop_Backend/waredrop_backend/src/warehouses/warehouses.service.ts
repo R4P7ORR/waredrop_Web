@@ -39,10 +39,6 @@ export class WarehousesService {
 
     async getWarehousesByUser(user: UserDto){
         return this.db.warehouses.findMany({
-            select: {
-                warehouse_name: true,
-                location: true,
-            },
             where: {
                 user_assigned_to_warehouse: {
                     some: {
@@ -56,7 +52,13 @@ export class WarehousesService {
     async getItemsInWarehouse(warehouseDto: WarehouseDto){
         return this.db.transactions.findMany({
             select:{
-                items: true,
+                items: {
+                    select: {
+                        item_id: true,
+                        item_name: true,
+                        item_quantity: true,
+                    }
+                },
             },
             where: {
                 warehouse_warehouse_id: warehouseDto.warehouseId,

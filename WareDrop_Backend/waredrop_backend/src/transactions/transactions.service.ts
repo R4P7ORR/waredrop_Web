@@ -20,7 +20,7 @@ export interface WorkerUpdateInput {
 
 @Injectable()
 export class TransactionsService {
-    constructor(private readonly db: PrismaService) {}
+    constructor(private readonly db: PrismaService) { }
 
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
@@ -60,7 +60,7 @@ export class TransactionsService {
 
     async getAllTransByWorker(user: UserDto){
         return this.db.transactions.findMany({
-            where:{
+            where: {
                 worker_email: user.userEmail,
             }
         });
