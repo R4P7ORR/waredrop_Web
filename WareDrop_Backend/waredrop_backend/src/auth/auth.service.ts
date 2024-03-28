@@ -54,9 +54,9 @@ export class AuthService {
         }
     }
 
-    async isAdmin(user_permissions: string[]){
+    async isAdmin(user_permissions: Permission[]){
         for (const permission of user_permissions) {
-            if (permission === 'All'){
+            if (permission.permission_name === 'All'){
                 return true;
             }
         }

@@ -1,5 +1,5 @@
 import {Body, Controller, Delete, Get, Post} from '@nestjs/common';
-import {AddPermissionInput, AddRoleInput, Role, RolesService} from "./roles.service";
+import {AddPermissionInput, AddRoleInput, Role, RoleDto, RolesService} from "./roles.service";
 import {UserDto} from "../users/users.service";
 
 
@@ -9,17 +9,17 @@ export class RolesController {
     constructor(private service: RolesService) {
     }
 
-    @Post('/createRole')
+    @Post('/new')
     createRole(@Body() newRole: Role){
         return this.service.createRole(newRole);
     }
 
-    @Post('/userRole')
+    @Post('/user')
     getRole(@Body() userId: UserDto){
         return this.service.getUserRoles(userId);
     }
 
-    @Post('/addRoleToUser')
+    @Post('/addToUser')
     addRole(@Body() addRoleInput: AddRoleInput){
         return this.service.addRoleToUser(addRoleInput);
     }
@@ -35,7 +35,7 @@ export class RolesController {
     }
 
     @Delete('/delete')
-    deleteRole(){
-
+    deleteRole(@Body() deleteRole: RoleDto){
+        return this.service.deleteRole(deleteRole)
     }
 }

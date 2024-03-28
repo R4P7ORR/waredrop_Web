@@ -39,10 +39,6 @@ export class WarehousesService {
 
     async getWarehousesByUser(user: UserDto){
         return this.db.warehouses.findMany({
-            select: {
-                warehouse_name: true,
-                location: true,
-            },
             where: {
                 user_assigned_to_warehouse: {
                     some: {

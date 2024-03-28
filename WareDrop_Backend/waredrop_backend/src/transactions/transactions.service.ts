@@ -60,7 +60,7 @@ export class TransactionsService {
 
     async getAllTransByWorker(user: UserDto){
         return this.db.transactions.findMany({
-            where:{
+            where: {
                 worker_email: user.userEmail,
             }
         });
