@@ -1,6 +1,9 @@
 .hamburger-menu{
     background: var(--dark-gray);
     height: 2.5rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 #menu-toggle {
     z-index: 50;
@@ -66,7 +69,7 @@
     list-style: none;
     background:  no-repeat;
     background-size: contain;
-    transition: .7s ease-out;
+    transition: .8s ease-out;
 }
 .menu-item {
     margin-bottom: .5rem;
