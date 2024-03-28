@@ -1,8 +1,7 @@
-import {Injectable, NotFoundException,} from '@nestjs/common';
+import {Injectable, } from '@nestjs/common';
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt'
 import {CreateUserDto, UsersService} from "../users/users.service";
-import {RolesService} from "../roles/roles.service";
 import {Permission, PermissionsService} from "../permissions/permissions.service";
 
 export class AuthPayloadDto{
@@ -43,7 +42,7 @@ export class AuthService {
     }
 
     async register(newUser: CreateUserDto){
-        const user = await this.usersService.findUser(newUser.email)
+        const user = await this.usersService.findUser(newUser.userEmail)
         if(user){
             return {errorMessage: 'User already exist'}
         }

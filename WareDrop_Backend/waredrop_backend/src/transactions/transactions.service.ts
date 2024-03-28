@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
+import {UserDto} from "../users/users.service";
 
 export interface Transaction {
     trans_id?: number,
@@ -43,13 +44,13 @@ export class TransactionsService {
             }
         })
     }
-    async getAllTransByUser(userId: number){
+    async getAllTransByUser(user: UserDto){
         return this.db.transactions.findMany({
             where: {
                 warehouses: {
                     user_assigned_to_warehouse: {
                         some: {
-                            user_user_id: userId
+                            user_user_id: user.userId
                         }
                     }
                 }
@@ -57,10 +58,10 @@ export class TransactionsService {
         });
     }
 
-    async getAllTransByWorker(workerEmail: string){
+    async getAllTransByWorker(user: UserDto){
         return this.db.transactions.findMany({
             where:{
-                worker_email: workerEmail
+                worker_email: user.userEmail,
             }
         });
     }

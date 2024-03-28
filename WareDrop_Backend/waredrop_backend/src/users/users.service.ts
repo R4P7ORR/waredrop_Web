@@ -5,22 +5,21 @@ import * as bcrypt from 'bcrypt'
 
 
 export interface CreateUserDto {
-    name: string;
-    email: string;
-    password: string;
+    userName: string;
+    userEmail: string;
+    userPassword: string;
 }
 
 export interface UpdateInput {
-    data: {
-        user_name?: string,
-        user_password?: string,
-        user_email?: string,
-    }
-    where: number;
+    userId: number
+    userName?: string,
+    userPassword?: string,
+    userEmail?: string,
 }
 
 export interface UserDto{
     userId: number,
+    userEmail: string,
 }
 
 @Injectable()
@@ -29,12 +28,12 @@ export class UsersService {
 
     async createUser(createInput: CreateUserDto){
         const salt = await bcrypt.genSalt();
-        createInput.password = await bcrypt.hash(createInput.password, salt);
+        createInput.userPassword = await bcrypt.hash(createInput.userPassword, salt);
         return this.db.users.create({
                 data: {
-                    user_name: createInput.name,
-                    user_email: createInput.email,
-                    user_password: createInput.password,
+                    user_name: createInput.userName,
+                    user_email: createInput.userEmail,
+                    user_password: createInput.userPassword,
                 }
             });
     }
@@ -53,9 +52,9 @@ export class UsersService {
 
     async updateUser(updateInput: UpdateInput){
         return this.db.users.update({
-            data: updateInput.data,
+            data: updateInput,
             where: {
-                user_id: updateInput.where
+                user_id: updateInput.userId
             }
         })
     }

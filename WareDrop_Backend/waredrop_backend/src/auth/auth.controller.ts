@@ -29,8 +29,8 @@ export class AuthController {
 
     @Get('isAdmin')
     @UseGuards(JwtAuthGuard)
-    async isAdmin(@Req() req : Request){
-        const user_token = await this.jwt.decodeToken(req);
+    isAdmin(@Req() req : Request){
+        const user_token = this.jwt.decodeToken(req);
         return this.service.isAdmin(user_token.sub.userPermissions);
     }
 }

@@ -1,5 +1,4 @@
-import {Body, Controller, Delete, Get, Post, Req, UseGuards,} from "@nestjs/common";
-import {Prisma} from "@prisma/client";
+import {Body, Controller, Delete, Get, Patch, Req, UseGuards,} from "@nestjs/common";
 import {UpdateInput, UserDto, UsersService} from "./users.service";
 import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
@@ -10,7 +9,7 @@ import {RequiredPermission} from "../auth/guards/permission.decorator";
 
 @Controller('/user')
 export class UsersController {
-    constructor(private users: UsersService,
+    constructor(private service: UsersService,
                 private permissions: PermissionsService,
                 private jwt: JwtDecoder,
     ) {}
@@ -18,33 +17,32 @@ export class UsersController {
 
     @Get('/permissions')
     @UseGuards(JwtAuthGuard)
-    async userPermissions(@Req() req: Request){
+    userPermissions(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
         return this.permissions.getPermissionsByUser(decodedJwt.sub.id);
     }
 
     @Get('/getUserName')
     @UseGuards(JwtAuthGuard)
-    async getUserName(@Req() req: Request){
+    getUserName(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
-        return this.users.getUserName({ userId: decodedJwt.sub.id});
+        return this.service.getUserName({ userId: decodedJwt.sub.id});
     }
 
     @Get('/listAll')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission({permission_name: 'All'})
-
-    async getAllUsers(){
-        return this.users.listUsers();
+    getAllUsers(){
+        return this.service.listUsers();
     }
 
-    @Post('/update')
-    async updateUser(@Body() updateInput: UpdateInput){
-        return this.users.updateUser(updateInput);
+    @Patch('/update')
+    updateUser(@Body() updateInput: UpdateInput){
+        return this.service.updateUser(updateInput);
     }
 
     @Delete('/delete')
-    async deleteUser(@Body() deleteUser: UserDto){
-        return this.users.deleteUser(deleteUser);
+    deleteUser(@Body() deleteUser: UserDto){
+        return this.service.deleteUser(deleteUser);
     }
 }
