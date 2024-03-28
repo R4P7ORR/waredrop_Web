@@ -12,7 +12,7 @@ export class WarehousesController {
                 private readonly service: WarehousesService,
     ) { }
 
-    @Post('/addNew')
+    @Post('/new')
     addNew(@Body() createInput: WarehouseCreateInput){
         return this.service.addWarehouse(createInput);
     }
@@ -30,11 +30,11 @@ export class WarehousesController {
         return this.service.getWarehousesByUser({userId: decodedJwt.sub.id, userEmail: decodedJwt.sub.email});
     }
 
-    @Get('/itemsInWarehouse/:id')
+    @Get('/items/:id')
     async getItemsInWarehouse(@Param('id') warehouseId: WarehouseDto){
         return this.service.getItemsInWarehouse(warehouseId);
     }
-    @Patch('/addToUser')
+    @Patch('/assignUser')
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission({permission_name: 'All'})
     async addToUser(@Body() addInput: AddWarehouseDto){
