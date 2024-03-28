@@ -5,22 +5,21 @@ import * as bcrypt from 'bcrypt'
 
 
 export interface CreateUserDto {
-    name: string;
-    email: string;
-    password: string;
+    userName: string;
+    userEmail: string;
+    userPassword: string;
 }
 
 export interface UpdateInput {
-    data: {
-        user_name?: string,
-        user_password?: string,
-        user_email?: string,
-    }
-    where: number;
+    userId: number
+    userName?: string,
+    userPassword?: string,
+    userEmail?: string,
 }
 
 export interface UserDto{
     userId: number,
+    userEmail: string,
 }
 
 @Injectable()
@@ -29,12 +28,12 @@ export class UsersService {
 
     async createUser(createInput: CreateUserDto){
         const salt = await bcrypt.genSalt();
-        createInput.password = await bcrypt.hash(createInput.password, salt);
+        createInput.userPassword = await bcrypt.hash(createInput.userPassword, salt);
         return this.db.users.create({
                 data: {
-                    user_name: createInput.name,
-                    user_email: createInput.email,
-                    user_password: createInput.password,
+                    user_name: createInput.userName,
+                    user_email: createInput.userEmail,
+                    user_password: createInput.userPassword,
                 }
             });
     }
@@ -53,26 +52,71 @@ export class UsersService {
 
     async updateUser(updateInput: UpdateInput){
         return this.db.users.update({
-            data: updateInput.data,
+            data: updateInput,
             where: {
-                user_id: updateInput.where
+                user_id: updateInput.userId
             }
         })
     }
 
-    async deleteUser(deleteInput: Prisma.usersWhereUniqueInput){
-        return this.db.users.delete({
-            where: deleteInput
-        });
+    async deleteUser(deleteInput: UserDto){
+        try {
+
+            //If the user got any assigned roles, the relation will be deleted as well
+            const hasRole = await this.db.user_has_role.findFirst({
+                where: {
+                    user_user_id: deleteInput.userId
+                }
+            })
+
+            if (hasRole){
+                await this.db.user_has_role.deleteMany({
+                    where: {
+                        user_user_id: deleteInput.userId
+                    }
+                })
+            }
+
+            //If the user got any warehouses, the relation will be deleted as well
+            const assignedToWarehouse = await this.db.user_assigned_to_warehouse.findFirst({
+                where: {
+                    user_user_id: deleteInput.userId
+                }
+            })
+
+            if(assignedToWarehouse){
+                await this.db.user_assigned_to_warehouse.deleteMany({
+                    where: {
+                        user_user_id: deleteInput.userId
+                    }
+                })
+            }
+
+            await this.db.users.delete({
+                where: {
+                    user_id: deleteInput.userId,
+                }
+            });
+
+            return {Massage: "User deleted"};
+        }
+        catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'){
+                return {errorMassage: "User does not exist"};
+            }
+            else {
+                throw e
+            }
+        }
     }
 
-    async getUserName(user_id: number){
+    async getUserName(user: UserDto){
         return this.db.users.findFirst({
             select: {
                 user_name: true,
             },
             where: {
-                user_id: user_id,
+                user_id: user.userId,
             }
         })
     }

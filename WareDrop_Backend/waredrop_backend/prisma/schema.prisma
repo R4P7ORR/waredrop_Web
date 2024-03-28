@@ -44,7 +44,7 @@ model transactions {
   trans_target           String     @db.VarChar(30)
   warehouse_warehouse_id Int
   item_item_id           Int
-  worker_id              Int?
+  worker_email           String?
   items                  items      @relation(fields: [item_item_id], references: [item_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_item_fk")
   warehouses             warehouses @relation(fields: [warehouse_warehouse_id], references: [warehouse_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_warehouse_fk")
 }

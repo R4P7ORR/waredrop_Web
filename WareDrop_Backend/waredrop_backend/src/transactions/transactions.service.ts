@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
+import {UserDto} from "../users/users.service";
 
 export interface Transaction {
-    trans_id?: number,
-    trans_arrived_date?: string,
-    trans_origin: string,
-    trans_target: string,
-    warehouse_warehouse_id: number,
-    item_item_id: number,
-    worker_id?: number,
+    transId?: number,
+    transArrivedDate?: string,
+    transOrigin: string,
+    transTarget: string,
+    warehouseId: number,
+    itemId: number,
+    workerEmail?: string,
 }
 
 export interface WorkerUpdateInput {
-    worker_id: number,
-    trans_id: number,
+    workerEmail: string,
+    transId: number,
     date?: string,
 }
 
@@ -25,10 +26,10 @@ export class TransactionsService {
         return this.db.transactions.create({
             data: {
                 trans_post_date: Date.now().toString(),
-                trans_origin: newTrans.trans_origin,
-                trans_target: newTrans.trans_target,
-                warehouse_warehouse_id: newTrans.warehouse_warehouse_id,
-                item_item_id: newTrans.item_item_id
+                trans_origin: newTrans.transOrigin,
+                trans_target: newTrans.transTarget,
+                warehouse_warehouse_id: newTrans.warehouseId,
+                item_item_id: newTrans.itemId
             }
         })
     }
@@ -36,20 +37,20 @@ export class TransactionsService {
     async addWorkerToTrans(addInput: WorkerUpdateInput ){
         return this.db.transactions.update({
             data: {
-                worker_id: addInput.worker_id,
+                worker_email: addInput.workerEmail,
             },
             where: {
-                trans_id: addInput.trans_id,
+                trans_id: addInput.transId,
             }
         })
     }
-    async getAllTransByUser(userId: number){
+    async getAllTransByUser(user: UserDto){
         return this.db.transactions.findMany({
             where: {
                 warehouses: {
                     user_assigned_to_warehouse: {
                         some: {
-                            user_user_id: userId
+                            user_user_id: user.userId
                         }
                     }
                 }
@@ -57,10 +58,10 @@ export class TransactionsService {
         });
     }
 
-    async getAllTransByWorker(workerId: number){
+    async getAllTransByWorker(user: UserDto){
         return this.db.transactions.findMany({
             where:{
-                worker_id: workerId
+                worker_email: user.userEmail,
             }
         });
     }
@@ -72,7 +73,7 @@ export class TransactionsService {
     async getAvailableTrans(){
         return this.db.transactions.findMany({
             where: {
-                worker_id: null
+                worker_email: null
             }
         })
     }
@@ -83,7 +84,7 @@ export class TransactionsService {
                 trans_arrived_date: updateInput.date,
             },
             where: {
-                trans_id: updateInput.trans_id,
+                trans_id: updateInput.transId,
             }
         })
     }
