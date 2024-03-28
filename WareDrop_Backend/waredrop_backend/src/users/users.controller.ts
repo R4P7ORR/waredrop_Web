@@ -1,6 +1,6 @@
-import {Body, Controller, Get, Post, Req, UseGuards,} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Post, Req, UseGuards,} from "@nestjs/common";
 import {Prisma} from "@prisma/client";
-import {UpdateInput, UsersService} from "./users.service";
+import {UpdateInput, UserDto, UsersService} from "./users.service";
 import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
@@ -27,7 +27,7 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     async getUserName(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
-        return this.users.getUserName(decodedJwt.sub.id);
+        return this.users.getUserName({ userId: decodedJwt.sub.id});
     }
 
     @Get('/listAll')
@@ -43,8 +43,8 @@ export class UsersController {
         return this.users.updateUser(updateInput);
     }
 
-    @Post('/delete')
-    async deleteUser(@Body() deleteUser: Prisma.usersWhereUniqueInput){
+    @Delete('/delete')
+    async deleteUser(@Body() deleteUser: UserDto){
         return this.users.deleteUser(deleteUser);
     }
 }

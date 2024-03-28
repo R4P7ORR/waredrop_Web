@@ -8,11 +8,11 @@ export interface Transaction {
     trans_target: string,
     warehouse_warehouse_id: number,
     item_item_id: number,
-    worker_id?: number,
+    worker_email?: string,
 }
 
 export interface WorkerUpdateInput {
-    worker_id: number,
+    worker_email: string,
     trans_id: number,
     date?: string,
 }
@@ -36,7 +36,7 @@ export class TransactionsService {
     async addWorkerToTrans(addInput: WorkerUpdateInput ){
         return this.db.transactions.update({
             data: {
-                worker_id: addInput.worker_id,
+                worker_email: addInput.worker_email,
             },
             where: {
                 trans_id: addInput.trans_id,
@@ -57,10 +57,10 @@ export class TransactionsService {
         });
     }
 
-    async getAllTransByWorker(workerId: number){
+    async getAllTransByWorker(workerEmail: string){
         return this.db.transactions.findMany({
             where:{
-                worker_id: workerId
+                worker_email: workerEmail
             }
         });
     }
@@ -72,7 +72,7 @@ export class TransactionsService {
     async getAvailableTrans(){
         return this.db.transactions.findMany({
             where: {
-                worker_id: null
+                worker_email: null
             }
         })
     }

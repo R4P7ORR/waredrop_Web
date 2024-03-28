@@ -60,19 +60,64 @@ export class UsersService {
         })
     }
 
-    async deleteUser(deleteInput: Prisma.usersWhereUniqueInput){
-        return this.db.users.delete({
-            where: deleteInput
-        });
+    async deleteUser(deleteInput: UserDto){
+        try {
+
+            //If the user got any assigned roles, those will be deleted as well
+            const hasRole = await this.db.user_has_role.findFirst({
+                where: {
+                    user_user_id: deleteInput.userId
+                }
+            })
+
+            if (hasRole){
+                await this.db.user_has_role.deleteMany({
+                    where: {
+                        user_user_id: deleteInput.userId
+                    }
+                })
+            }
+
+            //If the user got any warehouses, those will be deleted as well
+            const assignedToWarehouse = await this.db.user_assigned_to_warehouse.findFirst({
+                where: {
+                    user_user_id: deleteInput.userId
+                }
+            })
+
+            if(assignedToWarehouse){
+                await this.db.user_assigned_to_warehouse.deleteMany({
+                    where: {
+                        user_user_id: deleteInput.userId
+                    }
+                })
+            }
+
+            await this.db.users.delete({
+                where: {
+                    user_id: deleteInput.userId,
+                }
+            });
+
+            return {Massage: "User deleted"};
+        }
+        catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'){
+                return {errorMassage: "User does not exist"};
+            }
+            else {
+                throw e
+            }
+        }
     }
 
-    async getUserName(user_id: number){
+    async getUserName(user: UserDto){
         return this.db.users.findFirst({
             select: {
                 user_name: true,
             },
             where: {
-                user_id: user_id,
+                user_id: user.userId,
             }
         })
     }
