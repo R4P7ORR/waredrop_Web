@@ -46,11 +46,11 @@ export class RolesService {
         return rolesResult;
     }
 
-    async addRoleToUser(input: AddRoleInput){
+    async addRoleToUser(addRoleInput: AddRoleInput){
         return this.db.user_has_role.create({
             data: {
-                user_user_id: input.user_id,
-                role_role_id: input.role_id
+                user_user_id: addRoleInput.user_id,
+                role_role_id: addRoleInput.role_id
             }
         })
     }

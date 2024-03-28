@@ -23,7 +23,7 @@ export class ItemsController {
     }
 
     @Delete('/delete')
-    async delete(@Body() item_id: number){
-        return this.service.deleteItem(item_id);
+    async delete(@Body() itemId: number){
+        return this.service.deleteItem(itemId);
     }
 }

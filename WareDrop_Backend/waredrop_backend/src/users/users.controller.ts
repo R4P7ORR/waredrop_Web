@@ -1,21 +1,12 @@
 import {Body, Controller, Get, Post, Req, UseGuards,} from "@nestjs/common";
 import {Prisma} from "@prisma/client";
-import {UsersService} from "./users.service";
+import {UpdateInput, UsersService} from "./users.service";
 import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import JwtDecoder from "../auth/jwt.decoder";
-import {PermissionGuard} from "../auth/permission.decoarator";
-
-export interface UpdateInput {
-    data: {
-        user_name?: string,
-        user_password?: string,
-        user_email?: string,
-    }
-    where: number;
-}
-
+import {PermissionGuard} from "../auth/guards/permission.guard";
+import {RequiredPermission} from "../auth/guards/permission.decorator";
 
 @Controller('/user')
 export class UsersController {
@@ -40,7 +31,9 @@ export class UsersController {
     }
 
     @Get('/listAll')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission({permission_name: 'All'})
+
     async getAllUsers(){
         return this.users.listUsers();
     }

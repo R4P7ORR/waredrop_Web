@@ -2,7 +2,7 @@ import {Body, Controller, Get, Post, Req, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {Request} from "express";
 import JwtDecoder from "../auth/jwt.decoder";
-import {Warehouse, WarehousesService} from "./warehouses.service";
+import {AddWarehouseDto, Warehouse, WarehousesService} from "./warehouses.service";
 
 @Controller('warehouses')
 export class WarehousesController {
@@ -15,8 +15,8 @@ export class WarehousesController {
     }
 
     @Post('/addToUser')
-    async addToUser(@Body() {user_id, warehouse_name}:{user_id: number, warehouse_name: string}){
-        return this.service.addWarehouseToUser(user_id, warehouse_name);
+    async addToUser(@Body() addInput: AddWarehouseDto){
+        return this.service.addWarehouseToUser(addInput);
     }
 
     @Get('/byUser')

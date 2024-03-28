@@ -6,7 +6,7 @@ import JwtDecoder from "../auth/jwt.decoder";
 
 @Controller('permissions')
 export class PermissionsController {
-    constructor(private readonly service: PermissionsService, private readonly jwt: JwtDecoder) {
+    constructor(private readonly service: PermissionsService, private readonly jwt: JwtDecoder, ) {
     }
 
     @Post('newPermission')

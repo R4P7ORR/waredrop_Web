@@ -20,13 +20,13 @@ export class RolesController {
     }
 
     @Post('/addRoleToUser')
-    addRole(@Body() input: AddRoleInput){
-        return this.service.addRoleToUser(input);
+    addRole(@Body() addRoleInput: AddRoleInput){
+        return this.service.addRoleToUser(addRoleInput);
     }
 
     @Post('/addPermission')
-    addPermission(@Body() input: AddPermissionInput){
-        return this.service.addPermissionToRole(input);
+    addPermission(@Body() addPermissionInput: AddPermissionInput){
+        return this.service.addPermissionToRole(addPermissionInput);
     }
 
     @Get('/list')
