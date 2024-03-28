@@ -67,7 +67,7 @@
     margin: 0;
     padding: 60px 15px;
     list-style: none;
-    background:  no-repeat;
+    background: url("../../public/images/hamburger_menu.png") no-repeat;
     background-size: contain;
     transition: .8s ease-out;
 }
@@ -92,7 +92,7 @@
     z-index: -1;
     height: 600px;
     width: 500px;
-    background: no-repeat;
+    background: url("../../public/images/hamburger_menu_under.png") no-repeat;
     background-size: contain;
     transition: 1.2s ease-out;
 }
