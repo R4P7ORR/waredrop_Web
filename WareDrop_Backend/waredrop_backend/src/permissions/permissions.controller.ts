@@ -11,22 +11,22 @@ import {UserDto} from "../users/users.service";
 export class PermissionsController {
     constructor(private readonly service: PermissionsService,) { }
 
-    @Post('/new')
+    @Post()
     createNewPermission(@Body() newPermission: Permission){
         return this.service .createPermission(newPermission);
     }
 
-    @Get('/user/:id')
+    @Get('/:id')
     getPermissionsByUser(@Param() userId: UserDto){
         return this.service.getPermissionsByUser(userId);
     }
 
-    @Get('/list')
+    @Get()
     listPermissions(){
         return this.service.getAllPermissions();
     }
 
-    @Patch('/give')
+    @Patch()
     givePermission(@Body() assignInput: AssignPermissionDto){
         return this.service.givePermission(assignInput);
     }

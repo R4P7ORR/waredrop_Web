@@ -12,7 +12,7 @@ export class TransactionsController {
                 private readonly jwt: JwtDecoder,
     ) { }
 
-    @Post('/new')
+    @Post()
     addTrans(@Body() newTrans: Transaction){
         return this.service.createTrans(newTrans);
     }
@@ -43,7 +43,7 @@ export class TransactionsController {
         return this.service.getAllTransByWorker(user.sub.id);
     }
 
-    @Patch('/update')
+    @Patch()
     updateTrans(@Body() updateInput: WorkerUpdateInput){
         return this.service.updateTrans(updateInput)
     }
