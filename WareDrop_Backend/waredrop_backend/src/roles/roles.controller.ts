@@ -13,27 +13,27 @@ import {RequiredPermission} from "../auth/guards/permission.decorator";
 export class RolesController {
     constructor(private service: RolesService) { }
 
-    @Post('/new')
+    @Post()
     createRole(@Body() newRole: Role){
         return this.service.createRole(newRole);
     }
 
-    @Get('/user/:id')
+    @Get('/:id')
     getRole(@Param('id') userId: UserDto){
         return this.service.getUserRoles(userId);
     }
 
-    @Get('/list')
+    @Get()
     getRoles(){
         return this.service.listRoles();
     }
 
-    @Patch('/addToUser')
+    @Patch()
     addRole(@Body() addRoleInput: AddRoleInput){
         return this.service.addRoleToUser(addRoleInput);
     }
 
-    @Delete('/delete')
+    @Delete()
     deleteRole(@Body() deleteRole: RoleDto){
         return this.service.deleteRole(deleteRole)
     }

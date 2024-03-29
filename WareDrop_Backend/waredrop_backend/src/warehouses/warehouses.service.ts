@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 
@@ -50,7 +50,7 @@ export class WarehousesService {
     }
 
     async getItemsInWarehouse(warehouseDto: WarehouseDto){
-        return this.db.transactions.findMany({
+        const result = await this.db.transactions.findMany({
             select:{
                 items: {
                     select: {
@@ -64,6 +64,7 @@ export class WarehousesService {
                 warehouse_warehouse_id: warehouseDto.warehouseId,
             }
         })
+        return result.map((item) => item.items);
     }
 
     async addWarehouseToUser(addInput: AddWarehouseDto){

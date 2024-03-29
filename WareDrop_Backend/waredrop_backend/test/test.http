@@ -1,11 +1,13 @@
 ###
-GET http://localhost:3001/user/listAll
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5hc2QiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25fbmFtZSI6IkFsbCJ9XX0sImlhdCI6MTcxMTUzNzI3MywiZXhwIjoxNzE0MTI5MjczfQ.5OcSsWIap-YmbTUDhil9jQbH9naN_9fElgMqA-hBpEw
+GET http://localhost:3001/warehouses/items/1
+
 
 ###
-DELETE http://localhost:3001/user/delete
+POST http://localhost:3001/items
 Content-Type: application/json
 
 {
-  "userId": 5
+  "itemName": "Teszt item 3",
+  "itemQuantity": 25,
+  "warehouseId": 1
 }

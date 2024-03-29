@@ -12,7 +12,7 @@ export class WarehousesController {
                 private readonly service: WarehousesService,
     ) { }
 
-    @Post('/new')
+    @Post()
     addNew(@Body() createInput: WarehouseCreateInput){
         return this.service.addWarehouse(createInput);
     }
@@ -36,7 +36,7 @@ export class WarehousesController {
         return this.service.getItemsInWarehouse(warehouseId);
     }
 
-    @Patch('/assignUser')
+    @Patch()
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission({permission_name: 'All'})
     async addToUser(@Body() addInput: AddWarehouseDto){

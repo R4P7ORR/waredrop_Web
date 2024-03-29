@@ -28,19 +28,19 @@ export class UsersController {
         return this.service.getUserName({ userId: decodedJwt.sub.id, userEmail: decodedJwt.sub.email});
     }
 
-    @Get('/list')
+    @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission({permission_name: 'All'})
     getAllUsers(){
         return this.service.listUsers();
     }
 
-    @Patch('/update')
+    @Patch()
     updateUser(@Body() updateInput: UpdateInput){
         return this.service.updateUser(updateInput);
     }
 
-    @Delete('/delete')
+    @Delete()
     deleteUser(@Body() deleteUser: UserDto){
         return this.service.deleteUser(deleteUser);
     }
