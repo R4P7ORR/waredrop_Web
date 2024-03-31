@@ -2,24 +2,44 @@ import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {Prisma} from "@prisma/client";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsStringArray} from "../validation/IsStringArrayConstraint";
 
-export interface AddRoleInput {
-    roleId: number,
-    userId: number,
+export class AddRoleInput {
+    @IsNumber()
+    @IsNotEmpty()
+    roleId: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    userId: number
 }
 
-export interface AddPermissionInput {
-    roleId: number,
-    permissionId: number,
+export class AddPermissionInput {
+    @IsNumber()
+    @IsNotEmpty()
+    roleId: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    permissionId: number
 }
 
-export interface Role {
-    roleId?: number,
-    roleName: string;
-    permissions?: string[];
+export class Role {
+    @IsNumber()
+    roleId?: number
+
+    @IsString()
+    @IsNotEmpty()
+    roleName: string
+
+    @IsStringArray()
+    permissions?: string[]
 }
 
-export interface RoleDto {
+export class RoleDto {
+    @IsNumber()
+    @IsNotEmpty()
     roleId: number
 }
 @Injectable()

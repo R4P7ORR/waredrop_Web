@@ -1,23 +1,32 @@
 import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export interface WarehouseCreateInput {
-    warehouseName: string,
-    location: string,
+export class WarehouseCreateInput {
+    @IsString()
+    @IsNotEmpty()
+    warehouseName: string
+
+    @IsString()
+    @IsNotEmpty()
+    warehouseLocation: string
 }
 
-export interface WarehouseDto{
-    warehouseId: number,
+export class WarehouseDto{
+    @IsNumber()
+    @IsNotEmpty()
+    warehouseId: number
 }
 
-export interface AddWarehouseDto {
-    userId: number,
-    warehouseName: string,
-}
+export class AddWarehouseDto {
+    @IsNumber()
+    @IsNotEmpty()
+    userId: number
 
-export interface AssignWarehouseInput {
-
+    @IsString()
+    @IsNotEmpty()
+    warehouseName: string
 }
 
 @Injectable()
@@ -28,7 +37,7 @@ export class WarehousesService {
         return this.db.warehouses.create({
             data: {
                 warehouse_name: createInput.warehouseName,
-                location: createInput.location,
+                location: createInput.warehouseLocation,
             }
         })
     }

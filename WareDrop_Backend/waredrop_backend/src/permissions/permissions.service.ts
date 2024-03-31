@@ -1,14 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export interface Permission{
-    permission_id?: number,
-    permission_name: string
+export class Permission{
+    @IsNumber()
+    permissionId?: number
+
+    @IsString()
+    @IsNotEmpty()
+    permissionName: string
 }
 
-export interface AssignPermissionDto {
-    permissionId: number,
+export class AssignPermissionDto {
+    @IsNumber()
+    @IsNotEmpty()
+    permissionId: number
+
+    @IsNumber()
+    @IsNotEmpty()
     roleId: number
 }
 
@@ -18,7 +28,9 @@ export class PermissionsService {
 
     async createPermission(newPermission: Permission){
         return this.db.permissions.create({
-            data: newPermission
+            data: {
+                permission_name: newPermission.permissionName,
+            }
         })
     }
 
@@ -51,7 +63,7 @@ export class PermissionsService {
         })
         for (const permission of result) {
            permission.role_has_permission.map((item) => {
-               permissions.push({permission_name: item.permissions.permission_name});
+               permissions.push({permissionName: item.permissions.permission_name});
            });
         }
 

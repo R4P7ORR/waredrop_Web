@@ -19,7 +19,7 @@ export class TransactionsController {
 
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
-    @RequiredPermission({permission_name: 'All'})
+    @RequiredPermission({permissionName: 'All'})
     getAllTrans(){
         return this.service.getAllTrans();
     }

@@ -16,7 +16,7 @@ export class ItemsController {
 
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
-    @RequiredPermission({permission_name: 'All'})
+    @RequiredPermission({permissionName: 'All'})
     async getItems(){
         return this.service.getItems();
     }

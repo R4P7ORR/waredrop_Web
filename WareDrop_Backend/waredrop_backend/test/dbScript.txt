@@ -124,7 +124,11 @@ ALTER TABLE IF EXISTS public.permissions
 
 INSERT INTO roles VALUES (nextval('roles_role_id_seq'), 'Admin');
 
+INSERT INTO roles VALUES (nextval('roles_role_id_seq'), 'Worker');
+
 INSERT INTO permissions VALUES (nextval('permissions_permission_id_seq'), 'All');
+
+INSERT INTO permissions VALUES (nextval('permissions_permission_id_seq'), 'Transactions');
 
 INSERT INTO role_has_permission VALUES (1, 1);
 

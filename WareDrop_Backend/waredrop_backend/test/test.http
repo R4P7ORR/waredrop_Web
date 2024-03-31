@@ -1,13 +1,18 @@
 ###
-GET http://localhost:3001/warehouses/items/1
-
-
-###
-POST http://localhost:3001/items
+POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
-  "itemName": "Teszt item 3",
-  "itemQuantity": 25,
-  "warehouseId": 1
+  "userEmail": "asd@asd.hu",
+  "userName": "asd",
+  "userPassword": "titkos123"
+}
+
+
+###
+POST http://localhost:3001/permissions
+Content-Type: application/json
+
+{
+  "permissionName": "Keksz"
 }

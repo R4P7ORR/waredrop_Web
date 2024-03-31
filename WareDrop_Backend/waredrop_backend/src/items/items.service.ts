@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export interface CreateItemDto{
-    itemName: string,
-    itemQuantity: number,
-    warehouseId: number,
-}
+export class CreateItemDto{
+    @IsString()
+    @IsNotEmpty()
+    itemName: string
 
-export interface ItemDto {
-    itemId: number,
-    itemName: string,
-    itemQuantity: number,
+    @IsNumber()
+    @IsNotEmpty()
+    itemQuantity: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    warehouseId: number
 }
 
 @Injectable()

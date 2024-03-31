@@ -30,7 +30,7 @@ export class UsersController {
 
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
-    @RequiredPermission({permission_name: 'All'})
+    @RequiredPermission({permissionName: 'All'})
     getAllUsers(){
         return this.service.listUsers();
     }
