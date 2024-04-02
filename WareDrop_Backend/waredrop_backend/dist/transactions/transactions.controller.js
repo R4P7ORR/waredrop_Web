@@ -17,16 +17,15 @@ const common_1 = require("@nestjs/common");
 const transactions_service_1 = require("./transactions.service");
 const jwt_decoder_1 = require("../auth/jwt.decoder");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
+const permission_guard_1 = require("../auth/guards/permission.guard");
+const permission_decorator_1 = require("../auth/guards/permission.decorator");
 let TransactionsController = class TransactionsController {
     constructor(service, jwt) {
         this.service = service;
         this.jwt = jwt;
     }
-    async addTrans(newTrans) {
-        return await this.service.createTrans(newTrans);
-    }
-    async addWorker(addInput) {
-        return this.service.addWorkerToTrans(addInput);
+    addTrans(newTrans) {
+        return this.service.createTrans(newTrans);
     }
     getAllTrans() {
         return this.service.getAllTrans();
@@ -34,41 +33,42 @@ let TransactionsController = class TransactionsController {
     getAvailable() {
         return this.service.getAvailableTrans();
     }
-    async getAllTransByUser(req) {
+    getAllTransByUser(req) {
         const user = this.jwt.decodeToken(req);
         return this.service.getAllTransByUser(user.sub.id);
     }
-    async getAllTransByWorker(req) {
+    getAllTransByWorker(req) {
         const user = this.jwt.decodeToken(req);
         return this.service.getAllTransByWorker(user.sub.id);
     }
-    async updateTrans(input) {
-        return this.service.updateTrans(input);
+    updateTrans(updateInput) {
+        return this.service.updateTrans(updateInput);
+    }
+    addWorker(addInput) {
+        return this.service.addWorkerToTrans(addInput);
     }
 };
 exports.TransactionsController = TransactionsController;
 __decorate([
-    (0, common_1.Post)('/newTrans'),
+    (0, common_1.Post)(),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [transactions_service_1.Transaction]),
+    __metadata("design:returntype", void 0)
 ], TransactionsController.prototype, "addTrans", null);
 __decorate([
-    (0, common_1.Post)('/addWorkerToTrans'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], TransactionsController.prototype, "addWorker", null);
-__decorate([
     (0, common_1.Get)(),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'All' }]),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], TransactionsController.prototype, "getAllTrans", null);
 __decorate([
     (0, common_1.Get)('/available'),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'Transactions' }, { permissionName: 'All' }]),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
@@ -79,25 +79,38 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], TransactionsController.prototype, "getAllTransByUser", null);
 __decorate([
     (0, common_1.Get)('/worker'),
-    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'Transactions' }, { permissionName: 'All' }]),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], TransactionsController.prototype, "getAllTransByWorker", null);
 __decorate([
-    (0, common_1.Post)('/update'),
+    (0, common_1.Patch)(),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'Transactions' }, { permissionName: 'All' }]),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [transactions_service_1.WorkerUpdateInput]),
+    __metadata("design:returntype", void 0)
 ], TransactionsController.prototype, "updateTrans", null);
+__decorate([
+    (0, common_1.Patch)('/assignWorker'),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'Transactions' }, { permissionName: 'All' }]),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [transactions_service_1.WorkerUpdateInput]),
+    __metadata("design:returntype", void 0)
+], TransactionsController.prototype, "addWorker", null);
 exports.TransactionsController = TransactionsController = __decorate([
     (0, common_1.Controller)('transactions'),
-    __metadata("design:paramtypes", [transactions_service_1.TransactionsService, jwt_decoder_1.default])
+    __metadata("design:paramtypes", [transactions_service_1.TransactionsService,
+        jwt_decoder_1.default])
 ], TransactionsController);
 //# sourceMappingURL=transactions.controller.js.map

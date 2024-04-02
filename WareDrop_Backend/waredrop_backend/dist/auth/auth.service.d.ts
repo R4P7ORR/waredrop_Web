@@ -2,10 +2,10 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto, UsersService } from "../users/users.service";
 import { Permission, PermissionsService } from "../permissions/permissions.service";
 export declare class AuthPayloadDto {
-    email: string;
-    password: string;
+    userEmail: string;
+    userPassword: string;
 }
-export interface TokenData {
+export declare class TokenData {
     sub: {
         id: number;
         email: string;
@@ -31,5 +31,5 @@ export declare class AuthService {
         message: string;
         errorMessage?: undefined;
     }>;
-    isAdmin(user_permissions: string[]): Promise<boolean>;
+    isAdmin(user_permissions: Permission[]): Promise<boolean>;
 }

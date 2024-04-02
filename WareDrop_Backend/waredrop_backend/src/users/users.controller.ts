@@ -1,58 +1,47 @@
-import {Body, Controller, Get, Post, Req, UseGuards,} from "@nestjs/common";
-import {Prisma} from "@prisma/client";
-import {UsersService} from "./users.service";
+import {Body, Controller, Delete, Get, Patch, Req, UseGuards,} from "@nestjs/common";
+import {UpdateInput, UserDto, UsersService} from "./users.service";
 import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import JwtDecoder from "../auth/jwt.decoder";
-import {PermissionGuard} from "../auth/permission.decoarator";
-
-export interface UpdateInput {
-    data: {
-        user_name?: string,
-        user_password?: string,
-        user_email?: string,
-    }
-    where: number;
-}
-
+import {PermissionGuard} from "../auth/guards/permission.guard";
+import {RequiredPermission} from "../auth/guards/permission.decorator";
 
 @Controller('/user')
 export class UsersController {
-    constructor(private users: UsersService,
+    constructor(private service: UsersService,
                 private permissions: PermissionsService,
                 private jwt: JwtDecoder,
     ) {}
 
-
     @Get('/permissions')
     @UseGuards(JwtAuthGuard)
-    async userPermissions(@Req() req: Request){
+    userPermissions(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
         return this.permissions.getPermissionsByUser(decodedJwt.sub.id);
     }
 
-    @Get('/getUserName')
+    @Get('/userName')
     @UseGuards(JwtAuthGuard)
-    async getUserName(@Req() req: Request){
+    getUserName(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
-        return this.users.getUserName(decodedJwt.sub.id);
+        return this.service.getUserName({ userId: decodedJwt.sub.id, userEmail: decodedJwt.sub.email});
     }
 
-    @Get('/listAll')
-    @UseGuards(JwtAuthGuard)
-    @PermissionGuard({permission_name: 'All'})
-    async getAllUsers(){
-        return this.users.listUsers();
+    @Get()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
+    getAllUsers(){
+        return this.service.listUsers();
     }
 
-    @Post('/update')
-    async updateUser(@Body() updateInput: UpdateInput){
-        return this.users.updateUser(updateInput);
+    @Patch()
+    updateUser(@Body() updateInput: UpdateInput){
+        return this.service.updateUser(updateInput);
     }
 
-    @Post('/delete')
-    async deleteUser(@Body() deleteUser: Prisma.usersWhereUniqueInput){
-        return this.users.deleteUser(deleteUser);
+    @Delete()
+    deleteUser(@Body() deleteUser: UserDto){
+        return this.service.deleteUser(deleteUser);
     }
 }

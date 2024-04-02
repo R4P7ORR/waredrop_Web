@@ -9,46 +9,68 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ItemsService = void 0;
+exports.ItemsService = exports.CreateItemDto = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../database/prisma.service");
+const class_validator_1 = require("class-validator");
+class CreateItemDto {
+}
+exports.CreateItemDto = CreateItemDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateItemDto.prototype, "itemName", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], CreateItemDto.prototype, "itemQuantity", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], CreateItemDto.prototype, "warehouseId", void 0);
 let ItemsService = class ItemsService {
     constructor(db) {
         this.db = db;
     }
     async addItem(newItem) {
-        return this.db.items.create({
-            data: newItem
-        });
+        try {
+            const createdItem = await this.db.items.create({
+                data: {
+                    item_name: newItem.itemName,
+                    item_quantity: newItem.itemQuantity
+                }
+            });
+            await this.assignItemToWarehouse(createdItem.item_id, newItem.warehouseId);
+            return { Massage: 'Added a new item to the warehouse' };
+        }
+        catch (e) {
+            throw e;
+        }
     }
     async getItems() {
         return this.db.items.findMany();
     }
-    async assignItemToWarehouse(item_id, warehouse_name) {
+    async assignItemToWarehouse(itemId, warehouseId) {
         const warehouse = await this.db.warehouses.findFirst({
             select: {
                 warehouse_id: true,
                 location: true,
             },
             where: {
-                warehouse_name: warehouse_name,
+                warehouse_id: warehouseId,
             }
         });
         return this.db.transactions.create({
             data: {
-                trans_post_date: Date.now().toString(),
-                trans_arrived_date: Date.now().toString(),
+                trans_post_date: new Date(Date.now()),
+                trans_arrived_date: new Date(Date.now()),
                 warehouse_warehouse_id: warehouse.warehouse_id,
-                item_item_id: item_id,
+                item_item_id: itemId,
                 trans_origin: warehouse.location,
                 trans_target: warehouse.location,
-            }
-        });
-    }
-    async deleteItem(item_id) {
-        return this.db.items.delete({
-            where: {
-                item_id: item_id
             }
         });
     }

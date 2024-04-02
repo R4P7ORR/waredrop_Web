@@ -1,34 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
+import {UserDto} from "../users/users.service";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export interface Transaction {
-    trans_id?: number,
-    trans_arrived_date?: string,
-    trans_origin: string,
-    trans_target: string,
-    warehouse_warehouse_id: number,
-    item_item_id: number,
-    worker_id?: number,
+export class Transaction {
+    @IsNumber()
+    transId?: number
+
+    @IsString()
+    transArrivedDate?: string
+
+    @IsString()
+    @IsNotEmpty()
+    transOrigin: string
+
+    @IsString()
+    @IsNotEmpty()
+    transTarget: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    warehouseId: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    itemId: number
+
+    @IsString()
+    workerEmail?: string
 }
 
-export interface WorkerUpdateInput {
-    worker_id: number,
-    trans_id: number,
-    date?: string,
+export class WorkerUpdateInput {
+    @IsString()
+    workerEmail?: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    transId: number
 }
 
 @Injectable()
 export class TransactionsService {
-    constructor(private readonly db: PrismaService) {}
+    constructor(private readonly db: PrismaService) { }
 
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
             data: {
-                trans_post_date: Date.now().toString(),
-                trans_origin: newTrans.trans_origin,
-                trans_target: newTrans.trans_target,
-                warehouse_warehouse_id: newTrans.warehouse_warehouse_id,
-                item_item_id: newTrans.item_item_id
+                trans_post_date: new Date(Date.now()),
+                trans_origin: newTrans.transOrigin,
+                trans_target: newTrans.transTarget,
+                warehouse_warehouse_id: newTrans.warehouseId,
+                item_item_id: newTrans.itemId
             }
         })
     }
@@ -36,20 +58,20 @@ export class TransactionsService {
     async addWorkerToTrans(addInput: WorkerUpdateInput ){
         return this.db.transactions.update({
             data: {
-                worker_id: addInput.worker_id,
+                worker_email: addInput.workerEmail,
             },
             where: {
-                trans_id: addInput.trans_id,
+                trans_id: addInput.transId,
             }
         })
     }
-    async getAllTransByUser(user_id: number){
+    async getAllTransByUser(user: UserDto){
         return this.db.transactions.findMany({
             where: {
                 warehouses: {
                     user_assigned_to_warehouse: {
                         some: {
-                            user_user_id: user_id
+                            user_user_id: user.userId
                         }
                     }
                 }
@@ -57,10 +79,10 @@ export class TransactionsService {
         });
     }
 
-    async getAllTransByWorker(worker_id: number){
+    async getAllTransByWorker(user: UserDto){
         return this.db.transactions.findMany({
-            where:{
-                worker_id: worker_id
+            where: {
+                worker_email: user.userEmail,
             }
         });
     }
@@ -71,8 +93,17 @@ export class TransactionsService {
 
     async getAvailableTrans(){
         return this.db.transactions.findMany({
+            select: {
+                trans_id: true,
+                trans_post_date: true,
+                trans_arrived_date: true,
+                trans_origin: true,
+                trans_target: true,
+                worker_email: true,
+                items: {}
+            },
             where: {
-                worker_id: null
+                worker_email: null
             }
         })
     }
@@ -80,10 +111,10 @@ export class TransactionsService {
     async updateTrans(updateInput: WorkerUpdateInput){
         return this.db.transactions.update({
             data: {
-                trans_arrived_date: updateInput.date,
+                trans_arrived_date: new Date(Date.now()),
             },
             where: {
-                trans_id: updateInput.trans_id,
+                trans_id: updateInput.transId,
             }
         })
     }

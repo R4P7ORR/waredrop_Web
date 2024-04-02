@@ -15,6 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RolesController = void 0;
 const common_1 = require("@nestjs/common");
 const roles_service_1 = require("./roles.service");
+const users_service_1 = require("../users/users.service");
+const jwt_guard_1 = require("../auth/guards/jwt.guard");
+const permission_guard_1 = require("../auth/guards/permission.guard");
+const permission_decorator_1 = require("../auth/guards/permission.decorator");
 let RolesController = class RolesController {
     constructor(service) {
         this.service = service;
@@ -25,53 +29,65 @@ let RolesController = class RolesController {
     getRole(userId) {
         return this.service.getUserRoles(userId);
     }
-    addRole(input) {
-        return this.service.addRoleToUser(input);
-    }
-    addPermission(input) {
-        return this.service.addPermissionToRole(input);
-    }
     getRoles() {
         return this.service.listRoles();
+    }
+    addRole(addRoleInput) {
+        return this.service.addRoleToUser(addRoleInput);
+    }
+    removeRole(removeInput) {
+        return this.service.removeRole(removeInput);
+    }
+    deleteRole(deleteRole) {
+        return this.service.deleteRole(deleteRole);
     }
 };
 exports.RolesController = RolesController;
 __decorate([
-    (0, common_1.Post)('/createRole'),
+    (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [roles_service_1.Role]),
     __metadata("design:returntype", void 0)
 ], RolesController.prototype, "createRole", null);
 __decorate([
-    (0, common_1.Post)('/userRole'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)('/:id'),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [users_service_1.UserDto]),
     __metadata("design:returntype", void 0)
 ], RolesController.prototype, "getRole", null);
 __decorate([
-    (0, common_1.Post)('/addRoleToUser'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], RolesController.prototype, "addRole", null);
-__decorate([
-    (0, common_1.Post)('/addPermission'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], RolesController.prototype, "addPermission", null);
-__decorate([
-    (0, common_1.Get)('/list'),
+    (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], RolesController.prototype, "getRoles", null);
+__decorate([
+    (0, common_1.Patch)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [roles_service_1.AddRoleInput]),
+    __metadata("design:returntype", void 0)
+], RolesController.prototype, "addRole", null);
+__decorate([
+    (0, common_1.Patch)('remove'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [roles_service_1.AddRoleInput]),
+    __metadata("design:returntype", void 0)
+], RolesController.prototype, "removeRole", null);
+__decorate([
+    (0, common_1.Delete)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [roles_service_1.RoleDto]),
+    __metadata("design:returntype", void 0)
+], RolesController.prototype, "deleteRole", null);
 exports.RolesController = RolesController = __decorate([
     (0, common_1.Controller)('roles'),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'All' }]),
     __metadata("design:paramtypes", [roles_service_1.RolesService])
 ], RolesController);
 //# sourceMappingURL=roles.controller.js.map

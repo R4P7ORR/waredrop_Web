@@ -9,59 +9,99 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WarehousesService = void 0;
+exports.WarehousesService = exports.AddWarehouseDto = exports.WarehouseDto = exports.WarehouseCreateInput = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../database/prisma.service");
+const class_validator_1 = require("class-validator");
+class WarehouseCreateInput {
+}
+exports.WarehouseCreateInput = WarehouseCreateInput;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], WarehouseCreateInput.prototype, "warehouseName", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], WarehouseCreateInput.prototype, "warehouseLocation", void 0);
+class WarehouseDto {
+}
+exports.WarehouseDto = WarehouseDto;
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], WarehouseDto.prototype, "warehouseId", void 0);
+class AddWarehouseDto {
+}
+exports.AddWarehouseDto = AddWarehouseDto;
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], AddWarehouseDto.prototype, "userId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], AddWarehouseDto.prototype, "warehouseName", void 0);
 let WarehousesService = class WarehousesService {
     constructor(db) {
         this.db = db;
     }
     async addWarehouse(createInput) {
         return this.db.warehouses.create({
-            data: createInput
+            data: {
+                warehouse_name: createInput.warehouseName,
+                location: createInput.warehouseLocation,
+            }
         });
     }
     async getWarehouses() {
         return this.db.warehouses.findMany();
     }
-    async getWarehousesByUser(user_id) {
-        const list = await this.db.warehouses.findMany({
-            select: {
-                warehouse_name: true,
-                location: true,
-            },
+    async getWarehousesByUser(user) {
+        return this.db.warehouses.findMany({
             where: {
                 user_assigned_to_warehouse: {
                     some: {
-                        user_user_id: user_id,
+                        user_user_id: user.userId,
                     }
                 }
             }
         });
-        return list;
     }
-    async getItemsInWarehouse(warehouse_id) {
-        return this.db.transactions.findMany({
+    async getItemsInWarehouse(warehouseDto) {
+        const result = await this.db.transactions.findMany({
             select: {
-                items: true,
+                items: {
+                    select: {
+                        item_id: true,
+                        item_name: true,
+                        item_quantity: true,
+                    }
+                },
             },
             where: {
-                warehouse_warehouse_id: warehouse_id,
+                warehouse_warehouse_id: warehouseDto.warehouseId,
             }
         });
+        return result.map((item) => item.items);
     }
-    async addWarehouseToUser(user_id, warehouse_name) {
+    async addWarehouseToUser(addInput) {
         const result = await this.db.warehouses.findFirst({
             select: {
                 warehouse_id: true,
             },
             where: {
-                warehouse_name: warehouse_name,
+                warehouse_name: addInput.warehouseName,
             }
         });
         return this.db.user_assigned_to_warehouse.create({
             data: {
-                user_user_id: user_id,
+                user_user_id: addInput.userId,
                 warehouse_warehouse_id: result.warehouse_id
             }
         });

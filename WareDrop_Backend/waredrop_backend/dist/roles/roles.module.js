@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const roles_service_1 = require("./roles.service");
 const prisma_module_1 = require("../database/prisma.module");
 const roles_controller_1 = require("./roles.controller");
+const jwt_decoder_1 = require("../auth/jwt.decoder");
 let RolesModule = class RolesModule {
 };
 exports.RolesModule = RolesModule;
 exports.RolesModule = RolesModule = __decorate([
     (0, common_1.Module)({
-        providers: [roles_service_1.RolesService],
+        providers: [roles_service_1.RolesService, jwt_decoder_1.default],
         imports: [prisma_module_1.PrismaModule],
         exports: [roles_service_1.RolesService],
         controllers: [roles_controller_1.RolesController]

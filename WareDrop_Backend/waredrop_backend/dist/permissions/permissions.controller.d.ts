@@ -1,20 +1,30 @@
-import { Permission, PermissionsService } from "./permissions.service";
-import { Request } from "express";
-import JwtDecoder from "../auth/jwt.decoder";
+import { AssignPermissionDto, Permission, PermissionDto, PermissionsService } from "./permissions.service";
+import { UserDto } from "../users/users.service";
 export declare class PermissionsController {
     private readonly service;
-    private readonly jwt;
-    constructor(service: PermissionsService, jwt: JwtDecoder);
+    constructor(service: PermissionsService);
     createNewPermission(newPermission: Permission): Promise<{
         permission_id: number;
         permission_name: string;
     }>;
-    getPermissionsByUser(req: Request): Promise<Permission[]>;
-    givePermission({ role_id, permission_id }: {
-        role_id: number;
+    getPermissionsByUser(userId: UserDto): Promise<Permission[]>;
+    listPermissions(): Promise<{
         permission_id: number;
-    }): Promise<{
+        permission_name: string;
+    }[]>;
+    givePermission(assignInput: AssignPermissionDto): Promise<{
         permission_permission_id: number;
         role_role_id: number;
+    }>;
+    removePermission(removeInput: AssignPermissionDto): Promise<{
+        permission_permission_id: number;
+        role_role_id: number;
+    }>;
+    deletePermission(deletePermission: PermissionDto): Promise<{
+        Massage: string;
+        errorMassage?: undefined;
+    } | {
+        errorMassage: string;
+        Massage?: undefined;
     }>;
 }

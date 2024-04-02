@@ -1,0 +1,142 @@
+
+CREATE TABLE items (
+    item_id       SERIAL,
+    item_name     VARCHAR(30) NOT NULL,
+    item_quantity INT NOT NULL
+);
+
+ALTER TABLE items ADD CONSTRAINT items_pk PRIMARY KEY ( item_id );
+
+CREATE TABLE permissions (
+    permission_id   SERIAL,
+    permission_name VARCHAR(30) NOT NULL
+);
+
+ALTER TABLE permissions ADD CONSTRAINT permissons_pk PRIMARY KEY ( permission_id );
+
+CREATE TABLE roles (
+    role_id   SERIAL,
+    role_name VARCHAR(30) NOT NULL
+);
+
+ALTER TABLE roles ADD CONSTRAINT roles_pk PRIMARY KEY ( role_id );
+
+CREATE TABLE role_has_permission (
+    permission_permission_id INT NOT NULL,
+    role_role_id            INT NOT NULL
+);
+
+ALTER TABLE role_has_permission ADD CONSTRAINT relation_7_pk PRIMARY KEY ( permission_permission_id,
+                                                                           role_role_id );
+
+CREATE TABLE transactions (
+    trans_id               SERIAL,
+    trans_post_date        VARCHAR(20) NOT NULL,
+    trans_arrived_date     VARCHAR(20),
+    trans_origin           VARCHAR(30),
+    trans_target           VARCHAR(30) NOT NULL,
+    warehouse_warehouse_id INT NOT NULL,
+    item_item_id           INT NOT NULL,
+    worker_email	   VARCHAR(50)
+);
+
+ALTER TABLE transactions ADD CONSTRAINT transactions_pk PRIMARY KEY ( trans_id );
+
+CREATE TABLE users (
+    user_id       SERIAL,
+    user_name     VARCHAR(30) NOT NULL,
+    user_email    VARCHAR(50) NOT NULL,
+    user_password VARCHAR(500) NOT NULL
+);
+
+ALTER TABLE users ADD CONSTRAINT users_pk PRIMARY KEY ( user_id );
+
+CREATE TABLE user_assigned_to_warehouse (
+    user_user_id           INT NOT NULL,
+    warehouse_warehouse_id INT NOT NULL
+);
+
+ALTER TABLE user_assigned_to_warehouse ADD CONSTRAINT relation_5_pk PRIMARY KEY ( user_user_id,
+                                                                                  warehouse_warehouse_id );
+
+CREATE TABLE user_has_role (
+    role_role_id INT NOT NULL,
+    user_user_id INT NOT NULL
+);
+
+ALTER TABLE user_has_role ADD CONSTRAINT relation_6_pk PRIMARY KEY ( role_role_id,
+                                                                     user_user_id );
+
+CREATE TABLE warehouses (
+    warehouse_id   SERIAL,
+    warehouse_name VARCHAR(30) NOT NULL,
+    location       VARCHAR(30) NOT NULL
+);
+
+ALTER TABLE warehouses ADD CONSTRAINT warehouses_pk PRIMARY KEY ( warehouse_id );
+
+ALTER TABLE user_assigned_to_warehouse
+    ADD CONSTRAINT relation_5_user_fk FOREIGN KEY ( user_user_id )
+        REFERENCES users ( user_id );
+
+ALTER TABLE user_assigned_to_warehouse
+    ADD CONSTRAINT relation_5_warehouse_fk FOREIGN KEY ( warehouse_warehouse_id )
+        REFERENCES warehouses ( warehouse_id );
+
+ALTER TABLE user_has_role
+    ADD CONSTRAINT relation_6_role_fk FOREIGN KEY ( role_role_id )
+        REFERENCES roles ( role_id );
+
+ALTER TABLE user_has_role
+    ADD CONSTRAINT relation_6_user_fk FOREIGN KEY ( user_user_id )
+        REFERENCES users ( user_id );
+
+ALTER TABLE role_has_permission
+    ADD CONSTRAINT relation_7_permisson_fk FOREIGN KEY ( permission_permission_id )
+        REFERENCES permissions ( permission_id );
+
+ALTER TABLE role_has_permission
+    ADD CONSTRAINT relation_7_role_fk FOREIGN KEY ( role_role_id )
+        REFERENCES roles ( role_id );
+
+ALTER TABLE transactions
+    ADD CONSTRAINT transaction_item_fk FOREIGN KEY ( item_item_id )
+        REFERENCES items ( item_id );
+
+ALTER TABLE transactions
+    ADD CONSTRAINT transaction_warehouse_fk FOREIGN KEY ( warehouse_warehouse_id )
+        REFERENCES warehouses ( warehouse_id );
+
+ALTER TABLE public.items
+    ADD CONSTRAINT item_name_uk UNIQUE (item_name);
+
+ALTER TABLE IF EXISTS public.users
+    ADD CONSTRAINT user_email_uk UNIQUE (user_email);
+
+ALTER TABLE IF EXISTS public.warehouses
+    ADD CONSTRAINT warehouse_name_uk UNIQUE (warehouse_name);
+
+ALTER TABLE IF EXISTS public.roles
+    ADD CONSTRAINT role_name_uk UNIQUE (role_name);
+
+ALTER TABLE IF EXISTS public.permissions
+    ADD CONSTRAINT permission_name_uk UNIQUE (permission_name);
+
+INSERT INTO roles VALUES (nextval('roles_role_id_seq'), 'Admin');
+
+INSERT INTO roles VALUES (nextval('roles_role_id_seq'), 'Worker');
+
+INSERT INTO permissions VALUES (nextval('permissions_permission_id_seq'), 'All');
+
+INSERT INTO permissions VALUES (nextval('permissions_permission_id_seq'), 'Transactions');
+
+INSERT INTO role_has_permission VALUES (1, 1);
+
+INSERT INTO role_has_permission VALUES (2, 2);
+
+INSERT INTO warehouses VALUES (nextval('warehouses_warehouse_id_seq'), 'Teszt_Warehouse', 'Budapest, Soroksári út, 16');
+
+INSERT INTO warehouses VALUES (nextval('warehouses_warehouse_id_seq'), 'Teszt_Target_Warehouse', 'Ecser, Ipar utca, 4');
+
+INSERT INTO items VALUES (nextval('items_item_id_seq'), 'Teszt_Item', 420);
+

@@ -1,4 +1,4 @@
-import { AddPermissionInput, AddRoleInput, Role, RolesService } from "./roles.service";
+import { AddRoleInput, Role, RoleDto, RolesService } from "./roles.service";
 import { UserDto } from "../users/users.service";
 export declare class RolesController {
     private service;
@@ -8,13 +8,20 @@ export declare class RolesController {
         role_name: string;
     }>;
     getRole(userId: UserDto): Promise<string[]>;
-    addRole(input: AddRoleInput): Promise<{
+    getRoles(): Promise<Role[]>;
+    addRole(addRoleInput: AddRoleInput): Promise<{
         role_role_id: number;
         user_user_id: number;
     }>;
-    addPermission(input: AddPermissionInput): Promise<{
-        permission_permission_id: number;
+    removeRole(removeInput: AddRoleInput): Promise<{
         role_role_id: number;
+        user_user_id: number;
     }>;
-    getRoles(): Promise<Role[]>;
+    deleteRole(deleteRole: RoleDto): Promise<{
+        Massage: string;
+        errorMassage?: undefined;
+    } | {
+        errorMassage: string;
+        Massage?: undefined;
+    }>;
 }

@@ -16,48 +16,78 @@ exports.PermissionsController = void 0;
 const common_1 = require("@nestjs/common");
 const permissions_service_1 = require("./permissions.service");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
-const jwt_decoder_1 = require("../auth/jwt.decoder");
+const permission_guard_1 = require("../auth/guards/permission.guard");
+const permission_decorator_1 = require("../auth/guards/permission.decorator");
+const users_service_1 = require("../users/users.service");
 let PermissionsController = class PermissionsController {
-    constructor(service, jwt) {
+    constructor(service) {
         this.service = service;
-        this.jwt = jwt;
     }
-    async createNewPermission(newPermission) {
+    createNewPermission(newPermission) {
         return this.service.createPermission(newPermission);
     }
-    async getPermissionsByUser(req) {
-        const user = this.jwt.decodeToken(req);
-        return this.service.getPermissionsByUser(user.sub.id);
+    getPermissionsByUser(userId) {
+        return this.service.getPermissionsByUser(userId);
     }
-    async givePermission({ role_id, permission_id }) {
-        return this.service.givePermission(role_id, permission_id);
+    listPermissions() {
+        return this.service.getAllPermissions();
+    }
+    givePermission(assignInput) {
+        return this.service.givePermission(assignInput);
+    }
+    removePermission(removeInput) {
+        return this.service.removePermission(removeInput);
+    }
+    deletePermission(deletePermission) {
+        return this.service.deletePermission(deletePermission);
     }
 };
 exports.PermissionsController = PermissionsController;
 __decorate([
-    (0, common_1.Post)('newPermission'),
+    (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [permissions_service_1.Permission]),
+    __metadata("design:returntype", void 0)
 ], PermissionsController.prototype, "createNewPermission", null);
 __decorate([
-    (0, common_1.Get)('/user'),
-    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
+    (0, common_1.Get)('/:id'),
+    __param(0, (0, common_1.Param)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [users_service_1.UserDto]),
+    __metadata("design:returntype", void 0)
 ], PermissionsController.prototype, "getPermissionsByUser", null);
 __decorate([
-    (0, common_1.Post)('/giveToRole'),
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], PermissionsController.prototype, "listPermissions", null);
+__decorate([
+    (0, common_1.Patch)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [permissions_service_1.AssignPermissionDto]),
+    __metadata("design:returntype", void 0)
 ], PermissionsController.prototype, "givePermission", null);
+__decorate([
+    (0, common_1.Patch)('/remove'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [permissions_service_1.AssignPermissionDto]),
+    __metadata("design:returntype", void 0)
+], PermissionsController.prototype, "removePermission", null);
+__decorate([
+    (0, common_1.Delete)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [permissions_service_1.PermissionDto]),
+    __metadata("design:returntype", void 0)
+], PermissionsController.prototype, "deletePermission", null);
 exports.PermissionsController = PermissionsController = __decorate([
     (0, common_1.Controller)('permissions'),
-    __metadata("design:paramtypes", [permissions_service_1.PermissionsService, jwt_decoder_1.default])
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'All' }]),
+    __metadata("design:paramtypes", [permissions_service_1.PermissionsService])
 ], PermissionsController);
 //# sourceMappingURL=permissions.controller.js.map

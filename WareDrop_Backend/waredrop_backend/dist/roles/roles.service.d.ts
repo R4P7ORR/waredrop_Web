@@ -1,17 +1,16 @@
 import { PrismaService } from "../database/prisma.service";
 import { UserDto } from "../users/users.service";
-export interface AddRoleInput {
-    role_id: number;
-    user_id: number;
+export declare class AddRoleInput {
+    roleId: number;
+    userId: number;
 }
-export interface AddPermissionInput {
-    role_id: number;
-    permission_id: number;
-}
-export interface Role {
-    role_id?: number;
-    role_name: string;
+export declare class Role {
+    roleId?: number;
+    roleName: string;
     permissions?: string[];
+}
+export declare class RoleDto {
+    roleId: number;
 }
 export declare class RolesService {
     private readonly db;
@@ -21,13 +20,20 @@ export declare class RolesService {
         role_name: string;
     }>;
     getUserRoles(userId: UserDto): Promise<string[]>;
-    addRoleToUser(input: AddRoleInput): Promise<{
+    addRoleToUser(addRoleInput: AddRoleInput): Promise<{
         role_role_id: number;
         user_user_id: number;
     }>;
-    addPermissionToRole(input: AddPermissionInput): Promise<{
-        permission_permission_id: number;
-        role_role_id: number;
-    }>;
     listRoles(): Promise<Role[]>;
+    removeRole(removeInput: AddRoleInput): Promise<{
+        role_role_id: number;
+        user_user_id: number;
+    }>;
+    deleteRole(deleteRole: RoleDto): Promise<{
+        Massage: string;
+        errorMassage?: undefined;
+    } | {
+        errorMassage: string;
+        Massage?: undefined;
+    }>;
 }

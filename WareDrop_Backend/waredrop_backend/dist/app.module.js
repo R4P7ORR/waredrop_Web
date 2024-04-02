@@ -16,12 +16,28 @@ const permissions_module_1 = require("./permissions/permissions.module");
 const warehouses_module_1 = require("./warehouses/warehouses.module");
 const items_module_1 = require("./items/items.module");
 const transactions_module_1 = require("./transactions/transactions.module");
+const core_1 = require("@nestjs/core");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, users_module_1.UsersModule, roles_module_1.RolesModule, auth_module_1.AuthModule, permissions_module_1.PermissionsModule, warehouses_module_1.WarehousesModule, items_module_1.ItemsModule, transactions_module_1.TransactionsModule],
+        imports: [
+            prisma_module_1.PrismaModule,
+            users_module_1.UsersModule,
+            roles_module_1.RolesModule,
+            auth_module_1.AuthModule,
+            permissions_module_1.PermissionsModule,
+            warehouses_module_1.WarehousesModule,
+            items_module_1.ItemsModule,
+            transactions_module_1.TransactionsModule,
+        ],
+        providers: [
+            {
+                provide: core_1.APP_PIPE,
+                useClass: common_1.ValidationPipe,
+            },
+        ]
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

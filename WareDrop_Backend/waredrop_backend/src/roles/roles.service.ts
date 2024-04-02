@@ -1,21 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
+import {Prisma} from "@prisma/client";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsStringArray} from "../validation/IsStringArrayConstraint";
 
-export interface AddRoleInput {
-    role_id: number,
-    user_id: number,
+export class AddRoleInput {
+    @IsNumber()
+    @IsNotEmpty()
+    roleId: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    userId: number
 }
 
-export interface AddPermissionInput {
-    role_id: number,
-    permission_id: number,
+export class Role {
+    @IsNumber()
+    roleId?: number
+
+    @IsString()
+    @IsNotEmpty()
+    roleName: string
+
+    @IsStringArray()
+    permissions?: string[]
 }
 
-export interface Role {
-    role_id?: number,
-    role_name: string;
-    permissions?: string[];
+export class RoleDto {
+    @IsNumber()
+    @IsNotEmpty()
+    roleId: number
 }
 @Injectable()
 export class RolesService {
@@ -24,7 +39,7 @@ export class RolesService {
     async createRole(newRole: Role){
         return this.db.roles.create({
             data: {
-                role_name: newRole.role_name,
+                role_name: newRole.roleName,
             }
         })
     }
@@ -46,20 +61,11 @@ export class RolesService {
         return rolesResult;
     }
 
-    async addRoleToUser(input: AddRoleInput){
+    async addRoleToUser(addRoleInput: AddRoleInput){
         return this.db.user_has_role.create({
             data: {
-                user_user_id: input.user_id,
-                role_role_id: input.role_id
-            }
-        })
-    }
-
-    async addPermissionToRole(input: AddPermissionInput){
-        return this.db.role_has_permission.create({
-            data: {
-                role_role_id: input.role_id,
-                permission_permission_id: input.permission_id
+                user_user_id: addRoleInput.userId,
+                role_role_id: addRoleInput.roleId
             }
         })
     }
@@ -84,7 +90,7 @@ export class RolesService {
             }
         })
         for (const role of roles) {
-            const roleItem: Role = {role_id: role.role_id,role_name: role.role_name, permissions: []}
+            const roleItem: Role = {roleId: role.role_id,roleName: role.role_name, permissions: []}
             for (const permission of permissions) {
                 if(role.role_has_permission[0] === undefined){
                     break;
@@ -96,5 +102,67 @@ export class RolesService {
             roleList.push(roleItem);
         }
         return roleList;
+    }
+
+    async removeRole(removeInput: AddRoleInput){
+        return this.db.user_has_role.delete({
+            where: {
+                role_role_id_user_user_id: {
+                    role_role_id: removeInput.roleId,
+                    user_user_id: removeInput.userId,
+                }
+            }
+        })
+    }
+
+    async deleteRole(deleteRole: RoleDto){
+        try {
+
+            //If the role got any assigned permissions, the relation will be deleted as well
+            const hasPermission = await this.db.role_has_permission.findFirst({
+                where: {
+                    role_role_id: deleteRole.roleId,
+                }
+            })
+
+            if (hasPermission){
+                await this.db.role_has_permission.deleteMany({
+                    where: {
+                        role_role_id: deleteRole.roleId,
+                    }
+                })
+            }
+
+            //If the role is assigned to any user, the relation will be deleted as well
+            const assigned = await this.db.user_has_role.findFirst({
+                where: {
+                    role_role_id: deleteRole.roleId,
+                }
+            })
+
+            if (assigned){
+                await this.db.user_has_role.deleteMany({
+                    where: {
+                        role_role_id: deleteRole.roleId,
+                    }
+                })
+            }
+
+            await this.db.roles.delete({
+                where: {
+                    role_id: deleteRole.roleId,
+                }
+            });
+
+            return {Massage: "Role deleted"};
+        }
+        catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'){
+                return {errorMassage: "Role does not exist"};
+            }
+            else {
+                throw e
+            }
+        }
     }
 }
