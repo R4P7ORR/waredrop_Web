@@ -2,6 +2,7 @@ import {Text, TouchableOpacity, View} from "react-native";
 import React from "react";
 import styles from "./StyleSheet";
 
+// @ts-ignore
 function My_Deliveries({navigation}){
 
     const goBackToStartMenu = () => {
@@ -9,6 +10,8 @@ function My_Deliveries({navigation}){
     };
 
     return(
+
+
         <View>
             <TouchableOpacity
                 style={styles.loginBtn}
