@@ -13,6 +13,7 @@ exports.PermissionGuard = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_decoder_1 = require("../jwt.decoder");
 const core_1 = require("@nestjs/core");
+const permission_decorator_1 = require("./permission.decorator");
 let PermissionGuard = class PermissionGuard {
     constructor(jwt, reflector) {
         this.jwt = jwt;
@@ -23,8 +24,15 @@ let PermissionGuard = class PermissionGuard {
         const token = this.jwt.decodeToken(request);
         if (!token)
             return false;
-        const permission = this.reflector.getAllAndOverride('permission', [context.getHandler(), context.getClass()]);
-        return token.sub.userPermissions.includes(permission);
+        const permissions = this.reflector.get(permission_decorator_1.RequiredPermission, context.getHandler());
+        for (const userPermission of token.sub.userPermissions) {
+            for (const reqPermission of permissions) {
+                if (userPermission.permissionName === reqPermission.permissionName) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 };
 exports.PermissionGuard = PermissionGuard;

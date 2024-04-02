@@ -9,9 +9,57 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionsService = void 0;
+exports.TransactionsService = exports.WorkerUpdateInput = exports.Transaction = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../database/prisma.service");
+const class_validator_1 = require("class-validator");
+class Transaction {
+}
+exports.Transaction = Transaction;
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], Transaction.prototype, "transId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Transaction.prototype, "transArrivedDate", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], Transaction.prototype, "transOrigin", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], Transaction.prototype, "transTarget", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], Transaction.prototype, "warehouseId", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], Transaction.prototype, "itemId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Transaction.prototype, "workerEmail", void 0);
+class WorkerUpdateInput {
+}
+exports.WorkerUpdateInput = WorkerUpdateInput;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], WorkerUpdateInput.prototype, "workerEmail", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], WorkerUpdateInput.prototype, "transId", void 0);
 let TransactionsService = class TransactionsService {
     constructor(db) {
         this.db = db;
@@ -19,41 +67,41 @@ let TransactionsService = class TransactionsService {
     async createTrans(newTrans) {
         return this.db.transactions.create({
             data: {
-                trans_post_date: Date.now().toString(),
-                trans_origin: newTrans.trans_origin,
-                trans_target: newTrans.trans_target,
-                warehouse_warehouse_id: newTrans.warehouse_warehouse_id,
-                item_item_id: newTrans.item_item_id
+                trans_post_date: new Date(Date.now()),
+                trans_origin: newTrans.transOrigin,
+                trans_target: newTrans.transTarget,
+                warehouse_warehouse_id: newTrans.warehouseId,
+                item_item_id: newTrans.itemId
             }
         });
     }
     async addWorkerToTrans(addInput) {
         return this.db.transactions.update({
             data: {
-                worker_id: addInput.worker_id,
+                worker_email: addInput.workerEmail,
             },
             where: {
-                trans_id: addInput.trans_id,
+                trans_id: addInput.transId,
             }
         });
     }
-    async getAllTransByUser(user_id) {
+    async getAllTransByUser(user) {
         return this.db.transactions.findMany({
             where: {
                 warehouses: {
                     user_assigned_to_warehouse: {
                         some: {
-                            user_user_id: user_id
+                            user_user_id: user.userId
                         }
                     }
                 }
             }
         });
     }
-    async getAllTransByWorker(worker_id) {
+    async getAllTransByWorker(user) {
         return this.db.transactions.findMany({
             where: {
-                worker_id: worker_id
+                worker_email: user.userEmail,
             }
         });
     }
@@ -62,18 +110,27 @@ let TransactionsService = class TransactionsService {
     }
     async getAvailableTrans() {
         return this.db.transactions.findMany({
+            select: {
+                trans_id: true,
+                trans_post_date: true,
+                trans_arrived_date: true,
+                trans_origin: true,
+                trans_target: true,
+                worker_email: true,
+                items: {}
+            },
             where: {
-                worker_id: null
+                worker_email: null
             }
         });
     }
     async updateTrans(updateInput) {
         return this.db.transactions.update({
             data: {
-                trans_arrived_date: updateInput.date,
+                trans_arrived_date: new Date(Date.now()),
             },
             where: {
-                trans_id: updateInput.trans_id,
+                trans_id: updateInput.transId,
             }
         });
     }

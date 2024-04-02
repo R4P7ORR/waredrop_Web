@@ -15,11 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemsController = void 0;
 const common_1 = require("@nestjs/common");
 const items_service_1 = require("./items.service");
-const jwt_decoder_1 = require("../auth/jwt.decoder");
+const jwt_guard_1 = require("../auth/guards/jwt.guard");
+const permission_guard_1 = require("../auth/guards/permission.guard");
+const permission_decorator_1 = require("../auth/guards/permission.decorator");
 let ItemsController = class ItemsController {
-    constructor(service, jwt) {
+    constructor(service) {
         this.service = service;
-        this.jwt = jwt;
     }
     async addItem(newItem) {
         return this.service.addItem(newItem);
@@ -27,43 +28,25 @@ let ItemsController = class ItemsController {
     async getItems() {
         return this.service.getItems();
     }
-    async assignItemToWarehouse({ user_id, warehouse_name }) {
-        return this.service.assignItemToWarehouse(user_id, warehouse_name);
-    }
-    async delete(item_id) {
-        return this.service.deleteItem(item_id);
-    }
 };
 exports.ItemsController = ItemsController;
 __decorate([
-    (0, common_1.Post)('/newItem'),
+    (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [items_service_1.CreateItemDto]),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "addItem", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'All' }]),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "getItems", null);
-__decorate([
-    (0, common_1.Post)('/assignToWarehouse'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], ItemsController.prototype, "assignItemToWarehouse", null);
-__decorate([
-    (0, common_1.Delete)('/delete'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], ItemsController.prototype, "delete", null);
 exports.ItemsController = ItemsController = __decorate([
     (0, common_1.Controller)('items'),
-    __metadata("design:paramtypes", [items_service_1.ItemsService, jwt_decoder_1.default])
+    __metadata("design:paramtypes", [items_service_1.ItemsService])
 ], ItemsController);
 //# sourceMappingURL=items.controller.js.map

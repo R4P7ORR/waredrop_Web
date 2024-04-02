@@ -19,9 +19,9 @@ function Register(props: RegisterProps) {
             console.log("Must match!")
         }else{
             axios.post('http://localhost:3001/auth/register', {
-                name: fullNameInput,
-                email: emailInput,
-                password: passwordInput
+                userName: fullNameInput,
+                userEmail: emailInput,
+                userPassword: passwordInput
             }).then(res => {
                 if (res.data.hasOwnProperty('message')){
                     setFullNameInput('');

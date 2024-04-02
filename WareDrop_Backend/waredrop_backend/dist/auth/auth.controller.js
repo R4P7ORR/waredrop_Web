@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const local_guard_1 = require("./guards/local.guard");
 const jwt_guard_1 = require("./guards/jwt.guard");
+const users_service_1 = require("../users/users.service");
 const jwt_decoder_1 = require("./jwt.decoder");
 let AuthController = class AuthController {
     constructor(service, jwt) {
@@ -32,8 +33,8 @@ let AuthController = class AuthController {
     status(req) {
         return req.user;
     }
-    async isAdmin(req) {
-        const user_token = await this.jwt.decodeToken(req);
+    isAdmin(req) {
+        const user_token = this.jwt.decodeToken(req);
         return this.service.isAdmin(user_token.sub.userPermissions);
     }
 };
@@ -50,7 +51,7 @@ __decorate([
     (0, common_1.Post)('register'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [users_service_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "register", null);
 __decorate([
@@ -67,7 +68,7 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], AuthController.prototype, "isAdmin", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),

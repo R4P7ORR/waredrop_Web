@@ -1,10 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export interface Item{
-    item_id?: number,
-    item_name: string,
-    item_quantity: number,
+export class CreateItemDto{
+    @IsString()
+    @IsNotEmpty()
+    itemName: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    itemQuantity: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    warehouseId: number
 }
 
 @Injectable()
@@ -12,42 +21,46 @@ export class ItemsService {
     constructor(private readonly db: PrismaService) {
     }
 
-    async addItem(newItem: Item){
-        return this.db.items.create({
-            data: newItem
-        })
+    async addItem(newItem: CreateItemDto){
+        try {
+            const createdItem = await this.db.items.create({
+                data: {
+                    item_name: newItem.itemName,
+                    item_quantity: newItem.itemQuantity
+                }
+            })
+
+            await this.assignItemToWarehouse(createdItem.item_id, newItem.warehouseId);
+
+            return {Massage: 'Added a new item to the warehouse'};
+
+        } catch (e) {
+            throw e;
+        }
     }
 
     async getItems(){
-        return this.db.items.findMany()
+        return this.db.items.findMany();
     }
 
-    async assignItemToWarehouse(item_id: number, warehouse_name: string){
+    async assignItemToWarehouse(itemId: number, warehouseId: number){
         const warehouse = await this.db.warehouses.findFirst({
             select: {
                 warehouse_id: true,
                 location: true,
             },
             where: {
-                warehouse_name: warehouse_name,
+                warehouse_id: warehouseId,
             }
         })
         return this.db.transactions.create({
             data:{
-                trans_post_date: Date.now().toString(),
-                trans_arrived_date: Date.now().toString(),
+                trans_post_date: new Date(Date.now()),
+                trans_arrived_date: new Date(Date.now()),
                 warehouse_warehouse_id: warehouse.warehouse_id,
-                item_item_id: item_id,
+                item_item_id: itemId,
                 trans_origin: warehouse.location,
                 trans_target: warehouse.location,
-            }
-        })
-    }
-
-    async deleteItem(item_id: number){
-        return this.db.items.delete({
-            where: {
-                item_id: item_id
             }
         })
     }

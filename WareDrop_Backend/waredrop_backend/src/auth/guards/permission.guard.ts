@@ -1,8 +1,8 @@
 import {CanActivate, ExecutionContext, Injectable} from "@nestjs/common";
-import {Observable} from "rxjs";
 import JwtDecoder from "../jwt.decoder";
 import {Reflector} from "@nestjs/core";
 import {TokenData} from "../auth.service";
+import {RequiredPermission} from "./permission.decorator";
 
 @Injectable()
 export class PermissionGuard implements CanActivate{
@@ -15,10 +15,15 @@ export class PermissionGuard implements CanActivate{
 
         if (!token) return false;
 
-        const permission = this.reflector.getAllAndOverride(
-            'permission',[context.getHandler(), context.getClass()]
-        );
+        const permissions = this.reflector.get(RequiredPermission, context.getHandler());
 
-        return token.sub.userPermissions.includes(permission);
+        for (const userPermission of token.sub.userPermissions) {
+            for (const reqPermission of permissions) {
+                if(userPermission.permissionName === reqPermission.permissionName){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

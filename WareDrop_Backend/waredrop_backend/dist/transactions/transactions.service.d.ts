@@ -1,17 +1,17 @@
 import { PrismaService } from "../database/prisma.service";
-export interface Transaction {
-    trans_id?: number;
-    trans_arrived_date?: string;
-    trans_origin: string;
-    trans_target: string;
-    warehouse_warehouse_id: number;
-    item_item_id: number;
-    worker_id?: number;
+import { UserDto } from "../users/users.service";
+export declare class Transaction {
+    transId?: number;
+    transArrivedDate?: string;
+    transOrigin: string;
+    transTarget: string;
+    warehouseId: number;
+    itemId: number;
+    workerEmail?: string;
 }
-export interface WorkerUpdateInput {
-    worker_id: number;
-    trans_id: number;
-    date?: string;
+export declare class WorkerUpdateInput {
+    workerEmail?: string;
+    transId: number;
 }
 export declare class TransactionsService {
     private readonly db;
@@ -36,7 +36,7 @@ export declare class TransactionsService {
         item_item_id: number;
         worker_id: number;
     }>;
-    getAllTransByUser(user_id: number): Promise<{
+    getAllTransByUser(user: UserDto): Promise<{
         trans_id: number;
         trans_post_date: string;
         trans_arrived_date: string;
@@ -46,7 +46,7 @@ export declare class TransactionsService {
         item_item_id: number;
         worker_id: number;
     }[]>;
-    getAllTransByWorker(worker_id: number): Promise<{
+    getAllTransByWorker(user: UserDto): Promise<{
         trans_id: number;
         trans_post_date: string;
         trans_arrived_date: string;

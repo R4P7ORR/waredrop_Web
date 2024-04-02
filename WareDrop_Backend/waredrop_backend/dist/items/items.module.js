@@ -18,7 +18,7 @@ exports.ItemsModule = ItemsModule;
 exports.ItemsModule = ItemsModule = __decorate([
     (0, common_1.Module)({
         providers: [items_service_1.ItemsService, prisma_service_1.PrismaService, jwt_decoder_1.default],
-        controllers: [items_controller_1.ItemsController]
+        controllers: [items_controller_1.ItemsController],
     })
 ], ItemsModule);
 //# sourceMappingURL=items.module.js.map

@@ -38,13 +38,13 @@ model roles {
 
 model transactions {
   trans_id               Int        @id(map: "transactions_pk") @default(autoincrement())
-  trans_post_date        String     @db.VarChar(20)
-  trans_arrived_date     String?    @db.VarChar(20)
+  trans_post_date        DateTime
+  trans_arrived_date     DateTime?
   trans_origin           String?    @db.VarChar(30)
   trans_target           String     @db.VarChar(30)
   warehouse_warehouse_id Int
   item_item_id           Int
-  worker_id              Int?
+  worker_email           String?    @db.VarChar(50)
   items                  items      @relation(fields: [item_item_id], references: [item_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_item_fk")
   warehouses             warehouses @relation(fields: [warehouse_warehouse_id], references: [warehouse_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_warehouse_fk")
 }

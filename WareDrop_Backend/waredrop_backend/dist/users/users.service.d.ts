@@ -1,13 +1,18 @@
 import { PrismaService } from "../database/prisma.service";
-import { Prisma } from "@prisma/client";
-import { UpdateInput } from "./users.controller";
-export interface CreateUserDto {
-    name: string;
-    email: string;
-    password: string;
+export declare class CreateUserDto {
+    userName: string;
+    userEmail: string;
+    userPassword: string;
 }
-export interface UserDto {
+export declare class UpdateInput {
     userId: number;
+    userName?: string;
+    userPassword?: string;
+    userEmail?: string;
+}
+export declare class UserDto {
+    userId: number;
+    userEmail: string;
 }
 export declare class UsersService {
     private db;
@@ -36,13 +41,14 @@ export declare class UsersService {
         user_email: string;
         user_password: string;
     }>;
-    deleteUser(deleteInput: Prisma.usersWhereUniqueInput): Promise<{
-        user_id: number;
-        user_name: string;
-        user_email: string;
-        user_password: string;
+    deleteUser(deleteInput: UserDto): Promise<{
+        Massage: string;
+        errorMassage?: undefined;
+    } | {
+        errorMassage: string;
+        Massage?: undefined;
     }>;
-    getUserName(user_id: number): Promise<{
+    getUserName(user: UserDto): Promise<{
         user_name: string;
     }>;
 }

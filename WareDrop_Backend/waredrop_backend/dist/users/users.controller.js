@@ -14,34 +14,34 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
-const client_1 = require("@prisma/client");
 const users_service_1 = require("./users.service");
 const permissions_service_1 = require("../permissions/permissions.service");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
 const jwt_decoder_1 = require("../auth/jwt.decoder");
-const permission_decoarator_1 = require("../auth/permission.decoarator");
+const permission_guard_1 = require("../auth/guards/permission.guard");
+const permission_decorator_1 = require("../auth/guards/permission.decorator");
 let UsersController = class UsersController {
-    constructor(users, permissions, jwt) {
-        this.users = users;
+    constructor(service, permissions, jwt) {
+        this.service = service;
         this.permissions = permissions;
         this.jwt = jwt;
     }
-    async userPermissions(req) {
+    userPermissions(req) {
         const decodedJwt = this.jwt.decodeToken(req);
         return this.permissions.getPermissionsByUser(decodedJwt.sub.id);
     }
-    async getUserName(req) {
+    getUserName(req) {
         const decodedJwt = this.jwt.decodeToken(req);
-        return this.users.getUserName(decodedJwt.sub.id);
+        return this.service.getUserName({ userId: decodedJwt.sub.id, userEmail: decodedJwt.sub.email });
     }
-    async getAllUsers() {
-        return this.users.listUsers();
+    getAllUsers() {
+        return this.service.listUsers();
     }
-    async updateUser(updateInput) {
-        return this.users.updateUser(updateInput);
+    updateUser(updateInput) {
+        return this.service.updateUser(updateInput);
     }
-    async deleteUser(deleteUser) {
-        return this.users.deleteUser(deleteUser);
+    deleteUser(deleteUser) {
+        return this.service.deleteUser(deleteUser);
     }
 };
 exports.UsersController = UsersController;
@@ -51,37 +51,37 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], UsersController.prototype, "userPermissions", null);
 __decorate([
-    (0, common_1.Get)('/getUserName'),
+    (0, common_1.Get)('/userName'),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], UsersController.prototype, "getUserName", null);
 __decorate([
-    (0, common_1.Get)('/listAll'),
-    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, permission_decoarator_1.PermissionGuard)({ permission_name: 'All' }),
+    (0, common_1.Get)(),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'All' }]),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], UsersController.prototype, "getAllUsers", null);
 __decorate([
-    (0, common_1.Post)('/update'),
+    (0, common_1.Patch)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [users_service_1.UpdateInput]),
+    __metadata("design:returntype", void 0)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
-    (0, common_1.Post)('/delete'),
+    (0, common_1.Delete)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [users_service_1.UserDto]),
+    __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUser", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('/user'),

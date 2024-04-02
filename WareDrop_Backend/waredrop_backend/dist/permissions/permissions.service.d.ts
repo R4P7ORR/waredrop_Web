@@ -1,7 +1,15 @@
 import { PrismaService } from "../database/prisma.service";
-export interface Permission {
-    permission_id?: number;
-    permission_name: string;
+import { UserDto } from "../users/users.service";
+export declare class Permission {
+    permissionId?: number;
+    permissionName: string;
+}
+export declare class PermissionDto {
+    permissionId: number;
+}
+export declare class AssignPermissionDto {
+    permissionId: number;
+    roleId: number;
 }
 export declare class PermissionsService {
     private readonly db;
@@ -10,9 +18,24 @@ export declare class PermissionsService {
         permission_id: number;
         permission_name: string;
     }>;
-    givePermission(permission_id: number, role_id: number): Promise<{
+    getAllPermissions(): Promise<{
+        permission_id: number;
+        permission_name: string;
+    }[]>;
+    getPermissionsByUser(userDto: UserDto): Promise<Permission[]>;
+    givePermission(assignInput: AssignPermissionDto): Promise<{
         permission_permission_id: number;
         role_role_id: number;
     }>;
-    getPermissionsByUser(user_id: number): Promise<Permission[]>;
+    removePermission(removeInput: AssignPermissionDto): Promise<{
+        permission_permission_id: number;
+        role_role_id: number;
+    }>;
+    deletePermission(deletePermission: PermissionDto): Promise<{
+        Massage: string;
+        errorMassage?: undefined;
+    } | {
+        errorMassage: string;
+        Massage?: undefined;
+    }>;
 }
