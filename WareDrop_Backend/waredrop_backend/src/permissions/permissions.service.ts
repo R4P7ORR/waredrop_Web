@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
-import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import { IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {Prisma} from "@prisma/client";
 
 export class Permission{
     @IsNumber()
@@ -10,6 +11,12 @@ export class Permission{
     @IsString()
     @IsNotEmpty()
     permissionName: string
+}
+
+export class PermissionDto {
+    @IsNumber()
+    @IsNotEmpty()
+    permissionId: number
 }
 
 export class AssignPermissionDto {
@@ -76,5 +83,52 @@ export class PermissionsService {
                 role_role_id: assignInput.roleId,
             }
         });
+    }
+
+    async removePermission(removeInput: AssignPermissionDto){
+        return this.db.role_has_permission.delete({
+            where: {
+                permission_permission_id_role_role_id: {
+                    role_role_id: removeInput.roleId,
+                    permission_permission_id: removeInput.permissionId,
+                }
+            }
+        })
+    }
+
+    async deletePermission(deletePermission: PermissionDto){
+        try {
+
+            //If the permission is assigned to any roles, the relation will be deleted as well
+            const hasRole = await this.db.role_has_permission.findFirst({
+                where: {
+                    permission_permission_id: deletePermission.permissionId,
+                }
+            })
+
+            if (hasRole){
+                await this.db.role_has_permission.deleteMany({
+                    where: {
+                        permission_permission_id: deletePermission.permissionId,
+                    }
+                })
+            }
+
+            await this.db.permissions.delete({
+                where: {
+                    permission_id: deletePermission.permissionId,
+                }
+            });
+
+            return {Massage: "Permission deleted"};
+        }
+        catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'){
+                return {errorMassage: "Role does not exist"};
+            }
+            else {
+                throw e
+            }
+        }
     }
 }

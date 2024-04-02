@@ -15,16 +15,6 @@ export class AddRoleInput {
     userId: number
 }
 
-export class AddPermissionInput {
-    @IsNumber()
-    @IsNotEmpty()
-    roleId: number
-
-    @IsNumber()
-    @IsNotEmpty()
-    permissionId: number
-}
-
 export class Role {
     @IsNumber()
     roleId?: number
@@ -80,15 +70,6 @@ export class RolesService {
         })
     }
 
-    async addPermissionToRole(input: AddPermissionInput){
-        return this.db.role_has_permission.create({
-            data: {
-                role_role_id: input.roleId,
-                permission_permission_id: input.permissionId
-            }
-        })
-    }
-
     async listRoles(){
         const roleList: Role[] = [];
         const roles = await this.db.roles.findMany({
@@ -121,6 +102,17 @@ export class RolesService {
             roleList.push(roleItem);
         }
         return roleList;
+    }
+
+    async removeRole(removeInput: AddRoleInput){
+        return this.db.user_has_role.delete({
+            where: {
+                role_role_id_user_user_id: {
+                    role_role_id: removeInput.roleId,
+                    user_user_id: removeInput.userId,
+                }
+            }
+        })
     }
 
     async deleteRole(deleteRole: RoleDto){

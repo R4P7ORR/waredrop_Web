@@ -31,6 +31,11 @@ export class RolesController {
         return this.service.addRoleToUser(addRoleInput);
     }
 
+    @Patch('remove')
+    removeRole(@Body() removeInput: AddRoleInput){
+        return this.service.removeRole(removeInput);
+    }
+
     @Delete()
     deleteRole(@Body() deleteRole: RoleDto){
         return this.service.deleteRole(deleteRole)
