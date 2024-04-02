@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {Prisma} from "@prisma/client";
-import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {IsStringArray} from "../validation/IsStringArrayConstraint";
 
 export class AddRoleInput {
@@ -17,6 +17,7 @@ export class AddRoleInput {
 
 export class Role {
     @IsNumber()
+    @IsOptional()
     roleId?: number
 
     @IsString()
@@ -24,6 +25,7 @@ export class Role {
     roleName: string
 
     @IsStringArray()
+    @IsOptional()
     permissions?: string[]
 }
 

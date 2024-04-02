@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
-import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 
 export class Transaction {
     @IsNumber()
+    @IsOptional()
     transId?: number
 
     @IsString()
+    @IsOptional()
     transArrivedDate?: string
 
     @IsString()
@@ -27,6 +29,7 @@ export class Transaction {
     itemId: number
 
     @IsString()
+    @IsOptional()
     workerEmail?: string
 }
 
