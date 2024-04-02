@@ -38,8 +38,8 @@ model roles {
 
 model transactions {
   trans_id               Int        @id(map: "transactions_pk") @default(autoincrement())
-  trans_post_date        String     @db.VarChar(20)
-  trans_arrived_date     String?    @db.VarChar(20)
+  trans_post_date        DateTime
+  trans_arrived_date     DateTime?
   trans_origin           String?    @db.VarChar(30)
   trans_target           String     @db.VarChar(30)
   warehouse_warehouse_id Int

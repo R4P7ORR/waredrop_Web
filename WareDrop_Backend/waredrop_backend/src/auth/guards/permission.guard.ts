@@ -15,11 +15,13 @@ export class PermissionGuard implements CanActivate{
 
         if (!token) return false;
 
-        const permission = this.reflector.get(RequiredPermission, context.getHandler());
+        const permissions = this.reflector.get(RequiredPermission, context.getHandler());
 
         for (const userPermission of token.sub.userPermissions) {
-            if(userPermission.permission_name === permission.permission_name){
-                return true;
+            for (const reqPermission of permissions) {
+                if(userPermission.permissionName === reqPermission.permissionName){
+                    return true;
+                }
             }
         }
         return false;

@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export interface CreateItemDto{
-    itemName: string,
-    itemQuantity: number,
-    warehouseId: number,
-}
+export class CreateItemDto{
+    @IsString()
+    @IsNotEmpty()
+    itemName: string
 
-export interface ItemDto {
-    itemId: number,
-    itemName: string,
-    itemQuantity: number,
+    @IsNumber()
+    @IsNotEmpty()
+    itemQuantity: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    warehouseId: number
 }
 
 @Injectable()
@@ -32,7 +35,7 @@ export class ItemsService {
             return {Massage: 'Added a new item to the warehouse'};
 
         } catch (e) {
-            return {errorMassage: 'Something went wrong'};
+            throw e;
         }
     }
 
@@ -52,8 +55,8 @@ export class ItemsService {
         })
         return this.db.transactions.create({
             data:{
-                trans_post_date: Date.now().toString(),
-                trans_arrived_date: Date.now().toString(),
+                trans_post_date: new Date(Date.now()),
+                trans_arrived_date: new Date(Date.now()),
                 warehouse_warehouse_id: warehouse.warehouse_id,
                 item_item_id: itemId,
                 trans_origin: warehouse.location,

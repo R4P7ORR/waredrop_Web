@@ -8,9 +8,7 @@ import {PassportModule} from "@nestjs/passport";
 import {LocalStrategy} from "./strategies/local.strategy";
 import {JwtStrategy} from "./strategies/jwt.strategy";
 import {UsersModule} from "../users/users.module";
-import {RolesModule} from "../roles/roles.module";
 import JwtDecoder from "./jwt.decoder";
-import {PermissionsService} from "../permissions/permissions.service";
 import {PermissionsModule} from "../permissions/permissions.module";
 
 @Module({

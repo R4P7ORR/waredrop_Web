@@ -1,21 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export interface Transaction {
-    transId?: number,
-    transArrivedDate?: string,
-    transOrigin: string,
-    transTarget: string,
-    warehouseId: number,
-    itemId: number,
-    workerEmail?: string,
+export class Transaction {
+    @IsNumber()
+    transId?: number
+
+    @IsString()
+    transArrivedDate?: string
+
+    @IsString()
+    @IsNotEmpty()
+    transOrigin: string
+
+    @IsString()
+    @IsNotEmpty()
+    transTarget: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    warehouseId: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    itemId: number
+
+    @IsString()
+    workerEmail?: string
 }
 
-export interface WorkerUpdateInput {
-    workerEmail: string,
-    transId: number,
-    date?: string,
+export class WorkerUpdateInput {
+    @IsString()
+    workerEmail?: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    transId: number
 }
 
 @Injectable()
@@ -25,7 +46,7 @@ export class TransactionsService {
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
             data: {
-                trans_post_date: Date.now().toString(),
+                trans_post_date: new Date(Date.now()),
                 trans_origin: newTrans.transOrigin,
                 trans_target: newTrans.transTarget,
                 warehouse_warehouse_id: newTrans.warehouseId,
@@ -72,6 +93,15 @@ export class TransactionsService {
 
     async getAvailableTrans(){
         return this.db.transactions.findMany({
+            select: {
+                trans_id: true,
+                trans_post_date: true,
+                trans_arrived_date: true,
+                trans_origin: true,
+                trans_target: true,
+                worker_email: true,
+                items: {}
+            },
             where: {
                 worker_email: null
             }
@@ -81,7 +111,7 @@ export class TransactionsService {
     async updateTrans(updateInput: WorkerUpdateInput){
         return this.db.transactions.update({
             data: {
-                trans_arrived_date: updateInput.date,
+                trans_arrived_date: new Date(Date.now()),
             },
             where: {
                 trans_id: updateInput.transId,

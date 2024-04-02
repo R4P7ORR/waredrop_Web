@@ -13,18 +13,21 @@ export class TransactionsController {
     ) { }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     addTrans(@Body() newTrans: Transaction){
         return this.service.createTrans(newTrans);
     }
 
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
-    @RequiredPermission({permission_name: 'All'})
+    @RequiredPermission([{permissionName: 'All'}])
     getAllTrans(){
         return this.service.getAllTrans();
     }
 
     @Get('/available')
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
     getAvailable(){
         return this.service.getAvailableTrans();
     }
@@ -37,18 +40,23 @@ export class TransactionsController {
     }
 
     @Get('/worker')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
     getAllTransByWorker(@Req() req : Request){
         const user = this.jwt.decodeToken(req);
         return this.service.getAllTransByWorker(user.sub.id);
     }
 
     @Patch()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
     updateTrans(@Body() updateInput: WorkerUpdateInput){
         return this.service.updateTrans(updateInput)
     }
 
     @Patch('/assignWorker')
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
     addWorker(@Body() addInput: WorkerUpdateInput){
         return this.service.addWorkerToTrans(addInput);
     }
