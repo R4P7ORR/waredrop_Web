@@ -1,5 +1,5 @@
-import {Body, Controller, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
-import {AssignPermissionDto, Permission, PermissionsService} from "./permissions.service";
+import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {AssignPermissionDto, Permission, PermissionDto, PermissionsService} from "./permissions.service";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
@@ -29,5 +29,15 @@ export class PermissionsController {
     @Patch()
     givePermission(@Body() assignInput: AssignPermissionDto){
         return this.service.givePermission(assignInput);
+    }
+
+    @Patch('/remove')
+    removePermission(@Body() removeInput: AssignPermissionDto){
+        return this.service.removePermission(removeInput);
+    }
+
+    @Delete()
+    deletePermission(@Body() deletePermission: PermissionDto){
+        return this.service.deletePermission(deletePermission);
     }
 }
