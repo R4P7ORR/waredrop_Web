@@ -132,6 +132,8 @@ INSERT INTO permissions VALUES (nextval('permissions_permission_id_seq'), 'Trans
 
 INSERT INTO role_has_permission VALUES (1, 1);
 
+INSERT INTO role_has_permission VALUES (2, 2);
+
 INSERT INTO warehouses VALUES (nextval('warehouses_warehouse_id_seq'), 'Teszt_Warehouse', 'Budapest, Soroksári út, 16');
 
 INSERT INTO warehouses VALUES (nextval('warehouses_warehouse_id_seq'), 'Teszt_Target_Warehouse', 'Ecser, Ipar utca, 4');

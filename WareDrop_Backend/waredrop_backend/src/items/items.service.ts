@@ -35,7 +35,7 @@ export class ItemsService {
             return {Massage: 'Added a new item to the warehouse'};
 
         } catch (e) {
-            return {errorMassage: 'Something went wrong'};
+            throw e;
         }
     }
 
@@ -55,8 +55,8 @@ export class ItemsService {
         })
         return this.db.transactions.create({
             data:{
-                trans_post_date: Date.now().toString(),
-                trans_arrived_date: Date.now().toString(),
+                trans_post_date: new Date(Date.now()),
+                trans_arrived_date: new Date(Date.now()),
                 warehouse_warehouse_id: warehouse.warehouse_id,
                 item_item_id: itemId,
                 trans_origin: warehouse.location,

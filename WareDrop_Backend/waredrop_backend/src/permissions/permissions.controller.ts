@@ -7,7 +7,7 @@ import {UserDto} from "../users/users.service";
 
 @Controller('permissions')
 @UseGuards(JwtAuthGuard, PermissionGuard)
-@RequiredPermission({permissionName: 'All'})
+@RequiredPermission([{permissionName: 'All'}])
 export class PermissionsController {
     constructor(private readonly service: PermissionsService,) { }
 

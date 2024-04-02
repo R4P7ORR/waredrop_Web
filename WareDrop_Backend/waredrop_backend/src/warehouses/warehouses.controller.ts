@@ -18,7 +18,7 @@ export class WarehousesController {
     }
     @Get()
     @UseGuards(JwtAuthGuard,PermissionGuard)
-    @RequiredPermission({permissionName: 'All'})
+    @RequiredPermission([{permissionName: 'All'}])
     async getWarehouses(){
         return this.service.getWarehouses();
     }
@@ -38,7 +38,7 @@ export class WarehousesController {
 
     @Patch()
     @UseGuards(JwtAuthGuard,PermissionGuard)
-    @RequiredPermission({permissionName: 'All'})
+    @RequiredPermission([{permissionName: 'All'}])
     async addToUser(@Body() addInput: AddWarehouseDto){
         return this.service.addWarehouseToUser(addInput);
     }

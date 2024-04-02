@@ -32,15 +32,11 @@ export class Transaction {
 
 export class WorkerUpdateInput {
     @IsString()
-    @IsNotEmpty()
-    workerEmail: string
+    workerEmail?: string
 
     @IsNumber()
     @IsNotEmpty()
     transId: number
-
-    @IsString()
-    transDate?: string
 }
 
 @Injectable()
@@ -50,7 +46,7 @@ export class TransactionsService {
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
             data: {
-                trans_post_date: Date.now().toString(),
+                trans_post_date: new Date(Date.now()),
                 trans_origin: newTrans.transOrigin,
                 trans_target: newTrans.transTarget,
                 warehouse_warehouse_id: newTrans.warehouseId,
@@ -97,6 +93,15 @@ export class TransactionsService {
 
     async getAvailableTrans(){
         return this.db.transactions.findMany({
+            select: {
+                trans_id: true,
+                trans_post_date: true,
+                trans_arrived_date: true,
+                trans_origin: true,
+                trans_target: true,
+                worker_email: true,
+                items: {}
+            },
             where: {
                 worker_email: null
             }
@@ -106,7 +111,7 @@ export class TransactionsService {
     async updateTrans(updateInput: WorkerUpdateInput){
         return this.db.transactions.update({
             data: {
-                trans_arrived_date: updateInput.transDate,
+                trans_arrived_date: new Date(Date.now()),
             },
             where: {
                 trans_id: updateInput.transId,

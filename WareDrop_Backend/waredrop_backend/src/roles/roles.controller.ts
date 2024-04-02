@@ -7,7 +7,7 @@ import {RequiredPermission} from "../auth/guards/permission.decorator";
 
 @Controller('roles')
 @UseGuards(JwtAuthGuard, PermissionGuard)
-@RequiredPermission({permissionName: 'All'})
+@RequiredPermission([{permissionName: 'All'}])
 export class RolesController {
     constructor(private service: RolesService) { }
 
