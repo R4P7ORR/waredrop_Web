@@ -2,7 +2,7 @@ import {Injectable,} from "@nestjs/common";
 import {PrismaService} from "../database/prisma.service";
 import {Prisma} from "@prisma/client"
 import * as bcrypt from 'bcrypt'
-import {IsEmail, IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 
 
 export class CreateUserDto {
@@ -25,12 +25,14 @@ export class UpdateInput {
     userId: number
 
     @IsString()
+    @IsOptional()
     userName?: string
 
     @IsString()
     userPassword?: string
 
     @IsString()
+    @IsOptional()
     userEmail?: string
 }
 

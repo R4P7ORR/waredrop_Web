@@ -3,16 +3,17 @@ POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
-  "userEmail": "asd@asd.hu",
   "userName": "asd",
+  "userEmail": "asd@asd.hu",
   "userPassword": "titkos123"
 }
 
 
 ###
-POST http://localhost:3001/permissions
+POST http://localhost:3001/auth/login
 Content-Type: application/json
 
 {
-  "permissionName": "Keksz"
+  "email": "asd@asd.hu",
+  "password": "titkos123"
 }
