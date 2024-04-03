@@ -62,6 +62,26 @@ export class UsersService {
             });
     }
 
+    async createWorker(createInput: CreateUserDto){
+        const salt = await bcrypt.genSalt();
+        createInput.userPassword = await bcrypt.hash(createInput.userPassword, salt);
+        const newUser =  await this.db.users.create({
+            data: {
+                user_name: createInput.userName,
+                user_email: createInput.userEmail,
+                user_password: createInput.userPassword,
+            }
+        });
+        await this.db.user_has_role.create({
+            data: {
+                user_user_id: newUser.user_id,
+                role_role_id: 2
+            }
+        })
+
+        return newUser;
+    }
+
     async listUsers(){
         return this.db.users.findMany();
     }
