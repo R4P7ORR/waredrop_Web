@@ -13,6 +13,8 @@ export class WarehousesController {
     ) { }
 
     @Post()
+    @UseGuards(JwtAuthGuard,PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
     addNew(@Body() createInput: WarehouseCreateInput){
         return this.service.addWarehouse(createInput);
     }
