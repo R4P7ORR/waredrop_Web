@@ -1,24 +1,25 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
+import WarehouseContext from "../Contexts/WarehouseContext";
 
 interface OverlayProps {
-    id?: number;
     getType: string;
     setType: (type: string) => void;
 }
-function Overlay({id, getType, setType}: OverlayProps){
+function Overlay({getType, setType}: OverlayProps){
     const [nameInput, setNameInput] = useState("");
-    const [quantityInput, setQuantityInput] = useState<string>();
+    const [quantityInput, setQuantityInput] = useState<number>(1);
+    const {selectedId} = useContext(WarehouseContext);
 
     function handleClick(){
         if (nameInput.trim().length === 0 || quantityInput === undefined){
             console.log("Cannot be empty");
         } else{
-            console.log(quantityInput, id)
-            axios.post("http://localhost:3001/items/new", {
+            console.log(quantityInput, selectedId)
+            axios.post("http://localhost:3001/items", {
                 itemName: nameInput,
                 itemQuantity: quantityInput,
-                warehouseId: id
+                warehouseId: selectedId
             }).then(res =>{
                 console.log(res);
                 setType("none");
@@ -38,7 +39,11 @@ function Overlay({id, getType, setType}: OverlayProps){
                     }}/>
                     <input type="number" placeholder="Quantity" value={quantityInput} onChange={(e) => {
                         const quantity = e.target.value;
-                        setQuantityInput(quantity);
+                        if (quantity.length === 0 || Number.parseInt(quantity) < 1){
+                            setQuantityInput(1);
+                        } else {
+                            setQuantityInput(Number.parseInt(quantity));
+                        }
                     }}/>
                     <button onClick={handleClick}>Add</button>
                 </>

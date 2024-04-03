@@ -8,8 +8,8 @@ export class LocalStrategy extends PassportStrategy(Strategy){
         super({usernameField: 'email'});
     }
 
-    validate(email: string, password: string){
-        const user = this.authService.validateUser({userEmail: email, userPassword: password})
+    validate(userEmail: string, userPassword: string){
+        const user = this.authService.validateUser({userEmail: userEmail, userPassword: userPassword})
         if (!user) return {errorMessage: "User not found"};
         return user;
     }

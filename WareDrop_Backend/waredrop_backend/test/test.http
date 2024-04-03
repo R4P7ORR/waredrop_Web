@@ -1,5 +1,12 @@
-GET http://localhost:3001/transactions/available
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXR0aWxhQGdtYWlsLmNvbSIsInVzZXJQZXJtaXNzaW9ucyI6W3sicGVybWlzc2lvbk5hbWUiOiJBbGwifV19LCJpYXQiOjE3MTIwNTkxOTAsImV4cCI6MTcxNDY1MTE5MH0.Y_9DjprgsTU__LMnl1AmmVeRIulsGZDxh0KteFRLDwE
+###
+POST http://localhost:3001/auth/register
+Content-Type: application/json
+
+{
+  "userName": "asd",
+  "userEmail": "asd@asd.hu",
+  "userPassword": "titkos123"
+}
 
 
 ###
@@ -9,14 +16,4 @@ Content-Type: application/json
 {
   "email": "asd@asd.hu",
   "password": "titkos123"
-}
-
-###
-POST http://localhost:3001/auth/register
-Content-Type: application/json
-
-{
-  "userName": "asd",
-  "userEmail": "asd@asd.hu",
-  "userPassword": "titkos123"
 }

@@ -4,13 +4,13 @@ import WarehouseDisplay from "../Displays/WarehouseDisplay";
 import Navbar from "../Components/Navbar";
 import Users from "../Components/Users";
 import Overlay from "../Components/Overlay";
+import WarehouseContext from "../Contexts/WarehouseContextProvider";
 
 function Control(){
     const navigate = useNavigate();
     const [loginToken, setLoginToken] = useState("none");
     const [currentPage, setCurrentPage] = useState("control");
     const [overlayType, setOverlayType] = useState("none");
-    const [selectedId, setSelectedId] = useState(0);
 
 
     useEffect(() => {
@@ -24,10 +24,10 @@ function Control(){
     }, []);
 
     return (
-        <div>
+        <WarehouseContext>
             {overlayType!== "none"&&
                 <div className="overlay-fullscreen">
-                    <Overlay id={selectedId} getType={overlayType} setType={setOverlayType}/>
+                    <Overlay getType={overlayType} setType={setOverlayType}/>
                 </div>
             }
             <>
@@ -41,13 +41,13 @@ function Control(){
                     <>transactions</> : null
                 }
                 {currentPage === "users"?
-                    <Users/> : null
+                    <Users loginToken={loginToken}/> : null
                 }
                 {currentPage === "contact"?
                     <>contact</> : null
                 }
             </div>
-        </div>
+        </WarehouseContext>
     )
 }
 export default Control;

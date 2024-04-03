@@ -1,4 +1,4 @@
-import {Injectable, Optional} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
@@ -34,10 +34,6 @@ export class Transaction {
 }
 
 export class WorkerUpdateInput {
-    @IsString()
-    @IsOptional()
-    workerEmail?: string
-
     @IsNumber()
     @IsNotEmpty()
     transId: number
@@ -59,10 +55,10 @@ export class TransactionsService {
         })
     }
 
-    async addWorkerToTrans(addInput: WorkerUpdateInput ){
+    async addWorkerToTrans(addInput: WorkerUpdateInput, workerEmail: string ){
         return this.db.transactions.update({
             data: {
-                worker_email: addInput.workerEmail,
+                worker_email: workerEmail,
             },
             where: {
                 trans_id: addInput.transId,
