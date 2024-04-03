@@ -34,9 +34,6 @@ export class Transaction {
 }
 
 export class WorkerUpdateInput {
-    @IsString()
-    workerEmail?: string
-
     @IsNumber()
     @IsNotEmpty()
     transId: number
@@ -58,10 +55,10 @@ export class TransactionsService {
         })
     }
 
-    async addWorkerToTrans(addInput: WorkerUpdateInput ){
+    async addWorkerToTrans(addInput: WorkerUpdateInput, workerEmail: string ){
         return this.db.transactions.update({
             data: {
-                worker_email: addInput.workerEmail,
+                worker_email: workerEmail,
             },
             where: {
                 trans_id: addInput.transId,
