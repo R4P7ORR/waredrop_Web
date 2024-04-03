@@ -3,7 +3,7 @@ body{
 }
 .main-container{
     z-index: -1;
-    padding: 1rem;
+    padding: 3rem 1rem 1rem 1rem;
 }
 .item-container {
     display: flex;

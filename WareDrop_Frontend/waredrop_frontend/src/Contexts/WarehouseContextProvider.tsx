@@ -5,12 +5,13 @@ interface WarehouseContextProviderProps {
     children: ReactNode;
 }
 
-function DarkModeContextProvider(props: WarehouseContextProviderProps) {
+function WarehouseContextProvider(props: WarehouseContextProviderProps) {
     const [selectedId, setSelectedId] = useState(0);
-    const darkModeContextValue = { selectedId, setSelectedId};
+    const [overlayType, setOverlayType] = useState("none");
+    const warehouseContextValues = { selectedId, setSelectedId, overlayType, setOverlayType };
 
-    return <WarehouseContext.Provider value={darkModeContextValue}>
+    return <WarehouseContext.Provider value={warehouseContextValues}>
         {props.children}
     </WarehouseContext.Provider>
 }
-export default DarkModeContextProvider;
+export default WarehouseContextProvider;
