@@ -57,7 +57,8 @@ export class TransactionsController {
     @Patch('/assignWorker')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
-    addWorker(@Body() addInput: WorkerUpdateInput){
-        return this.service.addWorkerToTrans(addInput);
+    addWorker(@Req() token: Request, @Body() transId: WorkerUpdateInput){
+        const user = this.jwt.decodeToken(token);
+        return this.service.addWorkerToTrans(transId, user.sub.email);
     }
 }
