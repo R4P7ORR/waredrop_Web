@@ -52,9 +52,9 @@ function Login({navigation}) {
 
         if (password==password2){
         axios.post(`${baseUrl}/auth/register`, {
-            name: name,
-            email: email,
-            password: password,
+            userName: name,
+            userEmail: email,
+            userPassword: password,
 
         }).then( (response)=> {
             console.log(response.data)

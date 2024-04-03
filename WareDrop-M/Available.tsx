@@ -21,7 +21,11 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
             try {
                 const storedToken = await AsyncStorage.getItem('token');
                 if (baseUrl && storedToken) {
-                    axios.get(`${baseUrl}/transactions/available`)
+                    axios.get(`${baseUrl}/transactions/available`,{
+                        headers:{
+                            Authorization: `Bearer ${storedToken}`
+                        }
+                    })
                         .then((response) => {
                             const data=response.data;
                             setAvailable(data);
@@ -51,15 +55,35 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
         setTransactionId(null)
     }
 
-    const error =()=>{
-        if (available&&transactionId!==null) {
-            console.log("Legyen jó: ", available[transactionId])
-        }
+    const acceptTransaction= async (id:number)=>{
+            try {
+                const storedToken = await AsyncStorage.getItem('token');
+                if (baseUrl&&storedToken){
+                    axios.patch(`${baseUrl}/transactions/assignWorker`,
+                        {
+                            headers:{
+                                Authorization: `Bearer ${storedToken}`,
+                                transId:id,
+                            }
+                        })
+                        .then((response)=>{
+                            console.log('Ez itt a response: ' + response)
+                        })
+                        .catch((error)=>{
+                            console.log('Patch errorja: ' + error)
+                        })
+                }
+            }
+            catch (error){
+                console.log('try cath error: ' + error)
+            }
+
     }
 
     const goBackToStartMenu = () => {
             navigation.navigate('StartMenu');
         };
+
 
         return(
             <View>
@@ -79,7 +103,7 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
                 </View> :
                         <View>
                             {available &&
-                            <AvailableSelect list={available[transactionId]} back={goBack}/>}
+                            <AvailableSelect list={available[transactionId]} back={goBack} update={acceptTransaction}/>}
 
 
                         </View>

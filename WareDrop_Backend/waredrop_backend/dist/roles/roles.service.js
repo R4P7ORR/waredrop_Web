@@ -33,6 +33,7 @@ class Role {
 exports.Role = Role;
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], Role.prototype, "roleId", void 0);
 __decorate([
@@ -42,6 +43,7 @@ __decorate([
 ], Role.prototype, "roleName", void 0);
 __decorate([
     (0, IsStringArrayConstraint_1.IsStringArray)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], Role.prototype, "permissions", void 0);
 class RoleDto {

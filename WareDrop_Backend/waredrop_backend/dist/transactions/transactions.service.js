@@ -18,10 +18,12 @@ class Transaction {
 exports.Transaction = Transaction;
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], Transaction.prototype, "transId", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], Transaction.prototype, "transArrivedDate", void 0);
 __decorate([
@@ -46,6 +48,7 @@ __decorate([
 ], Transaction.prototype, "itemId", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], Transaction.prototype, "workerEmail", void 0);
 class WorkerUpdateInput {
@@ -53,6 +56,7 @@ class WorkerUpdateInput {
 exports.WorkerUpdateInput = WorkerUpdateInput;
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], WorkerUpdateInput.prototype, "workerEmail", void 0);
 __decorate([

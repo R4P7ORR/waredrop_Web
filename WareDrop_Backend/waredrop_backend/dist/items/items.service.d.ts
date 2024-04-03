@@ -17,12 +17,12 @@ export declare class ItemsService {
     }[]>;
     assignItemToWarehouse(itemId: number, warehouseId: number): Promise<{
         trans_id: number;
-        trans_post_date: string;
-        trans_arrived_date: string;
+        trans_post_date: Date;
+        trans_arrived_date: Date;
         trans_origin: string;
         trans_target: string;
         warehouse_warehouse_id: number;
         item_item_id: number;
-        worker_id: number;
+        worker_email: string;
     }>;
 }

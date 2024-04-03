@@ -19,6 +19,7 @@ class Permission {
 exports.Permission = Permission;
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], Permission.prototype, "permissionId", void 0);
 __decorate([

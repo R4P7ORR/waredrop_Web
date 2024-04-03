@@ -9,19 +9,12 @@ import baseUrl from "./BaseUrl";
 function StartMenu({navigation}){
 const [name,setName]=useState('User')
 
-
-
-
-
-
-   /* useEffect(() => {
-
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const storedToken = await AsyncStorage.getItem('token');
-                if (baseUrl&& storedToken) {
-                    const response =
-                        await axios.get(`${baseUrl}/user/getUserName`, {
+                if (baseUrl && storedToken) {
+                    const response = await axios.get(`${baseUrl}/user/userName`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${storedToken}`
@@ -29,40 +22,13 @@ const [name,setName]=useState('User')
                     });
                     setName(response.data.user_name);
                 }
-
             } catch (error) {
                 console.log('Itt az error: ' + error);
             }
         };
 
         fetchData();
-    }
-    , []);
-
-*/
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const storedToken = await AsyncStorage.getItem('token');
-                if (baseUrl && storedToken) {
-
-                    const response = await axios.get(`${baseUrl}/user/getUserName`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${storedToken}`
-                        }
-                    });
-                    setName(response.data.user_name);
-                }
-            } catch (error) {
-                console.log('Itt az error: ' + error);
-            }
-        };
-
-       fetchData();
     }, []);
-
-
 
 
     const handleLogout=async ()=>{
