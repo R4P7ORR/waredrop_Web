@@ -41,6 +41,8 @@ export class UsersController {
     }
 
     @Delete()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
     deleteUser(@Body() deleteUser: UserDto){
         return this.service.deleteUser(deleteUser);
     }
