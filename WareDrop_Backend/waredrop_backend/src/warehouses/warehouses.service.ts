@@ -73,8 +73,8 @@ export class WarehousesService {
     }
 
     async getItemsInWarehouse(warehouseDto: WarehouseDto){
-        const result = await this.db.transactions.findMany({
-            select:{
+        const result = await this.db.stock.findMany({
+            select: {
                 items: {
                     select: {
                         item_id: true,
