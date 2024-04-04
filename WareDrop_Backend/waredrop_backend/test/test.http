@@ -17,7 +17,20 @@ Content-Type: application/json
   "email": "asd@asd.hu",
   "password": "titkos123"
 }
+###
+POST http://localhost:3001/transactions
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjIsImVtYWlsIjoiYXNkQGFzZC5odSIsInVzZXJQZXJtaXNzaW9ucyI6W119LCJpYXQiOjE3MTIxMzYxMTUsImV4cCI6MTcxNDcyODExNX0.v3k_Q1FtabFxa4z6TQoOBnKgQyumsokgvungpE8ia80
+Content-Type: application/json
+
+{
+  "transOrigin": "Dánszentmiklós Altár út 23",
+  "transTarget": "Pécs Kút utca 6",
+  "itemId": 1,
+  "warehouseId": 2
+}
+=======
 
 ###
 GET http://localhost:3001/transactions/worker
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5hc2QiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25OYW1lIjoiQWxsIn1dfSwiaWF0IjoxNzEyMjE3NjM2LCJleHAiOjE3MTQ4MDk2MzZ9._oqe5tn6wVWjTrW7wuhsOZlcDCvWIGHADuKMYlQLgfM
+

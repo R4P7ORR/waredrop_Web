@@ -1,46 +1,20 @@
 import {Text, TouchableOpacity, View} from "react-native";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styles from "./StyleSheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as assert from "assert";
 import axios from "axios";
+import baseUrl from "./BaseUrl";
 
+// @ts-ignore
 function StartMenu({navigation}){
-const [url,setUrl]=useState<string|null>('')
 const [name,setName]=useState('User')
-const [token,setToken]=useState<string|null>('')
 
- /*   useEffect(()=>{
-        AsyncStorage.getItem('url').then((result)=>{
-            setUrl(result)
-        })
-        AsyncStorage.getItem('token').then((result) => {
-            if (result !== null) {
-                setToken(result)
-            }
-        })
-        axios.get(`${url}/user/getUserName`, {
-            headers: {
-                'Content-Type':'application/json',
-                'Authorization': 'Bearer ' + token
-            }
-        }).then((response) => {
-            setName(response.data.user_name)
-        }).catch(function (error) {
-            console.log('Itt az error: ' + error)
-        })
-    },[])
-*/
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const storedUrl = await AsyncStorage.getItem('url');
                 const storedToken = await AsyncStorage.getItem('token');
-                if (storedUrl && storedToken) {
-                    setUrl(storedUrl);
-                    setToken(storedToken);
-                    const response =
-                        await axios.get(`${storedUrl}/user/getUserName`, {
+                if (baseUrl && storedToken) {
+                    const response = await axios.get(`${baseUrl}/user/userName`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${storedToken}`
@@ -55,9 +29,6 @@ const [token,setToken]=useState<string|null>('')
 
         fetchData();
     }, []);
-
-
-
 
 
     const handleLogout=async ()=>{
@@ -82,7 +53,7 @@ const [token,setToken]=useState<string|null>('')
 
                 <TouchableOpacity
                     style={styles.loginBtn}
-                onPress={()=>navigation.navigate('Avaliable')}
+                onPress={()=>navigation.navigate('Available')}
                 >
                     <Text style={styles.TextInput}>Avaliable</Text>
                 </TouchableOpacity>
