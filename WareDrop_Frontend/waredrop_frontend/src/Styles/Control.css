@@ -13,6 +13,9 @@ body{
 .item-container:hover{
     background: var(--dar-blue);
 }
+.item-container > button{
+    margin: 0;
+}
 .item-name {
     width: 85%;
     white-space: nowrap;
@@ -88,4 +91,7 @@ body{
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--main-color);
+}
+.align-horizontal{
+    display: flex;
 }

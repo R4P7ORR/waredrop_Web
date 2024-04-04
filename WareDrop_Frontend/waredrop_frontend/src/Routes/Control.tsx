@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import WarehouseDisplay from "../Displays/WarehouseDisplay";
 import Navbar from "../Components/Navbar";
-import Users from "../Components/Users";
+import Users from "../Components/Users/Users";
 import Overlay from "../Components/Overlay";
 import WarehouseContext from "../Contexts/WarehouseContextProvider";
 
