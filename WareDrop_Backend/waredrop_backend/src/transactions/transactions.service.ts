@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
+import {StockService} from "../stock/stock.service";
 
 export class Transaction {
     @IsNumber()
@@ -41,7 +42,7 @@ export class WorkerUpdateInput {
 
 @Injectable()
 export class TransactionsService {
-    constructor(private readonly db: PrismaService) { }
+    constructor(private readonly db: PrismaService, private readonly stock: StockService) { }
 
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
@@ -56,12 +57,14 @@ export class TransactionsService {
     }
 
     async addWorkerToTrans(addInput: WorkerUpdateInput, workerEmail: string ){
+        const trans = await this.db.transactions.findFirst({where: {trans_id: addInput.transId}})
+        await this.stock.deleteStock({warehouseId: trans.warehouse_warehouse_id, itemId: trans.item_item_id});
         return this.db.transactions.update({
-            data: {
-                worker_email: workerEmail,
-            },
             where: {
-                trans_id: addInput.transId,
+                trans_id: addInput.transId
+            },
+            data: {
+                worker_email: workerEmail
             }
         })
     }
@@ -83,6 +86,7 @@ export class TransactionsService {
         return this.db.transactions.findMany({
             where: {
                 worker_email: user.userEmail,
+                trans_arrived_date: null
             }
         });
     }
