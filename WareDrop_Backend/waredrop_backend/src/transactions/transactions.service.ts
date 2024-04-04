@@ -83,6 +83,7 @@ export class TransactionsService {
         return this.db.transactions.findMany({
             where: {
                 worker_email: user.userEmail,
+                trans_arrived_date: null
             }
         });
     }
