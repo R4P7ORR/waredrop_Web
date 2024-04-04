@@ -16,7 +16,8 @@ function Overlay(){
                 itemQuantity: quantityInput,
                 warehouseId: selectedId
             }).then(res =>{
-                console.log(res);
+                setNameInput("");
+                setQuantityInput(1);
                 setOverlayType("none");
             })
         }
@@ -50,7 +51,11 @@ function Overlay(){
                             <h1 className="text-light">New Warehouse</h1>
                         </>
                     }
-                    <button onClick={() => setOverlayType("none")}>Cancel</button>
+                    <button onClick={() => {
+                        setNameInput("");
+                        setQuantityInput(1);
+                        setOverlayType("none");
+                    }}>Cancel</button>
                 </div>
             </div>
         }</>

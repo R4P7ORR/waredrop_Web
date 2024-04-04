@@ -40,7 +40,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                     <h1>You don't have any Warehouses registered yet.</h1>
                 </div>
                 :
-                <div>
+                <div className="container-listed-warehouses">
                     {warehouseList.map((warehouse: Warehouse) => (
                         <WarehouseList key={warehouse.warehouse_id}
                                        warehouse_id={warehouse.warehouse_id}

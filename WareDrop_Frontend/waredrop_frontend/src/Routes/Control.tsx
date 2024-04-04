@@ -28,20 +28,21 @@ function Control(){
                 <Navbar setCurrentPage={setCurrentPage}/>
             </>
             <div className="main-container">
-                {currentPage === "control"?
+                {currentPage === "control" ?
                     <WarehouseDisplay loginToken={loginToken}/> : null
                 }
-                {currentPage === "transactions"?
+                {currentPage === "transactions" ?
                     <>transactions</> : null
                 }
-                {currentPage === "users"?
+                {currentPage === "users" ?
                     <Users loginToken={loginToken}/> : null
                 }
-                {currentPage === "contact"?
+                {currentPage === "contact" ?
                     <>contact</> : null
                 }
             </div>
         </WarehouseContext>
     )
 }
+
 export default Control;
