@@ -62,6 +62,19 @@ export class AuthService {
         }
     }
 
+    async registerWorker(newUser: CreateUserDto){
+        const user = await this.usersService.findUser(newUser.userEmail)
+        if(user){
+            return {errorMessage: 'User already exist'}
+        }
+        else {
+            const result = await this.usersService.createWorker(newUser);
+            if (result) {
+                return {message: "User created"}
+            }
+        }
+    }
+
     async isAdmin(user_permissions: Permission[]){
         for (const permission of user_permissions) {
             if (permission.permissionName === 'All'){

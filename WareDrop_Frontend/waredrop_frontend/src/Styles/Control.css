@@ -3,20 +3,23 @@ body{
 }
 .main-container{
     z-index: -1;
-    padding: 1rem;
+    padding: 3rem 1rem 1rem 1rem;
 }
 .item-container {
     display: flex;
     height: 50px;
     align-items: center;
-    background: rgba(100, 100, 100, 1);
+}
+.item-container:hover{
+    background: var(--dar-blue);
 }
 .item-name {
-    width: 200px;
+    width: 85%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
+    padding-left: 0.5rem;
 }
 .item-name:hover {
     overflow: visible;
@@ -42,4 +45,44 @@ body{
     padding: 1rem;
     border: 2px var(--main-color) solid;
     border-radius: 0.5rem;
+}
+.container-listed-warehouses{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+}
+.container-warehouse{
+    background: var(--dark-gray);
+    color: var(--main-color);
+    min-width: 35vw;
+    max-width: 35vw;
+    height: fit-content;
+
+    border-radius: 1rem;
+    padding: 0 0.5rem 0.5rem 0.5rem;
+    margin-bottom: 1rem;
+}
+.container-body{
+    max-height: 300px;
+    overflow-y: auto;
+    background: #0f0f0f;
+    border-radius: 1rem;
+}
+.container-header{
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: var(--dar-blue);
+    border-radius: 1rem;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 1rem;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--main-color);
 }

@@ -8,13 +8,12 @@ interface WarehouseListProps {
     warehouse_id: number;
     warehouse_name: string;
     location: string;
-    setType: (type: string) => void;
 }
 
-function WarehouseList({setType, warehouse_id, warehouse_name, location}: WarehouseListProps){
+function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
     const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-    const {setSelectedId} = useContext(WarehouseContext);
+    const {setSelectedId, overlayType, setOverlayType} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (warehouse_id !== null){
@@ -23,7 +22,7 @@ function WarehouseList({setType, warehouse_id, warehouse_name, location}: Wareho
                 setItemList(res.data);
                 console.log(itemList)
             });
-        }}, [warehouse_id]);
+        }}, [overlayType]);
 
     function handleCheckBox(item: Item){
         if (selectedItems.filter(selected => selected.item_name === item.item_name).length === 0){
@@ -35,17 +34,18 @@ function WarehouseList({setType, warehouse_id, warehouse_name, location}: Wareho
     }
 
     return (
-        <div className="warehouse-container">
+        <div className="container-warehouse">
             <div className="container-header">
                 <h1>{warehouse_name}</h1>
                 <h3>id: {warehouse_id}</h3>
                 <button onClick={() => {
-                    setType("itemForm");
+                    setOverlayType("itemForm");
                     setSelectedId(warehouse_id);
-                }}>Add item</button>
+                }}>Add item
+                </button>
             </div>
             <div className="container-body">
-                {itemList.length === 0?
+                {itemList.length === 0 ?
                     <p>No items in warehouse</p>
                     :
                     <>
