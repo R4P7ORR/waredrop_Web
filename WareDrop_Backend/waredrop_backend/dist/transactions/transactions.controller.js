@@ -44,8 +44,9 @@ let TransactionsController = class TransactionsController {
     updateTrans(updateInput) {
         return this.service.updateTrans(updateInput);
     }
-    addWorker(addInput) {
-        return this.service.addWorkerToTrans(addInput);
+    addWorker(token, transId) {
+        const user = this.jwt.decodeToken(token);
+        return this.service.addWorkerToTrans(transId, user.sub.email);
     }
 };
 exports.TransactionsController = TransactionsController;
@@ -103,9 +104,10 @@ __decorate([
     (0, common_1.Patch)('/assignWorker'),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
     (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'Transactions' }, { permissionName: 'All' }]),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [transactions_service_1.WorkerUpdateInput]),
+    __metadata("design:paramtypes", [Object, transactions_service_1.WorkerUpdateInput]),
     __metadata("design:returntype", void 0)
 ], TransactionsController.prototype, "addWorker", null);
 exports.TransactionsController = TransactionsController = __decorate([

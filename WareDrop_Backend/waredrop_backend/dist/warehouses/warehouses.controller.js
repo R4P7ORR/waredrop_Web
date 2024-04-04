@@ -45,6 +45,8 @@ let WarehousesController = class WarehousesController {
 exports.WarehousesController = WarehousesController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, permission_guard_1.PermissionGuard),
+    (0, permission_decorator_1.RequiredPermission)([{ permissionName: 'All' }]),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [warehouses_service_1.WarehouseCreateInput]),

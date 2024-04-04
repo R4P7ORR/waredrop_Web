@@ -14,6 +14,7 @@ function Available({navigation}){
 const [available,setAvailable] =useState<TransDTO[]>()
 const [selectedTransaction,setSelectedTransaction] = useState(false)
 const [transactionId,setTransactionId]=useState<number|null>(null)
+const [listId,setlistId]=useState<number|null>(null)
 
 
     useEffect(() => {
@@ -48,11 +49,24 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
 
     const showTransactions = (id:number) => {
         console.log("Clicked transaction with ID:", id)
-        setTransactionId(id-1)
+        setTransactionId(id)
+
+
+
     };
 
-    const goBack=()=>{
+    useEffect(() => {
+        if (available&&transactionId!==null){
+            const getid =available.findIndex((id)=>id.trans_id===transactionId)
+            setlistId(getid)
+        }
+    }, [transactionId]);
+
+
+    const goBackToAvailable=()=>{
+        setlistId(null)
         setTransactionId(null)
+        console.log("listId: "+listId)
     }
 
     const acceptTransaction= async (id:number)=>{
@@ -80,15 +94,15 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
 
     }
 
+
     const goBackToStartMenu = () => {
             navigation.navigate('StartMenu');
         };
 
-
         return(
             <View>
                 {
-                    transactionId ===null?
+                    listId===null ?
 
                 <View>
                         {available !== undefined ? <AvailableList list={available} onClick={showTransactions}/> :
@@ -100,15 +114,14 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
                         <Text style={styles.TextInput}>Go back</Text>
                     </TouchableOpacity>
 
-                </View> :
+                </View>
+                  :
                         <View>
                             {available &&
-                            <AvailableSelect list={available[transactionId]} back={goBack} update={acceptTransaction}/>}
+                                <AvailableSelect list={available[listId]} back={goBackToAvailable} update={acceptTransaction}/>}
 
 
                         </View>
-
-
                 }
             </View>
 
@@ -117,4 +130,8 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
     }
 
 
+    /*
+
+
+     */
     export default Available

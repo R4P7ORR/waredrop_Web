@@ -2,6 +2,7 @@ import React from "react";
 import {Button, Text, TouchableOpacity, View} from "react-native";
 import TransDTO from "./AvailableShowList";
 import styles from "./StyleSheet";
+import {format} from "date-fns";
 
 interface List{
     list:TransDTO[],
@@ -18,7 +19,7 @@ function AvailableList(props:List){
          key={item.trans_id}
         onPress={()=>props.onClick(item.trans_id)}
         >
-            <Text> {item.trans_id}, {item.trans_post_date.substring(0,10)}  </Text>
+            <Text> Id: {item.trans_id}, Date: {item.trans_post_date ? format(item.trans_post_date, "yyyy-MM-dd") : "Unknown Date"}  </Text>
         </TouchableOpacity>)}
         </View>
     )

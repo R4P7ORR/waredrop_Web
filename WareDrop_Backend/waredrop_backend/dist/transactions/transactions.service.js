@@ -55,11 +55,6 @@ class WorkerUpdateInput {
 }
 exports.WorkerUpdateInput = WorkerUpdateInput;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], WorkerUpdateInput.prototype, "workerEmail", void 0);
-__decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
@@ -79,10 +74,10 @@ let TransactionsService = class TransactionsService {
             }
         });
     }
-    async addWorkerToTrans(addInput) {
+    async addWorkerToTrans(addInput, workerEmail) {
         return this.db.transactions.update({
             data: {
-                worker_email: addInput.workerEmail,
+                worker_email: workerEmail,
             },
             where: {
                 trans_id: addInput.transId,

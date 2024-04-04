@@ -19,8 +19,8 @@ let LocalStrategy = class LocalStrategy extends (0, passport_1.PassportStrategy)
         super({ usernameField: 'email' });
         this.authService = authService;
     }
-    validate(email, password) {
-        const user = this.authService.validateUser({ userEmail: email, userPassword: password });
+    validate(userEmail, userPassword) {
+        const user = this.authService.validateUser({ userEmail: userEmail, userPassword: userPassword });
         if (!user)
             return { errorMessage: "User not found" };
         return user;

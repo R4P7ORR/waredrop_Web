@@ -10,7 +10,6 @@ export declare class Transaction {
     workerEmail?: string;
 }
 export declare class WorkerUpdateInput {
-    workerEmail?: string;
     transId: number;
 }
 export declare class TransactionsService {
@@ -26,7 +25,7 @@ export declare class TransactionsService {
         item_item_id: number;
         worker_email: string;
     }>;
-    addWorkerToTrans(addInput: WorkerUpdateInput): Promise<{
+    addWorkerToTrans(addInput: WorkerUpdateInput, workerEmail: string): Promise<{
         trans_id: number;
         trans_post_date: Date;
         trans_arrived_date: Date;

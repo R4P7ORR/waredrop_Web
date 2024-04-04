@@ -68,7 +68,7 @@ export declare class TransactionsController {
         item_item_id: number;
         worker_email: string;
     }>;
-    addWorker(addInput: WorkerUpdateInput): Promise<{
+    addWorker(token: Request, transId: WorkerUpdateInput): Promise<{
         trans_id: number;
         trans_post_date: Date;
         trans_arrived_date: Date;
