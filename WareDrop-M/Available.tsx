@@ -12,7 +12,6 @@ import AvailableSelect from "./AvailableSelect";
 // @ts-ignore
 function Available({navigation}){
 const [available,setAvailable] =useState<TransDTO[]>()
-const [selectedTransaction,setSelectedTransaction] = useState(false)
 const [transactionId,setTransactionId]=useState<number|null>(null)
 const [listId,setlistId]=useState<number|null>(null)
 
@@ -41,11 +40,9 @@ const [listId,setlistId]=useState<number|null>(null)
             }
         };
         List();
-    }, []);
+    }, [listId]);
 
-    const selectTransaction=()=>{
-        setSelectedTransaction(true)
-    }
+
 
     const showTransactions = (id:number) => {
         console.log("Clicked transaction with ID:", id)
@@ -70,18 +67,22 @@ const [listId,setlistId]=useState<number|null>(null)
     }
 
     const acceptTransaction= async (id:number)=>{
+        console.log("Transaction idja: " +id)
             try {
                 const storedToken = await AsyncStorage.getItem('token');
+                console.log("Ez a token: " +storedToken)
                 if (baseUrl&&storedToken){
-                    axios.patch(`${baseUrl}/transactions/assignWorker`,
+                    axios.patch(`${baseUrl}/transactions/assignWorker`,{
+                      transId:id
+                    },
                         {
                             headers:{
                                 Authorization: `Bearer ${storedToken}`,
-                                transId:id,
                             }
                         })
                         .then((response)=>{
-                            console.log('Ez itt a response: ' + response)
+                            goBackToAvailable()
+                            alert('Transaction successfully accepted')
                         })
                         .catch((error)=>{
                             console.log('Patch errorja: ' + error)
@@ -90,6 +91,8 @@ const [listId,setlistId]=useState<number|null>(null)
             }
             catch (error){
                 console.log('try cath error: ' + error)
+
+
             }
 
     }
