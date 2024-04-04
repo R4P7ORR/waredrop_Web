@@ -29,6 +29,7 @@ export class UpdateInput {
     userName?: string
 
     @IsString()
+    @IsOptional()
     userPassword?: string
 
     @IsString()

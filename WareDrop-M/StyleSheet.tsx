@@ -42,5 +42,10 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300,
     },
+    list:{
+        display:"flex",
+        alignItems:"center",
+        padding:12,
+    }
 });
 export default styles
