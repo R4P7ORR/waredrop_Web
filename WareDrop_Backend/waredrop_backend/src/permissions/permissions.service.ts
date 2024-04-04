@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
-import { IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {Prisma} from "@prisma/client";
 
 export class Permission{
     @IsNumber()
+    @IsOptional()
     permissionId?: number
 
     @IsString()

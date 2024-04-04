@@ -3,9 +3,9 @@ import React, {useState} from "react";
 import axios  from "axios";
 import styles from "./StyleSheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const baseUrl="http://192.168.11.120:3001";
-AsyncStorage.setItem('url',baseUrl)
+import baseUrl from "./BaseUrl";
 
+// @ts-ignore
 function Login({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -28,6 +28,7 @@ function Login({navigation}) {
 
 
         console.log('Elmegy a res-ig')
+        console.log('Írd át a saját ip címedre!!')
         //A baseUrl-t írd át arra az ip címre amin van a backend, mert a localhost nem működik
          axios.post(`${baseUrl}/auth/login`, {
             email: email,
@@ -51,9 +52,9 @@ function Login({navigation}) {
 
         if (password==password2){
         axios.post(`${baseUrl}/auth/register`, {
-            name: name,
-            email: email,
-            password: password,
+            userName: name,
+            userEmail: email,
+            userPassword: password,
 
         }).then( (response)=> {
             console.log(response.data)
