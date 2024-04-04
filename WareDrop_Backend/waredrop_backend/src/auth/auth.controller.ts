@@ -21,6 +21,11 @@ export class AuthController {
         return this.service.register(newUser);
     }
 
+    @Post('registerWorker')
+    registerWorker(@Body() newUser: CreateUserDto){
+        return this.service.registerWorker(newUser);
+    }
+
     @Get('status')
     @UseGuards(JwtAuthGuard)
     status(@Req() req : Request){
