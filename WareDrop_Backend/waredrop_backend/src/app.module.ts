@@ -8,6 +8,7 @@ import { WarehousesModule } from './warehouses/warehouses.module';
 import { ItemsModule } from './items/items.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import {APP_PIPE} from "@nestjs/core";
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import {APP_PIPE} from "@nestjs/core";
       WarehousesModule,
       ItemsModule,
       TransactionsModule,
+      StockModule,
   ],
   providers: [
     {
