@@ -44,7 +44,7 @@ export class TransactionsController {
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
     getAllTransByWorker(@Req() req : Request){
         const user = this.jwt.decodeToken(req);
-        return this.service.getAllTransByWorker(user.sub.id);
+        return this.service.getAllTransByWorker({userId: user.sub.id, userEmail: user.sub.email});
     }
 
     @Patch()

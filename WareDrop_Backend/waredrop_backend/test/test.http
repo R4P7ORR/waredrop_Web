@@ -17,3 +17,7 @@ Content-Type: application/json
   "email": "asd@asd.hu",
   "password": "titkos123"
 }
+
+###
+GET http://localhost:3001/transactions/worker
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5hc2QiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25OYW1lIjoiQWxsIn1dfSwiaWF0IjoxNzEyMjE3NjM2LCJleHAiOjE3MTQ4MDk2MzZ9._oqe5tn6wVWjTrW7wuhsOZlcDCvWIGHADuKMYlQLgfM

@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
-import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 
 export class WarehouseCreateInput {
     @IsString()
@@ -10,6 +10,20 @@ export class WarehouseCreateInput {
 
     @IsString()
     @IsNotEmpty()
+    warehouseLocation: string
+}
+
+export class WarehouseUpdateInput {
+    @IsNumber()
+    @IsNotEmpty()
+    warehouseId: number
+
+    @IsString()
+    @IsOptional()
+    warehouseName: string
+
+    @IsString()
+    @IsOptional()
     warehouseLocation: string
 }
 
@@ -91,5 +105,40 @@ export class WarehousesService {
                 warehouse_warehouse_id: result.warehouse_id
             }
         })
+    }
+
+    async updateWarehouse(input: WarehouseUpdateInput){
+        let result;
+        if (input.warehouseLocation!) {
+            result = this.db.warehouses.update({
+                where: {
+                    warehouse_id: input.warehouseId
+                },
+                data: {
+                    warehouse_name: input.warehouseName
+                }
+            })
+        } else if (input.warehouseName!) {
+            result = this.db.warehouses.update({
+                where: {
+                    warehouse_id: input.warehouseId
+                },
+                data: {
+                    location: input.warehouseLocation
+                }
+            })
+        } else {
+            result = this.db.warehouses.update({
+                where: {
+                    warehouse_id: input.warehouseId
+                },
+                data: {
+                    warehouse_name: input.warehouseName,
+                    location: input.warehouseLocation
+                }
+            })
+        }
+
+        return result;
     }
 }

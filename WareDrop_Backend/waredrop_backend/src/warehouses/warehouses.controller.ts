@@ -2,7 +2,13 @@ import {Body, Controller, Get, Param, Patch, Post, Req, UseGuards} from '@nestjs
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {Request} from "express";
 import JwtDecoder from "../auth/jwt.decoder";
-import {AddWarehouseDto, WarehouseCreateInput, WarehouseDto, WarehousesService} from "./warehouses.service";
+import {
+    AddWarehouseDto,
+    WarehouseCreateInput,
+    WarehouseDto,
+    WarehousesService,
+    WarehouseUpdateInput
+} from "./warehouses.service";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
 
@@ -39,6 +45,13 @@ export class WarehousesController {
     }
 
     @Patch()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
+    async updateWarehouse(@Body() warehouseDto: WarehouseUpdateInput){
+        return this.service.updateWarehouse(warehouseDto);
+    }
+
+    @Patch('/assignUser')
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
     async addToUser(@Body() addInput: AddWarehouseDto){
