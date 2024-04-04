@@ -51,7 +51,7 @@ function Login({navigation}) {
     const registerFunction =() =>{
 
         if (password==password2){
-        axios.post(`${baseUrl}/auth/register`, {
+        axios.post(`${baseUrl}/auth/registerWorker`, {
             userName: name,
             userEmail: email,
             userPassword: password,
