@@ -6,7 +6,7 @@ function Overlay(){
     const [nameInput, setNameInput] = useState("");
     const [quantityInput, setQuantityInput] = useState<number>(1);
     const {selectedId, overlayType, setOverlayType} = useContext(WarehouseContext);
-    function handleClick(){
+    function handleAdd(){
         if (nameInput.trim().length === 0 || quantityInput === undefined){
             console.log("Cannot be empty");
         } else{
@@ -21,6 +21,12 @@ function Overlay(){
                 setOverlayType("none");
             })
         }
+    }
+    function handleEdit(){
+
+    }
+    function handleDelete(){
+
     }
 
     return(
@@ -43,12 +49,24 @@ function Overlay(){
                                     setQuantityInput(Number.parseInt(quantity));
                                 }
                             }}/>
-                            <button onClick={handleClick}>Add</button>
+                            <button onClick={handleAdd}>Add</button>
                         </>
                     }
                     {overlayType === "warehouseForm" &&
                         <>
                             <h1 className="text-light">New Warehouse</h1>
+                        </>
+                    }
+                    {overlayType === "warehouseEditForm" &&
+                        <>
+                            <h1 className="text-light">Edit this</h1>
+                            <button onClick={handleEdit}>Confirm</button>
+                        </>
+                    }
+                    {overlayType === "warehouseDeleteForm" &&
+                        <>
+                            <h1 className="text-light">Are you sure you want to delete</h1>
+                            <button onClick={handleDelete}>Confirm</button>
                         </>
                     }
                     <button onClick={() => {

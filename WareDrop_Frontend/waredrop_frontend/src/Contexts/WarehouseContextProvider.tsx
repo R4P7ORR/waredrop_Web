@@ -1,4 +1,4 @@
-import {ReactNode, useState} from "react";
+import {ReactNode, useContext, useState} from "react";
 import WarehouseContext from "../Contexts/WarehouseContext";
 
 interface WarehouseContextProviderProps {
@@ -8,7 +8,10 @@ interface WarehouseContextProviderProps {
 function WarehouseContextProvider(props: WarehouseContextProviderProps) {
     const [selectedId, setSelectedId] = useState(0);
     const [overlayType, setOverlayType] = useState("none");
-    const warehouseContextValues = { selectedId, setSelectedId, overlayType, setOverlayType };
+    const [editing, setEditing] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const warehouseContextValues = { selectedId, setSelectedId, overlayType, setOverlayType, editing, setEditing, deleting, setDeleting, isAdmin, setIsAdmin };
 
     return <WarehouseContext.Provider value={warehouseContextValues}>
         {props.children}

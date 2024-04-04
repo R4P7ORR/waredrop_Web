@@ -9,20 +9,36 @@ interface WarehouseDisplayProps{
 }
 function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
     const [warehouseList, setWareHouseList] = useState<Warehouse[]>([]);
-    const {setOverlayType} = useContext(WarehouseContext);
+    const {setOverlayType, editing, setEditing, deleting, setDeleting, isAdmin, setIsAdmin} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (loginToken !== "none"){
-            axios.get('http://localhost:3001/warehouses', {
+            axios.get('http://localhost:3001/auth/isAdmin',{
                 headers: {authorization: "Bearer " + loginToken}
             }).then(res => {
-                if (res.data.length === 0){
-                    setWareHouseList([{warehouse_id: -1, warehouse_name: "empty", location: "nothing"}]);
-                } else{
-                    setWareHouseList(res.data);
-                }
-            });
+                setIsAdmin(res.data);
+            })
+
         }}, [loginToken]);
+    useEffect(() => {
+        if(loginToken !== "none"){
+            if (isAdmin){
+                axios.get('http://localhost:3001/warehouses', {
+                    headers: {authorization: "Bearer " + loginToken}
+                }).then(res => {
+                    setWareHouseList(res.data);
+                });
+            } else {
+                axios.get('http://localhost:3001/warehouses/user', {
+                    headers: {authorization: "Bearer " + loginToken}
+                }).then(res => {
+                    if (res.data.length === 0) {
+                        setWareHouseList(res.data);
+                    }
+                });
+            }
+        }
+    }, [isAdmin]);
 
     function addNewWarehouse(name: string, location: string){
         axios.post("http://localhost:3001/warehouses/new", {
@@ -35,6 +51,14 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
     return (
         <>
             <button onClick={() => setOverlayType("warehouseForm")}>Add new</button>
+            <button onClick={() => {
+                setEditing(!editing);
+                setDeleting(false);
+            }}>{!editing? "Modify" : "Done"}</button>
+            <button onClick={() => {
+                setDeleting(!deleting);
+                setEditing(false);
+            }}>{!deleting? "Delete" : "Done"}</button>
             {warehouseList.length === 0 || warehouseList[0].warehouse_name === "empty" ?
                 <div>
                     <h1>You don't have any Warehouses registered yet.</h1>

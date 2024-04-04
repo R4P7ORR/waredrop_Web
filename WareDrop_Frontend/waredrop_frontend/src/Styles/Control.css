@@ -72,6 +72,9 @@ body{
 .container-header{
     overflow-x: hidden;
 }
+.container-header > h4{
+    color: rgba(var(--main-color-alpha), 0.5);
+}
 ::-webkit-scrollbar {
     width: 12px;
 }

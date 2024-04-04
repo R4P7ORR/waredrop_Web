@@ -2,6 +2,7 @@
 
 :root{
   --main-color: #ffa600;
+  --main-color-alpha: 255, 166, 0;
   --secondary-color: #381ac0;
   --dark-gray: #171717;
   --dar-blue: #2e1372;

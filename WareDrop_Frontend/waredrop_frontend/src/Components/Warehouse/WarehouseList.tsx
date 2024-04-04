@@ -13,36 +13,50 @@ interface WarehouseListProps {
 function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
     const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-    const {setSelectedId, overlayType, setOverlayType} = useContext(WarehouseContext);
+    const {setSelectedId, overlayType, setOverlayType, editing, deleting} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (warehouse_id !== null){
             axios.get('http://localhost:3001/warehouses/items/' + warehouse_id, {
             }).then(res => {
                 setItemList(res.data);
-                console.log(itemList)
             });
         }}, [overlayType]);
 
     function handleCheckBox(item: Item){
         if (selectedItems.filter(selected => selected.item_name === item.item_name).length === 0){
             selectedItems.push(item);
-        }else {
+        } else {
             setSelectedItems(selectedItems.filter(items => items !== item));
         }
-        console.log(selectedItems)
     }
 
     return (
         <div className="container-warehouse">
             <div className="container-header">
                 <h1>{warehouse_name}</h1>
-                <h3>id: {warehouse_id}</h3>
+                <h4>{location}</h4>
                 <button onClick={() => {
                     setOverlayType("itemForm");
                     setSelectedId(warehouse_id);
                 }}>Add item
                 </button>
+                {editing&&
+                    <button onClick={() => {
+                        setOverlayType("warehouseEditForm");
+                        setSelectedId(warehouse_id);
+                    }}>
+                        Pencil thingy goes here
+                    </button>
+                }
+                {deleting&&
+                    <button onClick={() => {
+                        setOverlayType("warehouseDeleteForm");
+                        setSelectedId(warehouse_id);
+                    }}>
+                        Trash thingy goes here
+                    </button>
+                }
             </div>
             <div className="container-body">
                 {itemList.length === 0 ?
