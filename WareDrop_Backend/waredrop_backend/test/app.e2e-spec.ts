@@ -205,7 +205,7 @@ describe('Waredrop E2E test', () => {
 
             it('should create a user with worker role', async () => {
                 await request(app.getHttpServer())
-                    .post('/auth/register')
+                    .post('/auth/registerWorker')
                     .send({
                         userName: "register test worker",
                         userEmail: "register@testWorker.email",
