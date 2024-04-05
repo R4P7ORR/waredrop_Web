@@ -13,13 +13,16 @@ interface List{
 
 function AvailableList(props:List){
     return(
-        <View >
+        <View style={styles.list}>
             {props.list.map((item) =>
         <TouchableOpacity
          key={item.trans_id}
         onPress={()=>props.onClick(item.trans_id)}
         >
-            <Text> Id: {item.trans_id}, Date: {item.trans_post_date ? format(item.trans_post_date, "yyyy-MM-dd") : "Unknown Date"}  </Text>
+            <Text style={styles.listItem}>
+                Date: {item.trans_post_date ? format(item.trans_post_date, "yyyy-MM-dd") : "Unknown Date"}
+                Item name:  {item.item_item_name}
+                Item quantity: {item.item_item_quantity}  </Text>
         </TouchableOpacity>)}
         </View>
     )

@@ -131,10 +131,4 @@ const [listId,setlistId]=useState<number|null>(null)
 
         );
     }
-
-
-    /*
-
-
-     */
     export default Available
