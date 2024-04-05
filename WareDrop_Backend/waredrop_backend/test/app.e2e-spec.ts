@@ -74,16 +74,160 @@ describe('Waredrop E2E test', () => {
    })
 
     describe('Authentication', () => {
-        it('should return token after login', async () => {
-            const response = await request(app.getHttpServer())
-                .post('/auth/login')
-                .send({
-                    email: 'admin@admin.hu',
-                    password: 'admin123'
-                })
-                .expect(201)
 
-            expect(response.body).toEqual(expect.any(String));
-        });
+        describe("Login", () => {
+
+            it('should return token after login', async () => {
+                const response = await request(app.getHttpServer())
+                    .post('/auth/login')
+                    .send({
+                        email: 'admin@admin.hu',
+                        password: 'admin123'
+                    })
+                    .expect(201);
+
+                expect(response.body).toEqual({accessToken: expect.any(String)});
+            });
+
+            it('should return 400 after failed login', async () => {
+                return request(app.getHttpServer())
+                    .post('/auth/login')
+                    .send({
+                        email: 'admin@admin.hu',
+                        password: 'wrongPassword'
+                    })
+                    .expect(400);
+            });
+        })
+
+        describe("Status", () => {
+            it('should return the data of a user', async () => {
+                const loginResponse = await request(app.getHttpServer())
+                    .post('/auth/login')
+                    .send({
+                        email: 'admin@admin.hu',
+                        password: 'admin123'
+                    })
+                    .expect(201);
+
+                const response = await request(app.getHttpServer())
+                    .get('/auth/status')
+                    .auth(loginResponse.body.accessToken, {type: "bearer"})
+                    .expect(200);
+
+                expect(response.body.sub.email).toEqual('admin@admin.hu');
+            });
+        })
+
+        describe("Register", () => {
+
+            it('should create a new user', async () => {
+                const response = await request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: "register test user",
+                        userEmail: "register@test.email",
+                        userPassword: "register.test.password",
+                    })
+                    .expect(201);
+
+                expect(response.body).toEqual({message: 'User created'})
+            });
+
+            it('should return 400 if the user already exit', () => {
+                return request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: "register test user",
+                        userEmail: "register@test.email",
+                        userPassword: "register.test.password",
+                    })
+                    .expect(400);
+            });
+
+            it('should return 400 if the email is invalid', () => {
+                return request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: "register test user",
+                        userEmail: "asd",
+                        userPassword: "register.test.password",
+                    })
+                    .expect(400);
+            });
+
+            it('should return 400 if the user name is invalid', () => {
+                return request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: 3,
+                        userEmail: "register@test.email",
+                        userPassword: "register.test.password",
+                    })
+                    .expect(400);
+            });
+
+            it('should return 400 if the user name is too short', () => {
+                return request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: "ab",
+                        userEmail: "register@test.email",
+                        userPassword: "register.test.password",
+                    })
+                    .expect(400);
+            });
+
+            it('should return 400 if the password is invalid', () => {
+                return request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: "register test user",
+                        userEmail: "register@test.email",
+                        userPassword: 1874152491246,
+                    })
+                    .expect(400);
+            });
+
+            it('should return 400 if the password is too short', () => {
+                return request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: "register test user",
+                        userEmail: "register@test.email",
+                        userPassword: "pswd",
+                    })
+                    .expect(400);
+            });
+        })
+        
+        describe("Register worker", () => {
+
+            it('should create a user with worker role', async () => {
+                await request(app.getHttpServer())
+                    .post('/auth/register')
+                    .send({
+                        userName: "register test worker",
+                        userEmail: "register@testWorker.email",
+                        userPassword: "register.test.worker.password",
+                    })
+                    .expect(201);
+
+                const newWorker = await request(app.getHttpServer())
+                    .post('/auth/login')
+                    .send({
+                        email: 'register@testWorker.email',
+                        password: 'register.test.worker.password'
+                    })
+                    .expect(201);
+
+                const response = await request(app.getHttpServer())
+                    .get('/auth/status')
+                    .auth(newWorker.body.accessToken, {type: 'bearer'})
+                    .expect(200);
+
+                expect(response.body.sub.userPermissions.permissionName).toEqual('Worker');
+            });
+        })
     })
 });

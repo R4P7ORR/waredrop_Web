@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
-import {IsNotEmpty, IsNumber} from "class-validator";
+import {IsNotEmpty, IsNumber,} from "class-validator";
 
 export class StockDto {
     @IsNumber()
@@ -21,18 +21,6 @@ export class StockService {
         return this.db.stock.create({
             data: {item_item_id: input.itemId, warehouse_warehouse_id: input.warehouseId}
         })
-    }
-
-    async getItemInWarehouse(input: StockDto){
-        return this.db.stock.findMany({
-            where: {
-                item_item_id: input.itemId,
-                warehouse_warehouse_id: input.warehouseId
-            },
-            select: {
-              items: true
-            }
-        });
     }
 
     async deleteStock(input: StockDto) {

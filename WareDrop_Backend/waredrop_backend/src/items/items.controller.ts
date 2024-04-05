@@ -1,5 +1,5 @@
-import {Body, Controller, Get, Post, UseGuards} from '@nestjs/common';
-import {CreateItemDto, ItemsService} from "./items.service";
+import {Body, Controller, Get, Patch, Post, UseGuards} from '@nestjs/common';
+import {CreateItemDto, ItemsService, UpdateItemDto} from "./items.service";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
@@ -10,14 +10,19 @@ export class ItemsController {
     }
 
     @Post()
-    async addItem(@Body() newItem: CreateItemDto){
+    addItem(@Body() newItem: CreateItemDto){
         return this.service.addItem(newItem);
     }
 
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    async getItems(){
+    getItems(){
         return this.service.getItems();
+    }
+
+    @Patch()
+    updateItem(@Body() updateInput: UpdateItemDto){
+        return this.service.updateItem(updateInput);
     }
 }
