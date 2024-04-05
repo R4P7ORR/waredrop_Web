@@ -112,3 +112,22 @@ hr{
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+.swal-modal {
+  background-color: var(--dark-gray);
+  border: 3px solid var(--main-color);
+}
+.swal-title{
+  color: var(--main-color)
+}
+.swal-text {
+  color: var(--main-color)
+}
+.swal-icon--success::before{
+  background: var(--dark-gray);
+}
+.swal-icon--success::after{
+  background: var(--dark-gray);
+}
+.swal-icon--success__hide-corners{
+  background: var(--dark-gray);
+}

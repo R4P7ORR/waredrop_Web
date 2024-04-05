@@ -2,6 +2,7 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import RegisterDisplay from "../Displays/RegisterDisplay";
 import axios from "axios";
+import swal from "sweetalert";
 
 interface RegisterProps{
     handleRegister: (className: string) => void;
@@ -14,9 +15,15 @@ function Register(props: RegisterProps) {
 
     function sendRegisterRequest() {
         if (!fullNameInput || !emailInput || !passwordInput) {
-            console.log("Must NOT be empty!")
+            swal("All fields must be filled!"," ", "error", {
+                buttons: {},
+                timer: 1500,
+            });
         }else if(passwordInput !== passwordAgainInput){
-            console.log("Must match!")
+            swal("The two password do not match!"," ", "error", {
+                buttons: {},
+                timer: 1500,
+            });
         }else{
             axios.post('http://localhost:3001/auth/register', {
                 userName: fullNameInput,
@@ -28,11 +35,18 @@ function Register(props: RegisterProps) {
                     setEmailInput('');
                     setPasswordInput('');
                     props.handleRegister('container');
-                } else if(res.data.hasOwnProperty('errorMessage')){
-                    console.log(res.data.errorMessage);
+                    swal("Great!", "Account created successfully!", "success", {
+                        buttons: {},
+                        timer: 1500,
+                    });
                 } else {
                     console.log("Unexpected response format");
                 }
+            }).catch(() => {
+                swal("User already exists!", " ", "error", {
+                    buttons: {},
+                    timer: 1500,
+                });
             });
         }
     }

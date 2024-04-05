@@ -1,5 +1,6 @@
 import React from "react";
 import User from "../Components/Users/User";
+import Item from "../Components/Warehouse/Item";
 
 export interface WarehouseContextValues {
     selectedId: number;
@@ -19,6 +20,9 @@ export interface WarehouseContextValues {
 
     editingUser: userWOId;
     setEditingUser: (user: userWOId) => void;
+
+    selectedItems: Item[];
+    setSelectedItems: (items: Item[]) => void;
 }
 
 const WarehouseContext = React.createContext<WarehouseContextValues>(null as unknown as WarehouseContextValues);

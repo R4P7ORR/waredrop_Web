@@ -12,8 +12,7 @@ interface WarehouseListProps {
 
 function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
-    const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-    const {setSelectedId, overlayType, setOverlayType, editingWarehouse, deletingWarehouse} = useContext(WarehouseContext);
+    const {setSelectedId, overlayType, setOverlayType, editingWarehouse, deletingWarehouse, setSelectedItems} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (warehouse_id !== null){
@@ -24,11 +23,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
         }}, [overlayType]);
 
     function handleCheckBox(item: Item){
-        if (selectedItems.filter(selected => selected.item_name === item.item_name).length === 0){
-            selectedItems.push(item);
-        } else {
-            setSelectedItems(selectedItems.filter(items => items !== item));
-        }
+
     }
 
     return (
@@ -39,6 +34,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
                 <button onClick={() => {
                     setOverlayType("itemForm");
                     setSelectedId(warehouse_id);
+                    setSelectedItems(itemList);
                 }}>Add item
                 </button>
                 {editingWarehouse&&
@@ -64,7 +60,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
                     :
                     <>
                     {itemList.map((item) => (
-                        <WarehouseListItem key={item.item_id} itemName={item.item_name} handleChecked={() => handleCheckBox(item)}/>
+                        <WarehouseListItem key={item.item_id} itemName={item.item_name} itemQuantity={item.item_quantity} handleChecked={() => handleCheckBox(item)}/>
                     ))}
                     </>
                 }

@@ -17,7 +17,7 @@ body{
     margin: 0;
 }
 .item-name {
-    width: 85%;
+    width: 75%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -25,7 +25,14 @@ body{
     padding-left: 0.5rem;
 }
 .item-name:hover {
-    overflow: visible;
+}
+.item-quantity{
+    text-align: center;
+    width: 15%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.item-quantity:hover {
 }
 .overlay-fullscreen{
     position: absolute;

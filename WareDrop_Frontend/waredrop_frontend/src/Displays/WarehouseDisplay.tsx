@@ -50,15 +50,19 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
     }
     return (
         <>
-            <button onClick={() => setOverlayType("warehouseForm")}>Add new</button>
-            <button onClick={() => {
-                setEditingWarehouse(!editingWarehouse);
-                setDeletingWarehouse(false);
-            }}>{!editingWarehouse? "Modify" : "Done"}</button>
-            <button onClick={() => {
-                setDeletingWarehouse(!deletingWarehouse);
-                setEditingWarehouse(false);
-            }}>{!deletingWarehouse? "Delete" : "Done"}</button>
+            {isAdmin&&
+                <>
+                    <button onClick={() => setOverlayType("warehouseForm")}>Add new</button>
+                    <button onClick={() => {
+                        setEditingWarehouse(!editingWarehouse);
+                        setDeletingWarehouse(false);
+                    }}>{!editingWarehouse? "Modify" : "Done"}</button>
+                    <button onClick={() => {
+                        setDeletingWarehouse(!deletingWarehouse);
+                        setEditingWarehouse(false);
+                    }}>{!deletingWarehouse? "Delete" : "Done"}</button>
+                </>
+            }
             {warehouseList.length === 0 || warehouseList[0].warehouse_name === "empty" ?
                 <div>
                     <h1>You don't have any Warehouses registered yet.</h1>

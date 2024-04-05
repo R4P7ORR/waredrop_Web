@@ -2,6 +2,7 @@ import {useState} from "react";
 import axios from "axios";
 import LoginDisplay from "../Displays/LoginDisplay";
 import {useNavigate} from "react-router-dom";
+import swal from "sweetalert";
 
 function Login() {
     const [emailInput, setEmailInput] = useState<string>('');
@@ -9,9 +10,17 @@ function Login() {
     const navigate = useNavigate();
 
     function sendLoginRequest() {
-        if (!emailInput || !passwordInput){
-            console.log("Must NOT be empty!")
-        } else{
+        if (!emailInput){
+            swal("Email cannot be empty!"," ", "error", {
+                buttons: {},
+                timer: 1500,
+            });
+        } else if(!passwordInput){
+            swal("Password cannot be empty!"," ", "error", {
+                buttons: {},
+                timer: 1500,
+            });
+        }else{
             axios.post(`http://localhost:3001/auth/login`, {
                 email: emailInput,
                 password: passwordInput,
@@ -19,12 +28,18 @@ function Login() {
                 if (res.data.hasOwnProperty("accessToken")) {
                     localStorage.setItem("loginToken", res.data.accessToken);
                     navigate('/Control');
-                } else if (res.data.hasOwnProperty("errorMessage")) {
-                    const errorMessage = res.data.errorMessage;
-                    console.log(errorMessage)
                 } else {
+                    swal("Oops", "Something went wrong!", "error", {
+                        buttons: {},
+                        timer: 1500,
+                    });
                     console.log("Unexpected response format");
                 }
+            }).catch(() => {
+                swal("Email or password is incorrect!"," " , "error", {
+                    buttons: {},
+                    timer: 1500,
+                });
             });
         }
     }
