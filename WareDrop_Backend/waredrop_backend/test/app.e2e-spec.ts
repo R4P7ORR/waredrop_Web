@@ -229,5 +229,24 @@ describe('Waredrop E2E test', () => {
                 expect(response.body.sub.userPermissions[0].permissionName).toEqual('Transactions');
             });
         })
+
+        describe('IsAdmin', () => {
+            it('should return true if the user has admin role', async () => {
+                const loginResponse = await request(app.getHttpServer())
+                    .post('/auth/login')
+                    .send({
+                        email: 'admin@admin.hu',
+                        password: 'admin123'
+                    })
+                    .expect(201);
+
+                const response = await request(app.getHttpServer())
+                    .get('/auth/isAdmin')
+                    .auth(loginResponse.body.accessToken, {type: "bearer"})
+                    .expect(200);
+
+                expect(response.body).toEqual({isAdmin: true});
+            });
+        })
     })
 });

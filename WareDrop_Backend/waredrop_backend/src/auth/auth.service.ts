@@ -65,7 +65,7 @@ export class AuthService {
     async registerWorker(newUser: CreateUserDto){
         const user = await this.usersService.findUser(newUser.userEmail)
         if(user){
-            return {errorMessage: 'User already exist'}
+            throw new BadRequestException('User already exist');
         }
         else {
             const result = await this.usersService.createWorker(newUser);
@@ -78,9 +78,9 @@ export class AuthService {
     async isAdmin(user_permissions: Permission[]){
         for (const permission of user_permissions) {
             if (permission.permissionName === 'All'){
-                return true;
+                return {isAdmin: true};
             }
         }
-        return false;
+        return {isAdmin: false};
     }
 }
