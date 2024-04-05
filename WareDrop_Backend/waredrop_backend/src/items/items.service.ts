@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {StockService} from "../stock/stock.service";
 
 export class CreateItemDto{
     @IsString()
@@ -16,9 +17,19 @@ export class CreateItemDto{
     warehouseId: number
 }
 
+export class UpdateItemDto{
+    @IsNumber()
+    @IsNotEmpty()
+    itemId: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    itemQuantity: number
+}
+
 @Injectable()
 export class ItemsService {
-    constructor(private readonly db: PrismaService) {
+    constructor(private readonly db: PrismaService, private readonly stock: StockService) {
     }
 
     async addItem(newItem: CreateItemDto){
@@ -30,7 +41,7 @@ export class ItemsService {
                 }
             })
 
-            await this.assignItemToWarehouse(createdItem.item_id, newItem.warehouseId);
+            await this.stock.addStock({itemId: createdItem.item_id, warehouseId: newItem.warehouseId});
 
             return {Massage: 'Added a new item to the warehouse'};
 
@@ -43,25 +54,20 @@ export class ItemsService {
         return this.db.items.findMany();
     }
 
-    async assignItemToWarehouse(itemId: number, warehouseId: number){
-        const warehouse = await this.db.warehouses.findFirst({
-            select: {
-                warehouse_id: true,
-                location: true,
-            },
-            where: {
-                warehouse_id: warehouseId,
-            }
-        })
-        return this.db.transactions.create({
-            data:{
-                trans_post_date: new Date(Date.now()),
-                trans_arrived_date: new Date(Date.now()),
-                warehouse_warehouse_id: warehouse.warehouse_id,
-                item_item_id: itemId,
-                trans_origin: warehouse.location,
-                trans_target: warehouse.location,
-            }
-        })
+    async updateItem(updateInput: UpdateItemDto){
+        try {
+            await this.db.items.update({
+                data: {
+                    item_quantity: updateInput.itemQuantity
+                },
+                where: {
+                    item_id: updateInput.itemId
+                }
+            })
+            return {Massage: 'Item updated'};
+
+        } catch (e) {
+            throw e;
+        }
     }
 }

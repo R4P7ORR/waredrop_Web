@@ -1,4 +1,4 @@
-import {Injectable, } from '@nestjs/common';
+import {BadRequestException, Injectable,} from '@nestjs/common';
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt'
 import {CreateUserDto, UsersService} from "../users/users.service";
@@ -45,14 +45,14 @@ export class AuthService {
                 accessToken: this.jwtService.sign(payload),
             }
         } else {
-            return {errorMessage: "User not found"}
+            throw new BadRequestException("Wrong password or user name");
         }
     }
 
     async register(newUser: CreateUserDto){
         const user = await this.usersService.findUser(newUser.userEmail)
         if(user){
-            return {errorMessage: 'User already exist'}
+            throw new BadRequestException('User already exist');
         }
         else {
             const result = await this.usersService.createUser(newUser);

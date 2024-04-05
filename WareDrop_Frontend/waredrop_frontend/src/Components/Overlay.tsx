@@ -5,8 +5,8 @@ import WarehouseContext from "../Contexts/WarehouseContext";
 function Overlay(){
     const [nameInput, setNameInput] = useState("");
     const [quantityInput, setQuantityInput] = useState<number>(1);
-    const {selectedId, overlayType, setOverlayType} = useContext(WarehouseContext);
-    function handleAdd(){
+    const {selectedId, overlayType, setOverlayType, editingUser, setEditingUser} = useContext(WarehouseContext);
+    function handleAddWarehouse(){
         if (nameInput.trim().length === 0 || quantityInput === undefined){
             console.log("Cannot be empty");
         } else{
@@ -22,10 +22,13 @@ function Overlay(){
             })
         }
     }
-    function handleEdit(){
+    function handleEditWarehouse(){
 
     }
-    function handleDelete(){
+    function handleDeleteWarehouse(){
+
+    }
+    function handleEditUser(){
 
     }
 
@@ -49,7 +52,7 @@ function Overlay(){
                                     setQuantityInput(Number.parseInt(quantity));
                                 }
                             }}/>
-                            <button onClick={handleAdd}>Add</button>
+                            <button onClick={handleAddWarehouse}>Add</button>
                         </>
                     }
                     {overlayType === "warehouseForm" &&
@@ -60,13 +63,27 @@ function Overlay(){
                     {overlayType === "warehouseEditForm" &&
                         <>
                             <h1 className="text-light">Edit this</h1>
-                            <button onClick={handleEdit}>Confirm</button>
+                            <button onClick={handleEditWarehouse}>Confirm</button>
                         </>
                     }
                     {overlayType === "warehouseDeleteForm" &&
                         <>
                             <h1 className="text-light">Are you sure you want to delete</h1>
-                            <button onClick={handleDelete}>Confirm</button>
+                            <button onClick={handleDeleteWarehouse}>Confirm</button>
+                        </>
+                    }
+                    {overlayType === "userEditForm" &&
+                        <>
+                            <h1 className="text-light">Edit User Details</h1>
+                            <input type="text" value={editingUser.user_name} onChange={(e) => {
+                                const name = e.target.value;
+                                setEditingUser({user_name: name, user_email: editingUser.user_email});
+                            }}/>
+                            <input type="text" value={editingUser.user_email} onChange={(e) => {
+                                const email = e.target.value;
+                                setEditingUser({user_name: editingUser.user_name, user_email: email});
+                            }}/>
+                            <button onClick={handleEditUser}>Confirm</button>
                         </>
                     }
                     <button onClick={() => {

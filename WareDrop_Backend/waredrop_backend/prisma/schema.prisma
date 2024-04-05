@@ -9,9 +9,10 @@ datasource db {
 
 model items {
   item_id       Int            @id(map: "items_pk") @default(autoincrement())
-  item_name     String         @unique(map: "item_name_uk") @db.VarChar(30)
+  item_name     String         @db.VarChar(30)
   item_quantity Int
   transactions  transactions[]
+  stock         stock[]
 }
 
 model permissions {
@@ -82,4 +83,14 @@ model warehouses {
   location                   String                       @db.VarChar(30)
   transactions               transactions[]
   user_assigned_to_warehouse user_assigned_to_warehouse[]
+  stock                      stock[]
+}
+
+model stock {
+  warehouse_warehouse_id Int
+  item_item_id           Int
+  items                  items      @relation(fields: [item_item_id], references: [item_id], onDelete: NoAction, onUpdate: NoAction, map: "relation_8_item_fk")
+  warehouses             warehouses @relation(fields: [warehouse_warehouse_id], references: [warehouse_id], onDelete: NoAction, onUpdate: NoAction, map: "relation_8_warehouse_fk")
+
+  @@id([item_item_id, warehouse_warehouse_id], map: "relation_8_pk")
 }

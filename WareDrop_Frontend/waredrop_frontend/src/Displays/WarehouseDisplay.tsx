@@ -9,7 +9,7 @@ interface WarehouseDisplayProps{
 }
 function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
     const [warehouseList, setWareHouseList] = useState<Warehouse[]>([]);
-    const {setOverlayType, editing, setEditing, deleting, setDeleting, isAdmin, setIsAdmin} = useContext(WarehouseContext);
+    const {setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin, setIsAdmin} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (loginToken !== "none"){
@@ -52,13 +52,13 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
         <>
             <button onClick={() => setOverlayType("warehouseForm")}>Add new</button>
             <button onClick={() => {
-                setEditing(!editing);
-                setDeleting(false);
-            }}>{!editing? "Modify" : "Done"}</button>
+                setEditingWarehouse(!editingWarehouse);
+                setDeletingWarehouse(false);
+            }}>{!editingWarehouse? "Modify" : "Done"}</button>
             <button onClick={() => {
-                setDeleting(!deleting);
-                setEditing(false);
-            }}>{!deleting? "Delete" : "Done"}</button>
+                setDeletingWarehouse(!deletingWarehouse);
+                setEditingWarehouse(false);
+            }}>{!deletingWarehouse? "Delete" : "Done"}</button>
             {warehouseList.length === 0 || warehouseList[0].warehouse_name === "empty" ?
                 <div>
                     <h1>You don't have any Warehouses registered yet.</h1>

@@ -13,7 +13,7 @@ interface WarehouseListProps {
 function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
     const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-    const {setSelectedId, overlayType, setOverlayType, editing, deleting} = useContext(WarehouseContext);
+    const {setSelectedId, overlayType, setOverlayType, editingWarehouse, deletingWarehouse} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (warehouse_id !== null){
@@ -41,7 +41,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
                     setSelectedId(warehouse_id);
                 }}>Add item
                 </button>
-                {editing&&
+                {editingWarehouse&&
                     <button onClick={() => {
                         setOverlayType("warehouseEditForm");
                         setSelectedId(warehouse_id);
@@ -49,7 +49,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
                         Pencil thingy goes here
                     </button>
                 }
-                {deleting&&
+                {deletingWarehouse&&
                     <button onClick={() => {
                         setOverlayType("warehouseDeleteForm");
                         setSelectedId(warehouse_id);
