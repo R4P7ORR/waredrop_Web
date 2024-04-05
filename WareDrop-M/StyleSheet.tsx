@@ -18,10 +18,12 @@ const styles = StyleSheet.create({
         height: 45,
         marginBottom: 20,
         alignItems:"center",
+        justifyContent:"center",
 
     },
     TextInput: {
-        height: 50,
+        height:"100%",
+        width:"100%",
         flex: 1,
         padding: 10,
         marginLeft: 20,
@@ -43,9 +45,28 @@ const styles = StyleSheet.create({
         height: 300,
     },
     list:{
+        backgroundColor: '#FFF',
+        padding: 15,
+        borderRadius: 10,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    listItem:{
         display:"flex",
+        justifyContent:"space-between",
         alignItems:"center",
-        padding:12,
+        marginBottom:8,
+        padding:8,
+        borderWidth:1,
+        borderRadius:4,
+        borderColor:"#ddd"
+    },
+    ListItemText:{
+        flex:1,
+        marginRight:8,
+        color:"#333"
     }
 });
 export default styles
