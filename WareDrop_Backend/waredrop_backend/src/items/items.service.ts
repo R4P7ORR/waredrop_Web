@@ -17,6 +17,16 @@ export class CreateItemDto{
     warehouseId: number
 }
 
+export class UpdateItemDto{
+    @IsNumber()
+    @IsNotEmpty()
+    itemId: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    itemQuantity: number
+}
+
 @Injectable()
 export class ItemsService {
     constructor(private readonly db: PrismaService, private readonly stock: StockService) {
@@ -42,5 +52,22 @@ export class ItemsService {
 
     async getItems(){
         return this.db.items.findMany();
+    }
+
+    async updateItem(updateInput: UpdateItemDto){
+        try {
+            await this.db.items.update({
+                data: {
+                    item_quantity: updateInput.itemQuantity
+                },
+                where: {
+                    item_id: updateInput.itemId
+                }
+            })
+            return {Massage: 'Item updated'};
+
+        } catch (e) {
+            throw e;
+        }
     }
 }
