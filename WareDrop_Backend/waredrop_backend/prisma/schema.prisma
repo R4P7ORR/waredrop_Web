@@ -9,7 +9,7 @@ datasource db {
 
 model items {
   item_id       Int            @id(map: "items_pk") @default(autoincrement())
-  item_name     String         @unique(map: "item_name_uk") @db.VarChar(30)
+  item_name     String         @db.VarChar(30)
   item_quantity Int
   transactions  transactions[]
   stock         stock[]

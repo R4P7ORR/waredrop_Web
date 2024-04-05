@@ -64,6 +64,7 @@ export class UsersService {
     }
 
     async createWorker(createInput: CreateUserDto){
+        const workerRole = await this.db.roles.findFirst({where: {role_name: "Worker"}})
         const salt = await bcrypt.genSalt();
         createInput.userPassword = await bcrypt.hash(createInput.userPassword, salt);
         const newUser =  await this.db.users.create({
@@ -76,7 +77,7 @@ export class UsersService {
         await this.db.user_has_role.create({
             data: {
                 user_user_id: newUser.user_id,
-                role_role_id: 2
+                role_role_id: workerRole.role_id,
             }
         })
 

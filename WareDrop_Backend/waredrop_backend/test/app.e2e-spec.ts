@@ -70,16 +70,20 @@ describe('Waredrop E2E test', () => {
        await prisma.users.deleteMany();
        await prisma.roles.deleteMany();
        await prisma.permissions.deleteMany();
+       await prisma.stock.deleteMany();
    })
 
     describe('Authentication', () => {
-        it('should return token after login', () => {
-            return  request(app.getHttpServer())
+        it('should return token after login', async () => {
+            const response = await request(app.getHttpServer())
                 .post('/auth/login')
                 .send({
                     email: 'admin@admin.hu',
                     password: 'admin123'
                 })
+                .expect(201)
+
+            expect(response.body).toEqual(expect.any(String));
         });
     })
 });
