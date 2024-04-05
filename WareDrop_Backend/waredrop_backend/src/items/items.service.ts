@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
-import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsString, MaxLength} from "class-validator";
 import {StockService} from "../stock/stock.service";
 
 export class CreateItemDto{
     @IsString()
     @IsNotEmpty()
+    @MaxLength(30)
     itemName: string
 
     @IsNumber()

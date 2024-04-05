@@ -21,7 +21,7 @@ describe('Waredrop E2E test', () => {
        await prisma.permissions.createMany({
            data: [
                { permission_name: 'All'},
-               { permission_name: 'Transaction'},
+               { permission_name: 'Transactions'},
            ]
        });
        await prisma.roles.createMany({
@@ -40,9 +40,9 @@ describe('Waredrop E2E test', () => {
 
        const adminUser = await prisma.users.findFirst({where: {user_name: 'admin'}});
        const allPermission = await prisma.permissions.findFirst({where: {permission_name: 'All'}});
-       const transPermission = await prisma.permissions.findFirst({where: {permission_name: 'Transaction'}});
+       const transPermission = await prisma.permissions.findFirst({where: {permission_name: 'Transactions'}});
        const adminRole = await prisma.roles.findFirst({where: {role_name: 'Admin'}});
-       const workerRole = await prisma.roles.findFirst({where: {role_name: 'Admin'}});
+       const workerRole = await prisma.roles.findFirst({where: {role_name: 'Worker'}});
 
        await prisma.role_has_permission.createMany({
            data: [
@@ -226,7 +226,26 @@ describe('Waredrop E2E test', () => {
                     .auth(newWorker.body.accessToken, {type: 'bearer'})
                     .expect(200);
 
-                expect(response.body.sub.userPermissions.permissionName).toEqual('Worker');
+                expect(response.body.sub.userPermissions[0].permissionName).toEqual('Transactions');
+            });
+        })
+
+        describe('IsAdmin', () => {
+            it('should return true if the user has admin role', async () => {
+                const loginResponse = await request(app.getHttpServer())
+                    .post('/auth/login')
+                    .send({
+                        email: 'admin@admin.hu',
+                        password: 'admin123'
+                    })
+                    .expect(201);
+
+                const response = await request(app.getHttpServer())
+                    .get('/auth/isAdmin')
+                    .auth(loginResponse.body.accessToken, {type: "bearer"})
+                    .expect(200);
+
+                expect(response.body).toEqual({isAdmin: true});
             });
         })
     })
