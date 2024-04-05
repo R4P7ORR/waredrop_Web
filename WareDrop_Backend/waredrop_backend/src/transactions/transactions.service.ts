@@ -78,6 +78,11 @@ export class TransactionsService {
                         }
                     }
                 }
+            },
+            include: {
+                items: {
+                    select: {item_name: true, item_quantity: true}
+                }
             }
         });
     }
@@ -87,27 +92,34 @@ export class TransactionsService {
             where: {
                 worker_email: user.userEmail,
                 trans_arrived_date: null
+            },
+            include: {
+                items: {
+                    select: {item_name: true, item_quantity: true}
+                }
             }
         });
     }
 
     async getAllTrans(){
-        return this.db.transactions.findMany();
+        return this.db.transactions.findMany({
+            include: {
+            items: {
+                select: {item_name: true, item_quantity: true}
+            }
+        }
+        });
     }
 
     async getAvailableTrans(){
         return this.db.transactions.findMany({
-            select: {
-                trans_id: true,
-                trans_post_date: true,
-                trans_arrived_date: true,
-                trans_origin: true,
-                trans_target: true,
-                worker_email: true,
-                items: {}
-            },
             where: {
                 worker_email: null
+            },
+            include: {
+                items: {
+                    select: {item_name: true, item_quantity: true}
+                }
             }
         })
     }

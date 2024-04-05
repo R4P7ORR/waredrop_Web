@@ -1,5 +1,5 @@
 import {View, Text, TextInput, Button, TouchableOpacity, Platform, Image, StyleSheet} from "react-native"
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import axios  from "axios";
 import styles from "./StyleSheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +13,7 @@ function Login({navigation}) {
     const [loginToggle,setLoginToggle]=useState(true)
     const [password2, setPassword2]=useState('')
     const [loggedIn,setLoggedIn]=useState(false)
+    const inputRef=useRef<TextInput|null>(null)
 
     if (loggedIn) {
         setName('')
@@ -20,8 +21,16 @@ function Login({navigation}) {
         setPassword('')
         setPassword2('')
         setLoggedIn(false)
+        setLoginToggle(true)
     }
 
+    useEffect(() => {
+        if (inputRef.current && !inputRef.current.props.defaultValue) {
+            const textLength = 0;
+            const middlePosition = Math.floor(textLength / 2);
+            inputRef.current.setNativeProps({ selection: { start: middlePosition, end: middlePosition } });
+        }
+    }, []);
 
 
     const loginFunction =  () => {
@@ -50,23 +59,43 @@ function Login({navigation}) {
 
     const registerFunction =() =>{
 
-        if (password==password2){
-        axios.post(`${baseUrl}/auth/register`, {
-            userName: name,
-            userEmail: email,
-            userPassword: password,
-
-        }).then( (response)=> {
-            console.log(response.data)
-            loginFunction()
-
-        })
-            .catch(function (error) {
-                console.log(error)
-            });
+        if(!name) {
+            alert('Name required')
+        }else if (name.length<3) {
+            alert('Name must be at least 3 characters')
         }
         else {
-            alert('Password do not match')
+           if (!email) {
+               alert('Email is required')
+           }
+           else if (!/\S+@\S+\.\S+/.test(email)){
+               alert('Email is invalid')
+           }else {
+               if (!password) {
+                   alert('Password required')
+               }else if(password.length<6){
+                alert('Password must be at least 6 characters.')
+               }
+               else{
+                   if (password == password2) {
+                       axios.post(`${baseUrl}/auth/registerWorker`, {
+                           userName: name,
+                           userEmail: email,
+                           userPassword: password,
+
+                       }).then((response) => {
+                           console.log(response.data)
+                           loginFunction()
+
+                       })
+                           .catch(function (error) {
+                               console.log(error)
+                           });
+                   }else{
+                       alert('Password does not match')
+                   }
+               }
+           }
         }
 
     }
@@ -80,15 +109,19 @@ function Login({navigation}) {
 
     }
 
+    const handleViewPress = () =>{
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }
+
     return (
-
-
         loginToggle ?
         <View style={styles.container}>
             <Image
                 style={styles.img}
                 source={require("./assets/WareDrop_logo.png")}/>
-            <View style={styles.inputView}>
+            <View style={styles.inputView} onTouchStart={handleViewPress}>
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Enter your email"
@@ -97,7 +130,7 @@ function Login({navigation}) {
                     onChangeText={(text) => setEmail(text)}
                 />
             </View>
-            <View style={styles.inputView}>
+            <View style={styles.inputView} onTouchStart={handleViewPress}>
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Enter your password"
@@ -125,7 +158,7 @@ function Login({navigation}) {
                     style={styles.img}
                     source={require("./assets/WareDrop_logo.png")}/>
 
-                <View style={styles.inputView}>
+                <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
                     style={styles.TextInput}
                     placeholder="Enter your name"
@@ -135,7 +168,7 @@ function Login({navigation}) {
                     />
 
                 </View>
-                <View style={styles.inputView}>
+                <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
                         style={styles.TextInput}
                         placeholder="Enter your email"
@@ -144,7 +177,7 @@ function Login({navigation}) {
                         onChangeText={(text) => setEmail(text)}
                     />
                 </View>
-                <View style={styles.inputView}>
+                <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
                         style={styles.TextInput}
                         placeholder="Enter your password"
@@ -154,7 +187,7 @@ function Login({navigation}) {
                         onChangeText={(text) => setPassword(text)}
                     />
                 </View>
-                <View style={styles.inputView}>
+                <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
                         style={styles.TextInput}
                         placeholder="Enter your password agian"
