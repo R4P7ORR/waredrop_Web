@@ -31,6 +31,13 @@ export class WarehousesController {
         return this.service.getWarehouses();
     }
 
+    @Get('/:id')
+    @UseGuards(JwtAuthGuard,PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
+    async getWarehouseById(@Param('id') id: string){
+        return this.service.getWarehouseById(id);
+    }
+
     @Get('/user')
     @UseGuards(JwtAuthGuard)
     async getWarehousesByUser(@Req() req: Request){

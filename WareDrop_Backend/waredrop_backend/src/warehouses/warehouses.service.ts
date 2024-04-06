@@ -60,6 +60,14 @@ export class WarehousesService {
         return this.db.warehouses.findMany();
     }
 
+    async getWarehouseById(id: string){
+        return this.db.warehouses.findMany({
+            where: {
+                warehouse_id : Number.parseInt(id),
+            }
+        });
+    }
+
     async getWarehousesByUser(user: UserDto){
         return this.db.warehouses.findMany({
             where: {
