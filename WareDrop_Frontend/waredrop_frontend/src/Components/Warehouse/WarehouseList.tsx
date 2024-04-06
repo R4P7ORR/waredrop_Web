@@ -29,7 +29,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
     return (
         <div className="container-warehouse">
             <div className="container-header">
-                <h1>{warehouse_name}</h1>
+                <h2>{warehouse_name}</h2>
                 <h4>{location}</h4>
                 <button onClick={() => {
                     setOverlayType("itemForm");

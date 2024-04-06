@@ -23,7 +23,7 @@ function Control(){
 
     return (
         <WarehouseContext>
-            <Overlay/>
+            <Overlay loginToken={loginToken}/>
             <>
                 <Navbar setCurrentPage={setCurrentPage}/>
             </>

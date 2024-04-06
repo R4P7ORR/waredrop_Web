@@ -1,19 +1,41 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import WarehouseContext from "../Contexts/WarehouseContext";
 import Item from "./Warehouse/Item";
 import swal from "sweetalert";
 
-function Overlay(){
-    const [nameInput, setNameInput] = useState("");
+interface OverlayProps{
+    loginToken: string;
+}
+
+function Overlay({loginToken}: OverlayProps){
+    const [nameInput, setNameInput] = useState<string>("");
     const [quantityInput, setQuantityInput] = useState<number>(1);
+    const [locationInput, setLocationInput] = useState<string>("");
     const {
-        selectedId,
-        overlayType,setOverlayType,
+        selectedId, setSelectedId,
+        overlayType, setOverlayType,
         editingUser, setEditingUser,
         selectedItems,
+        setEditingWarehouse,
     } = useContext(WarehouseContext);
-    function handleAddWarehouse(){
+
+    useEffect(() => {
+        if (overlayType === "warehouseEditForm" || overlayType === "warehouseDeleteForm"){
+            axios.get('http://localhost:3001/warehouses/'+ selectedId, {
+                headers: {authorization: "Bearer " + loginToken},
+            }).then((res) => {
+                setNameInput(res.data[0].warehouse_name);
+                setLocationInput(res.data[0].location);
+            });
+
+            return () => {
+                setSelectedId(0);
+            }
+        }
+    }, [selectedId]);
+
+    function handleAddItem(){
         if (nameInput.trim().length === 0 || quantityInput === undefined){
             swal("Oops", "Name cannot be empty!", "error", {
                 buttons: {},
@@ -64,11 +86,77 @@ function Overlay(){
             }
         }
     }
+    function handleCreateWarehouse(){
+        if (nameInput.trim().length === 0) {
+            swal("Oops", "Name cannot be empty!", "error", {
+                buttons: {},
+                timer: 1500,
+            });
+        } else if (locationInput.trim().length === 0){
+            swal("Oops", "Location must be defined!", "error", {
+                buttons: {},
+                timer: 1500,
+            });
+        } else {
+            console.log(loginToken)
+            axios.post("http://localhost:3001/warehouses", {
+                headers: {authorization: "Bearer " + loginToken},
+                warehouseName: nameInput,
+                warehouseLocation: locationInput,
+            }).then(() => {
+                swal("Great!", "Successfully created warehouse!", "success", {
+                    buttons: {},
+                    timer: 2500,
+                });
+                setNameInput("");
+                setLocationInput("");
+                setOverlayType("none");
+            }).catch(() => {
+                swal("Error", "A warehouse with this name already exists!", "error", {
+                    buttons: {},
+                    timer: 2500,
+                });
+            });
+        }
+    }
     function handleEditWarehouse(){
-
+        axios.patch('http://localhost:3001/warehouses', {
+            headers: {authorization: "Bearer " + loginToken},
+            warehouseId: selectedId,
+            warehouseName: nameInput,
+            warehouseLocation: locationInput
+        }).then(() => {
+            swal("Great!", "Successfully updated warehouse details!", "success", {
+                buttons: {},
+                timer: 2500,
+            });
+            setNameInput("");
+            setLocationInput("");
+            setOverlayType("none");
+            setEditingWarehouse(false);
+        }).catch(() => {
+                swal("Error", "Something went wrong :(", "error", {
+                    buttons: {},
+                    timer: 3000,
+                });
+        });
     }
     function handleDeleteWarehouse(){
-
+        axios.delete('http://localhost:3001/warehouses/'+ selectedId, {
+            headers: {authorization: "Bearer " + loginToken},
+            /*warehouseId: selectedId,*/
+        }).then(() => {
+            swal("Great!", `Successfully deleted ${nameInput} from the database!`, "success", {
+                buttons: {},
+                timer: 2500,
+            });
+            setOverlayType("none");
+        }).catch(() => {
+            swal("Error", "Something went wrong :(", "error", {
+                buttons: {},
+                timer: 3000,
+            });
+        });
     }
     function handleEditUser(){
 
@@ -80,7 +168,7 @@ function Overlay(){
                 <div className="overlay-fullscreen-container">
                     {overlayType === "itemForm" &&
                         <>
-                            <h1 className="text-light">New Item</h1>
+                            <h2 className="text-light">New Item</h2>
                             <hr className="hr-left"/>
                             <input autoFocus={true} type="text" placeholder="Name" value={nameInput} maxLength={30} onChange={(e) => {
                                 const name = e.target.value;
@@ -88,7 +176,7 @@ function Overlay(){
                             }}
                                onKeyDown={(e) => {
                                    if (e.key === "Enter")
-                                       handleAddWarehouse();
+                                       handleAddItem();
                                }}/>
                             <input type="number" placeholder="Quantity" value={quantityInput} onChange={(e) => {
                                 const quantity = e.target.value;
@@ -104,36 +192,69 @@ function Overlay(){
                             }}
                                onKeyDown={(e) => {
                                    if (e.key === "Enter")
-                                       handleAddWarehouse();
+                                       handleAddItem();
                                }}/>
-                            <button onClick={handleAddWarehouse}>Add</button>
+                            <button onClick={handleAddItem}>Add</button>
                         </>
                     }
                     {overlayType === "warehouseForm" &&
                         <>
-                            <h1 className="text-light">New Warehouse</h1>
+                            <h2 className="text-light">New Warehouse</h2>
+                            <input placeholder="Name" type="text" value={nameInput} maxLength={30} onChange={(e) => {
+                                const name = e.target.value;
+                                setNameInput(name);
+                            }}
+                               onKeyDown={(e) => {
+                                   if (e.key === "Enter")
+                                       handleCreateWarehouse();
+                               }}/>
+                            <input placeholder="Location" type="text" value={locationInput} maxLength={30} onChange={(e) => {
+                                const location = e.target.value;
+                                setLocationInput(location);
+                            }}
+                               onKeyDown={(e) => {
+                                    if (e.key === "Enter")
+                                        handleCreateWarehouse();
+                               }}/>
+                            <button onClick={handleCreateWarehouse}>Create</button>
                         </>
                     }
                     {overlayType === "warehouseEditForm" &&
                         <>
-                            <h1 className="text-light">Edit this</h1>
+                            <h2 className="text-light">Edit details of Warehouse</h2>
+                            <input type="text" value={nameInput} onChange={(e) => {
+                                const name = e.target.value;
+                                setNameInput(name);
+                            }}
+                               onKeyDown={(e) => {
+                                   if (e.key === "Enter")
+                                       handleEditWarehouse();
+                               }}/>
+                            <input type="text" value={locationInput} onChange={(e) => {
+                                const location = e.target.value;
+                                setLocationInput(location);
+                            }}
+                               onKeyDown={(e) => {
+                                   if (e.key === "Enter")
+                                       handleEditWarehouse();
+                               }}/>
                             <button onClick={handleEditWarehouse}>Confirm</button>
                         </>
                     }
                     {overlayType === "warehouseDeleteForm" &&
                         <>
-                            <h1 className="text-light">Are you sure you want to delete</h1>
+                            <h2 className="text-light">Are you sure you want to delete {nameInput}?</h2>
                             <button onClick={handleDeleteWarehouse}>Confirm</button>
                         </>
                     }
                     {overlayType === "userEditForm" &&
                         <>
-                            <h1 className="text-light">Edit User Details</h1>
-                            <input type="text" value={editingUser.user_name} onChange={(e) => {
+                            <h2 className="text-light">Edit User Details</h2>
+                            <input placeholder="Name" type="text" value={editingUser.user_name} onChange={(e) => {
                                 const name = e.target.value;
                                 setEditingUser({user_name: name, user_email: editingUser.user_email});
                             }}/>
-                            <input type="text" value={editingUser.user_email} onChange={(e) => {
+                            <input placeholder="Email" type="text" value={editingUser.user_email} onChange={(e) => {
                                 const email = e.target.value;
                                 setEditingUser({user_name: editingUser.user_name, user_email: email});
                             }}/>
@@ -143,7 +264,9 @@ function Overlay(){
                     <button onClick={() => {
                         setNameInput("");
                         setQuantityInput(1);
+                        setLocationInput("");
                         setOverlayType("none");
+                        setSelectedId(0);
                     }}>Cancel</button>
                 </div>
             </div>
