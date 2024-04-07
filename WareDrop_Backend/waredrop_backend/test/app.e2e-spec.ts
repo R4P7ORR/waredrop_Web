@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 
 describe('Waredrop E2E test', () => {
    let app: INestApplication;
-   process.env.DATABASE_URL="postgresql://postgres:postgre@localhost:5432/waredrop-test?schema=public"
+   process.env.DATABASE_URL="postgresql://postgres:postgres@localhost:5432/waredrop-test?schema=public"
 
    beforeAll(async () =>{
        const moduleFixture: TestingModule = await Test.createTestingModule({
