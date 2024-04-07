@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {Request} from "express";
 import JwtDecoder from "../auth/jwt.decoder";
@@ -27,26 +27,26 @@ export class WarehousesController {
     @Get()
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    async getWarehouses(){
+    getWarehouses(){
         return this.service.getWarehouses();
     }
 
-    @Get('/:id')
+    @Get('/warehouse/:id')
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    async getWarehouseById(@Param('id') id: string){
-        return this.service.getWarehouseById(id);
+    getWarehouseById(@Param('id') warehouseInput: WarehouseDto){
+        return this.service.getWarehouseById(warehouseInput);
     }
 
     @Get('/user')
     @UseGuards(JwtAuthGuard)
-    async getWarehousesByUser(@Req() req: Request){
+    getWarehousesByUser(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
         return this.service.getWarehousesByUser({userId: decodedJwt.sub.id, userEmail: decodedJwt.sub.email});
     }
 
     @Get('/items/:id')
-    async getItemsInWarehouse(@Param('id') warehouseString: string){
+    getItemsInWarehouse(@Param('id') warehouseString: string){
         const warehouseId: WarehouseDto = {warehouseId: parseInt(warehouseString)};
         return this.service.getItemsInWarehouse(warehouseId);
     }
@@ -54,14 +54,22 @@ export class WarehousesController {
     @Patch()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    async updateWarehouse(@Body() warehouseDto: WarehouseUpdateInput){
+    updateWarehouse(@Body() warehouseDto: WarehouseUpdateInput){
         return this.service.updateWarehouse(warehouseDto);
     }
 
     @Patch('/assignUser')
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    async addToUser(@Body() addInput: AddWarehouseDto){
+    addToUser(@Body() addInput: AddWarehouseDto){
         return this.service.addWarehouseToUser(addInput);
     }
+
+    @Delete()
+    @UseGuards(JwtAuthGuard,PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
+    deleteWarehouse(@Body() deleteInput: WarehouseDto){
+        return this.service.deleteWarehouse(deleteInput);
+    }
+
 }

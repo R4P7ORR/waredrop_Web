@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
+import {Prisma} from "@prisma/client";
 
 export class WarehouseCreateInput {
     @IsString()
@@ -60,10 +61,10 @@ export class WarehousesService {
         return this.db.warehouses.findMany();
     }
 
-    async getWarehouseById(id: string){
+    async getWarehouseById(warehouseInput: WarehouseDto){
         return this.db.warehouses.findMany({
             where: {
-                warehouse_id : Number.parseInt(id),
+                warehouse_id : warehouseInput.warehouseId,
             }
         });
     }
@@ -148,5 +149,26 @@ export class WarehousesService {
         }
 
         return result;
+    }
+
+    async deleteWarehouse(deleteInput: WarehouseDto){
+        try {
+            const result = await this.db.warehouses.delete({
+                where: {
+                    warehouse_id: deleteInput.warehouseId
+                }
+            })
+
+            if (result){
+                return {result, message: 'Warehouse deleted'};
+            }
+
+        } catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2003'){
+                return {errorMassage: "Warehouse is not empty"};
+            } else {
+                throw e;
+            }
+        }
     }
 }
