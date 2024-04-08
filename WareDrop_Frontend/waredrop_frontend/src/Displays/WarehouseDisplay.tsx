@@ -16,7 +16,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
             axios.get('http://localhost:3001/auth/isAdmin',{
                 headers: {authorization: "Bearer " + loginToken}
             }).then(res => {
-                setIsAdmin(res.data);
+                setIsAdmin(res.data.isAdmin);
             })
 
         }}, [loginToken]);
