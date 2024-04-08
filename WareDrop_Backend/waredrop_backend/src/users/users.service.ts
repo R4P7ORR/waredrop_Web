@@ -33,11 +33,6 @@ export class UpdateInput {
 
     @IsString()
     @IsOptional()
-    @MinLength(6)
-    userPassword?: string
-
-    @IsString()
-    @IsOptional()
     userEmail?: string
 }
 
@@ -101,13 +96,11 @@ export class UsersService {
     }
 
     async updateUser(updateInput: UpdateInput){
-        updateInput.userPassword = await bcrypt.hash(updateInput.userPassword, await bcrypt.genSalt());
 
         return this.db.users.update({
             data: {
                 user_name: updateInput.userName,
                 user_email: updateInput.userEmail,
-                user_password: updateInput.userPassword
             },
             where: {
                 user_id: updateInput.userId
