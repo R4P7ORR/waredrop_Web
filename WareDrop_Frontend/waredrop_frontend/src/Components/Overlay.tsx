@@ -17,21 +17,17 @@ function Overlay({loginToken}: OverlayProps){
         overlayType, setOverlayType,
         editingUser, setEditingUser,
         selectedItems,
-        setEditingWarehouse,
+        setEditingWarehouse, setDeletingWarehouse
     } = useContext(WarehouseContext);
 
     useEffect(() => {
         if (overlayType === "warehouseEditForm" || overlayType === "warehouseDeleteForm"){
-            axios.get('http://localhost:3001/warehouses/'+ selectedId, {
+            axios.get('http://localhost:3001/warehouses/warehouse/'+ selectedId, {
                 headers: {authorization: "Bearer " + loginToken},
             }).then((res) => {
                 setNameInput(res.data[0].warehouse_name);
                 setLocationInput(res.data[0].location);
             });
-
-            return () => {
-                setSelectedId(0);
-            }
         }
     }, [selectedId]);
 
@@ -100,10 +96,11 @@ function Overlay({loginToken}: OverlayProps){
         } else {
             console.log(loginToken)
             axios.post("http://localhost:3001/warehouses", {
-                headers: {authorization: "Bearer " + loginToken},
                 warehouseName: nameInput,
                 warehouseLocation: locationInput,
-            }).then(() => {
+            },{
+                headers: {authorization: "Bearer " + loginToken},
+                }).then(() => {
                 swal("Great!", "Successfully created warehouse!", "success", {
                     buttons: {},
                     timer: 2500,
@@ -121,10 +118,11 @@ function Overlay({loginToken}: OverlayProps){
     }
     function handleEditWarehouse(){
         axios.patch('http://localhost:3001/warehouses', {
-            headers: {authorization: "Bearer " + loginToken},
             warehouseId: selectedId,
             warehouseName: nameInput,
             warehouseLocation: locationInput
+        },{
+            headers: {authorization: "Bearer " + loginToken},
         }).then(() => {
             swal("Great!", "Successfully updated warehouse details!", "success", {
                 buttons: {},
@@ -142,15 +140,20 @@ function Overlay({loginToken}: OverlayProps){
         });
     }
     function handleDeleteWarehouse(){
-        axios.delete('http://localhost:3001/warehouses/'+ selectedId, {
+        axios.delete('http://localhost:3001/warehouses', {
             headers: {authorization: "Bearer " + loginToken},
-            /*warehouseId: selectedId,*/
+            data: {
+                warehouseId: selectedId,
+            }
         }).then(() => {
             swal("Great!", `Successfully deleted ${nameInput} from the database!`, "success", {
                 buttons: {},
                 timer: 2500,
             });
+            setNameInput("");
+            setLocationInput("");
             setOverlayType("none");
+            setDeletingWarehouse(false);
         }).catch(() => {
             swal("Error", "Something went wrong :(", "error", {
                 buttons: {},
@@ -197,7 +200,7 @@ function Overlay({loginToken}: OverlayProps){
                             <button onClick={handleAddItem}>Add</button>
                         </>
                     }
-                    {overlayType === "warehouseForm" &&
+                    {overlayType === "warehouseAddForm" &&
                         <>
                             <h2 className="text-light">New Warehouse</h2>
                             <input placeholder="Name" type="text" value={nameInput} maxLength={30} onChange={(e) => {
