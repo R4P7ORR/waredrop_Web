@@ -34,7 +34,8 @@ export class WarehousesController {
     @Get('/warehouse/:id')
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    getWarehouseById(@Param('id') warehouseInput: WarehouseDto){
+    getWarehouseById(@Param('id') id: string){
+        const warehouseInput = {warehouseId: parseInt(id)}
         return this.service.getWarehouseById(warehouseInput);
     }
 
