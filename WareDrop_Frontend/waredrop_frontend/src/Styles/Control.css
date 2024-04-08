@@ -13,8 +13,10 @@ body{
 .item-container:hover{
     background: var(--dar-blue);
 }
-.item-container > button{
-    margin: 0;
+.item-container > .inline-button{
+    border-radius: 0 0 0 20px;
+    height: 100%;
+    margin: 0 0 0 auto;
 }
 .item-name {
     width: 75%;
@@ -35,7 +37,7 @@ body{
 .item-quantity:hover {
 }
 .overlay-fullscreen{
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     z-index: 100;
@@ -63,12 +65,29 @@ body{
     justify-items: center;
 }
 .container-warehouse{
-    background: var(--dark-gray);
-    color: var(--main-color);
     min-width: 35vw;
     max-width: 35vw;
-    height: fit-content;
+}
+.container-users{
+    z-index: -1;
+    position: absolute;
+    width: 85vw;
+    left: 50%;
+    transform: translate(-50%);
+}
+.container-users-body{
+    overflow: hidden;
+    background: #0f0f0f;
+    border-radius: 1rem 0 0 1rem;
+}
+.users-details{
+    width: calc(100% / 3);
+}
+.container-box{
+    background: var(--dark-gray);
+    color: var(--main-color);
 
+    height: fit-content;
     border-radius: 1rem;
     padding: 0 0.5rem 0.5rem 0.5rem;
     margin-bottom: 1rem;
@@ -101,4 +120,15 @@ body{
 }
 .align-horizontal{
     display: flex;
+}
+.warehouse-operator-buttons{
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+    align-items: center;
+    z-index: 1;
+}
+.warehouse-operator-buttons > button{
+    margin-inline: 1rem;
 }

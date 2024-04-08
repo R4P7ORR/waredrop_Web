@@ -9,7 +9,7 @@ interface WarehouseDisplayProps{
 }
 function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
     const [warehouseList, setWareHouseList] = useState<Warehouse[]>([]);
-    const {setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin, setIsAdmin} = useContext(WarehouseContext);
+    const {overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin, setIsAdmin} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (loginToken !== "none"){
@@ -38,7 +38,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                 });
             }
         }
-    }, [isAdmin]);
+    }, [isAdmin, overlayType]);
 
     function addNewWarehouse(name: string, location: string){
         axios.post("http://localhost:3001/warehouses/new", {
@@ -51,8 +51,8 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
     return (
         <>
             {isAdmin&&
-                <>
-                    <button onClick={() => setOverlayType("warehouseForm")}>Add new</button>
+                <div className="warehouse-operator-buttons">
+                    <button onClick={() => setOverlayType("warehouseAddForm")}>Add new</button>
                     <button onClick={() => {
                         setEditingWarehouse(!editingWarehouse);
                         setDeletingWarehouse(false);
@@ -61,7 +61,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                         setDeletingWarehouse(!deletingWarehouse);
                         setEditingWarehouse(false);
                     }}>{!deletingWarehouse? "Delete" : "Done"}</button>
-                </>
+                </div>
             }
             {warehouseList.length === 0 || warehouseList[0].warehouse_name === "empty" ?
                 <div>

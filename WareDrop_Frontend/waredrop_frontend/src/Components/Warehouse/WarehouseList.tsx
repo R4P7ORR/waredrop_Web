@@ -3,6 +3,8 @@ import WarehouseListItem from "./WarehouseListItem";
 import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
+import editImage from "../../Images/edit_button.png";
+import deleteImage from "../../Images/delete_button.png";
 
 interface WarehouseListProps {
     warehouse_id: number;
@@ -27,9 +29,9 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
     }
 
     return (
-        <div className="container-warehouse">
+        <div className="container-warehouse container-box">
             <div className="container-header">
-                <h2>{warehouse_name}</h2>
+                <h2>{warehouse_name.toUpperCase()}</h2>
                 <h4>{location}</h4>
                 <button onClick={() => {
                     setOverlayType("itemForm");
@@ -37,25 +39,26 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
                     setSelectedItems(itemList);
                 }}>Add item
                 </button>
-                {editingWarehouse&&
-                    <button onClick={() => {
+
+                {editingWarehouse &&
+                    <button className="button-image" onClick={() => {
                         setOverlayType("warehouseEditForm");
                         setSelectedId(warehouse_id);
                     }}>
-                        Pencil thingy goes here
+                        <img className="button-image" src={editImage} alt="Edit"/>
                     </button>
                 }
-                {deletingWarehouse&&
-                    <button onClick={() => {
+                {deletingWarehouse &&
+                    <button className="button-image" onClick={() => {
                         setOverlayType("warehouseDeleteForm");
                         setSelectedId(warehouse_id);
                     }}>
-                        Trash thingy goes here
+                        <img className="button-image" src={deleteImage} alt="Edit"/>
                     </button>
                 }
             </div>
             <div className="container-body">
-                {itemList.length === 0 ?
+            {itemList.length === 0 ?
                     <p>No items in warehouse</p>
                     :
                     <>

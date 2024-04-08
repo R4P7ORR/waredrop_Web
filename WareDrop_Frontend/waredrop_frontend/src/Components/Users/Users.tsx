@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useContext, useEffect, useState} from "react";
 import User from "./User";
-import WarehouseContext from "../../Contexts/WarehouseContext";
+import UsersDisplay from "./UsersDisplay";
 
 interface UsersProps{
     loginToken: string;
@@ -9,7 +9,6 @@ interface UsersProps{
 
 function Users({loginToken}: UsersProps){
     const [users, setUsers] = useState<User[]>([]);
-    const {setOverlayType, setEditingUser} = useContext(WarehouseContext);
     useEffect(() => {
         axios.get('http://localhost:3001/user', {
             headers: {authorization: "Bearer " + loginToken}
@@ -18,19 +17,18 @@ function Users({loginToken}: UsersProps){
         });
     }, [loginToken]);
 
-    return(
-        <div>
-            {users.map((user: User) => (
-                <div className="item-container">
-                    <div className="item-name align-horizontal">
-                        <h4>id: {user.user_id} name: {user.user_name} email: {user.user_email}</h4>
-                    </div>
-                    <button onClick={() => {
-                        setOverlayType("userEditForm");
-                        setEditingUser(user);
-                    }}>Edit</button>
-                </div>
-            ))}
+    return (
+        <div className="container-users container-box">
+            <div className="item-name" style={{display: "flex"}}>
+                <h3 className="users-details">ID</h3>
+                <h3 className="users-details">NAME</h3>
+                <h3 className="users-details">EMAIL</h3>
+            </div>
+            <div className="container-users-body">
+                {users.map((user: User) => (
+                    <UsersDisplay user_id={user.user_id} user_name={user.user_name} user_email={user.user_email}/>
+                ))}
+            </div>
         </div>
     )
 }
