@@ -28,9 +28,15 @@ Content-Type: application/json
   "itemId": 1,
   "warehouseId": 2
 }
-=======
 
 ###
-GET http://localhost:3001/transactions/worker
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5hc2QiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25OYW1lIjoiQWxsIn1dfSwiaWF0IjoxNzEyMjE3NjM2LCJleHAiOjE3MTQ4MDk2MzZ9._oqe5tn6wVWjTrW7wuhsOZlcDCvWIGHADuKMYlQLgfM
+PATCH http://localhost:3001/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5odSIsInVzZXJQZXJtaXNzaW9ucyI6W119LCJpYXQiOjE3MTI1OTMxNjMsImV4cCI6MTcxNTE4NTE2M30.g__4eFgM-NzaSbbHhKRTJQAoChnK5iXgmKASp9jdS7w
+Content-Type: application/json
 
+{
+  "userId": 1,
+  "userName": "test_user",
+  "userEmail": "asd@asd.hu",
+  "userPassword": "titkos123"
+}
