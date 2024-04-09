@@ -133,7 +133,7 @@ export class TransactionsService {
     }
 
     async updateTrans(updateInput: WorkerUpdateInput){
-        return this.db.transactions.update({
+        const result = await this.db.transactions.update({
             data: {
                 trans_arrived_date: new Date(Date.now()),
             },
@@ -141,5 +141,7 @@ export class TransactionsService {
                 trans_id: updateInput.transId,
             }
         })
+        await this.stock.addStock({itemId: result.item_item_id, warehouseId: result.warehouse_warehouse_id});
+        return result;
     }
 }
