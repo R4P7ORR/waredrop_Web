@@ -57,14 +57,16 @@ export class TransactionsService {
     }
 
     async addWorkerToTrans(addInput: WorkerUpdateInput, workerEmail: string ){
-        const trans = await this.db.transactions.findFirst({where: {trans_id: addInput.transId}})
+        const trans = await this.db.transactions.findFirst({where: {trans_id: addInput.transId}});
+        const targetWarehouse = await this.db.warehouses.findFirst({where: {location: trans.trans_target}});
         await this.stock.deleteStock({warehouseId: trans.warehouse_warehouse_id, itemId: trans.item_item_id});
         return this.db.transactions.update({
             where: {
                 trans_id: addInput.transId
             },
             data: {
-                worker_email: workerEmail
+                worker_email: workerEmail,
+                warehouse_warehouse_id: targetWarehouse.warehouse_id
             }
         })
     }
@@ -133,7 +135,7 @@ export class TransactionsService {
     }
 
     async updateTrans(updateInput: WorkerUpdateInput){
-        return this.db.transactions.update({
+        const result = await this.db.transactions.update({
             data: {
                 trans_arrived_date: new Date(Date.now()),
             },
@@ -141,5 +143,7 @@ export class TransactionsService {
                 trans_id: updateInput.transId,
             }
         })
+        await this.stock.addStock({itemId: result.item_item_id, warehouseId: result.warehouse_warehouse_id});
+        return result;
     }
 }
