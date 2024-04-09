@@ -2,6 +2,7 @@ import axios from "axios";
 import {useContext, useEffect, useState} from "react";
 import User from "./User";
 import UsersDisplay from "./UsersDisplay";
+import WarehouseContext from "../../Contexts/WarehouseContext";
 
 interface UsersProps{
     loginToken: string;
@@ -9,13 +10,17 @@ interface UsersProps{
 
 function Users({loginToken}: UsersProps){
     const [users, setUsers] = useState<User[]>([]);
+    const {overlayType} = useContext(WarehouseContext);
+
     useEffect(() => {
-        axios.get('http://localhost:3001/user', {
-            headers: {authorization: "Bearer " + loginToken}
-        }).then(res => {
-            setUsers(res.data);
-        });
-    }, [loginToken]);
+        if (overlayType === "none"){
+            axios.get('http://localhost:3001/user', {
+                headers: {authorization: "Bearer " + loginToken}
+            }).then(res => {
+                setUsers(res.data);
+            });
+        }
+    }, [loginToken,overlayType]);
 
     return (
         <div className="container-users container-box">
