@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {IsNotEmpty, IsNumber, IsString, MaxLength} from "class-validator";
-import {StockService} from "../stock/stock.service";
 
-export class CreateItemDto{
+export class CreateItemDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(30)
@@ -30,19 +29,18 @@ export class UpdateItemDto{
 
 @Injectable()
 export class ItemsService {
-    constructor(private readonly db: PrismaService, private readonly stock: StockService) {
+    constructor(private readonly db: PrismaService) {
     }
 
     async addItem(newItem: CreateItemDto){
         try {
-            const createdItem = await this.db.items.create({
+            await this.db.items.create({
                 data: {
                     item_name: newItem.itemName,
-                    item_quantity: newItem.itemQuantity
+                    item_quantity: newItem.itemQuantity,
+                    warehouse_id: newItem.warehouseId
                 }
             })
-
-            await this.stock.addStock({itemId: createdItem.item_id, warehouseId: newItem.warehouseId});
 
             return {Massage: 'Added a new item to the warehouse'};
 

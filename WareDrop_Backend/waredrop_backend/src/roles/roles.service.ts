@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
-import {UserDto} from "../users/users.service";
 import {Prisma} from "@prisma/client";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {IsStringArray} from "../validation/IsStringArrayConstraint";
@@ -34,6 +33,13 @@ export class RoleDto {
     @IsNotEmpty()
     roleId: number
 }
+
+export class GetRoleDto {
+    @IsNotEmpty()
+    @IsNumber()
+    userId: number
+}
+
 @Injectable()
 export class RolesService {
     constructor(private readonly db: PrismaService) {}
@@ -46,7 +52,7 @@ export class RolesService {
         })
     }
 
-    async getUserRoles(userId: UserDto) {
+    async getUserRoles(userId: GetRoleDto) {
         const roles = await this.db.user_has_role.findMany({
             select: {
                 roles: {
