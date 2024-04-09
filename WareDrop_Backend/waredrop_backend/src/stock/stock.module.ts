@@ -5,6 +5,6 @@ import {PrismaModule} from "../database/prisma.module";
 @Module({
   providers: [StockService],
   imports: [PrismaModule],
-  exports: [StockService]
+  exports: [StockService],
 })
 export class StockModule {}
