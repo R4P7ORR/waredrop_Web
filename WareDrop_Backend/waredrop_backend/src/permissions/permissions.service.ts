@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
@@ -35,11 +35,19 @@ export class PermissionsService {
     constructor(private readonly db: PrismaService) {}
 
     async createPermission(newPermission: Permission){
-        return this.db.permissions.create({
-            data: {
-                permission_name: newPermission.permissionName,
+        try {
+            const result = await this.db.permissions.create({
+                data: {
+                    permission_name: newPermission.permissionName,
+                }
+            })
+
+            if (result){
+                return {message: 'Permission created'};
             }
-        })
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
     }
 
     async getAllPermissions(){

@@ -10,6 +10,27 @@ describe('Waredrop E2E test', () => {
    let app: INestApplication;
    process.env.DATABASE_URL="postgresql://postgres:postgres@localhost:5432/waredrop-test?schema=public"
 
+   async function loginAdminToken() {
+       const response = await request(app.getHttpServer())
+           .post('/auth/login')
+           .send({
+               email: 'admin@admin.hu',
+               password: 'admin123'
+           })
+           .expect(201);
+       return response.body.accessToken
+   }
+    async function loginToken() {
+        const response = await request(app.getHttpServer())
+            .post('/auth/login')
+            .send({
+                email: 'test@test.hu',
+                password: 'test123'
+            })
+            .expect(201);
+        return response.body.accessToken
+    }
+
    beforeAll(async () =>{
        const moduleFixture: TestingModule = await Test.createTestingModule({
            imports: [AppModule],
@@ -30,12 +51,19 @@ describe('Waredrop E2E test', () => {
                { role_name: 'Worker'},
            ]
        });
-       await prisma.users.create({
-           data: {
-               user_email: 'admin@admin.hu',
-               user_name: 'admin',
-               user_password: await bcrypt.hash('admin123', await bcrypt.genSalt())
-           }
+       await prisma.users.createMany({
+           data: [
+               {
+                   user_email: 'admin@admin.hu',
+                   user_name: 'admin',
+                   user_password: await bcrypt.hash('admin123', await bcrypt.genSalt())
+               },
+               {
+                   user_email: 'test@test.hu',
+                   user_name: 'test',
+                   user_password: await bcrypt.hash('test123', await bcrypt.genSalt())
+               }
+           ]
        });
 
        const adminUser = await prisma.users.findFirst({where: {user_name: 'admin'}});
@@ -246,6 +274,44 @@ describe('Waredrop E2E test', () => {
                     .expect(200);
 
                 expect(response.body).toEqual({isAdmin: true});
+            });
+
+            it('should return false if the user does not have admin role', async () => {
+                const notAdminToken = await loginToken();
+                const response = await request(app.getHttpServer())
+                    .get('/auth/isAdmin')
+                    .auth(notAdminToken, {type: "bearer"})
+                    .expect(200);
+
+                expect(response.body).toEqual({isAdmin: false});
+            });
+        })
+    })
+
+    describe('Authorization', () => {
+        describe('Permission', () => {
+            it('should create new permission if the user is an admin', async () => {
+                const adminToken = await loginAdminToken();
+                const response = await request(app.getHttpServer())
+                    .post('/permissions')
+                    .auth(adminToken, {type: "bearer"})
+                    .send({
+                        permissionName: 'testPermission'
+                    })
+                    .expect(201);
+
+                expect(response.body.message).toEqual('Permission created');
+            });
+
+            it('should NOT create new permission if the user is not an admin', async () => {
+                const notAdminToken = await loginToken();
+                await request(app.getHttpServer())
+                    .post('/permissions')
+                    .auth(notAdminToken, {type: "bearer"})
+                    .send({
+                        permissionName: 'testPermission'
+                    })
+                    .expect(403);
             });
         })
     })
