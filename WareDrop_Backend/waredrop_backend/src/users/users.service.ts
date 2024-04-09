@@ -84,7 +84,19 @@ export class UsersService {
     }
 
     async listUsers(){
-        return this.db.users.findMany();
+        return this.db.users.findMany({
+            include: {
+                user_has_role: {
+                    select: {
+                        roles: {
+                            select: {
+                                role_name: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     async findUser(email: string){
