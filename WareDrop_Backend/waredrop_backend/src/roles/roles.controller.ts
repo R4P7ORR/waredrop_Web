@@ -1,24 +1,26 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Patch, Post, Req, UseGuards} from '@nestjs/common';
 import {AddRoleInput, Role, RoleDto, RolesService} from "./roles.service";
-import {UserDto} from "../users/users.service";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {Request} from "express";
+import JwtDecoder from "../auth/jwt.decoder";
 
 @Controller('roles')
 @UseGuards(JwtAuthGuard, PermissionGuard)
 @RequiredPermission([{permissionName: 'All'}])
 export class RolesController {
-    constructor(private service: RolesService) { }
+    constructor(private service: RolesService, private jwt: JwtDecoder) { }
 
     @Post()
     createRole(@Body() newRole: Role){
         return this.service.createRole(newRole);
     }
 
-    @Get('/:id')
-    getRole(@Param('id') userId: UserDto){
-        return this.service.getUserRoles(userId);
+    @Get('/user')
+    getRole(@Req() req: Request){
+        const user = this.jwt.decodeToken(req);
+        return this.service.getUserRoles(user.sub.id);
     }
 
     @Get()
