@@ -8,7 +8,7 @@ interface UsersDisplayProps{
 }
 
 function UsersDisplay({user_id, user_name, user_email}: UsersDisplayProps){
-    const {setOverlayType, setEditingUser} = useContext(WarehouseContext);
+    const {setOverlayType, setEditingUser, setSelectedId} = useContext(WarehouseContext);
 
     return (
         <div className="item-container">
@@ -21,6 +21,7 @@ function UsersDisplay({user_id, user_name, user_email}: UsersDisplayProps){
             <input type="checkbox" className="switch" checked={false} onInput={() => {}}/>
             <button className="inline-button" onClick={() => {
                 setOverlayType("userEditForm");
+                setSelectedId(user_id);
                 setEditingUser({user_name, user_email});
             }}>Edit
             </button>

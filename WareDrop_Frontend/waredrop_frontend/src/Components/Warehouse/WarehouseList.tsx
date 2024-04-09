@@ -1,10 +1,11 @@
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import WarehouseListItem from "./WarehouseListItem";
 import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 import editImage from "../../Images/edit_button.png";
 import deleteImage from "../../Images/delete_button.png";
+import swal from "sweetalert";
 
 interface WarehouseListProps {
     warehouse_id: number;
@@ -14,7 +15,7 @@ interface WarehouseListProps {
 
 function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
-    const {setSelectedId, overlayType, setOverlayType, editingWarehouse, deletingWarehouse, setSelectedItems} = useContext(WarehouseContext);
+    const {setSelectedId, overlayType, setOverlayType, editingWarehouse, deletingWarehouse,selectedItems, setSelectedItems} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (warehouse_id !== null){
@@ -24,12 +25,26 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
             });
         }}, [overlayType]);
 
-    function handleCheckBox(item: Item){
-
+    const handleCheckBox = (item: Item) => {
+        let updatedItems = [...selectedItems];
+        const itemIndex = updatedItems.findIndex((selectedItem) => selectedItem.item_id === item.item_id);
+        if (itemIndex === -1) {
+            updatedItems.push(item);
+        } else {
+            updatedItems.splice(itemIndex, 1);
+        }
+        setSelectedItems(updatedItems);
+        if (updatedItems.length === 0){
+            setOverlayType("none");
+            (document.getElementById(warehouse_id.toString()))!.style.zIndex = "1";
+        } else {
+            setOverlayType("empty");
+            (document.getElementById(warehouse_id.toString()))!.style.zIndex = "170";
+        }
     }
 
     return (
-        <div className="container-warehouse container-box">
+        <div className="container-warehouse container-box" id={warehouse_id.toString()}>
             <div className="container-header">
                 <h2>{warehouse_name.toUpperCase()}</h2>
                 <h4>{location}</h4>
@@ -50,8 +65,15 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
                 }
                 {deletingWarehouse &&
                     <button className="button-image" onClick={() => {
-                        setOverlayType("warehouseDeleteForm");
-                        setSelectedId(warehouse_id);
+                        if (itemList.length !== 0){
+                            swal("Oh-oh!", "You cannot delete a warehouse that contains items!", "error", {
+                                buttons: {},
+                                timer: 2500
+                            });
+                        } else {
+                            setOverlayType("warehouseDeleteForm");
+                            setSelectedId(warehouse_id);
+                        }
                     }}>
                         <img className="button-image" src={deleteImage} alt="Edit"/>
                     </button>

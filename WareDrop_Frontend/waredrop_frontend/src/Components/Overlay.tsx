@@ -162,12 +162,45 @@ function Overlay({loginToken}: OverlayProps){
         });
     }
     function handleEditUser(){
-
+        if (editingUser.user_name.trim().length === 0 || editingUser.user_email.trim().length === 0){
+            swal("Oh-oh!", "One or more fields have been left empty!", "error", {
+                buttons: {},
+                timer: 2500,
+            });
+        } else if(editingUser.user_name.trim().length < 3){
+            swal("Oh-oh!", "Name must be at least 3 characters long!", "error", {
+                buttons: {},
+                timer: 2500,
+            });
+        } else if(editingUser.user_email.trim().length < 6){
+            swal("Oh-oh!", "Email must be at least 6 characters long!", "error", {
+                buttons: {},
+                timer: 2500,
+            });
+        } else {
+            axios.patch('http://localhost:3001/user', {
+                userId: selectedId,
+                userName: editingUser.user_name,
+                userEmail: editingUser.user_email,
+            }).then(() => {
+                    swal("Great!", "Successfully updated user details!", "success", {
+                        buttons: {},
+                        timer: 2500
+                    });
+                    setOverlayType("none");
+            }).catch(res => {
+                swal("Oh-oh!", "Something went wrong :(", "error", {
+                    buttons: {},
+                    timer: 2500
+                });
+            })
+        }
     }
 
     return(
         <>{overlayType !== "none" &&
             <div className="overlay-fullscreen">
+                {overlayType !== "empty"&&
                 <div className="overlay-fullscreen-container">
                     {overlayType === "itemForm" &&
                         <>
@@ -256,22 +289,31 @@ function Overlay({loginToken}: OverlayProps){
                             <input placeholder="Name" type="text" value={editingUser.user_name} onChange={(e) => {
                                 const name = e.target.value;
                                 setEditingUser({user_name: name, user_email: editingUser.user_email});
-                            }}/>
+                            }}
+                               onKeyDown={(e) => {
+                                   if (e.key === "Enter")
+                                       handleEditUser();
+                               }}/>
                             <input placeholder="Email" type="text" value={editingUser.user_email} onChange={(e) => {
                                 const email = e.target.value;
                                 setEditingUser({user_name: editingUser.user_name, user_email: email});
-                            }}/>
+                            }}
+                               onKeyDown={(e) => {
+                                   if (e.key === "Enter")
+                                       handleEditUser();
+                               }}/>
                             <button onClick={handleEditUser}>Confirm</button>
                         </>
                     }
-                    <button onClick={() => {
-                        setNameInput("");
-                        setQuantityInput(1);
-                        setLocationInput("");
-                        setOverlayType("none");
-                        setSelectedId(0);
-                    }}>Cancel</button>
+                        <button onClick={() => {
+                            setNameInput("");
+                            setQuantityInput(1);
+                            setLocationInput("");
+                            setOverlayType("none");
+                            setSelectedId(0);
+                        }}>Cancel</button>
                 </div>
+                }
             </div>
         }</>
     )
