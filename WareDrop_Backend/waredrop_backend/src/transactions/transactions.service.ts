@@ -124,6 +124,14 @@ export class TransactionsService {
         })
     }
 
+    async getTransDone(input: UserDto){
+        return this.db.transactions.findMany({
+            where: {
+                worker_email: input.userEmail,
+            }
+        })
+    }
+
     async updateTrans(updateInput: WorkerUpdateInput){
         return this.db.transactions.update({
             data: {

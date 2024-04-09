@@ -47,6 +47,14 @@ export class TransactionsController {
         return this.service.getAllTransByWorker({userId: user.sub.id, userEmail: user.sub.email});
     }
 
+    @Get('/doneBy')
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
+    getTransDoneByWorker(@Req() req : Request){
+        const user = this.jwt.decodeToken(req);
+        return this.service.getTransDone({userId: user.sub.id, userEmail: user.sub.email});
+    }
+
     @Patch()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
