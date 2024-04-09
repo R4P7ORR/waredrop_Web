@@ -139,16 +139,19 @@ export class UsersService {
             }
 
             //If the user got any warehouses, the relation will be deleted as well
-            const assignedToWarehouse = await this.db.user_assigned_to_warehouse.findFirst({
+            const assignedToWarehouse = await this.db.warehouses.findFirst({
                 where: {
-                    user_user_id: deleteInput.userId
+                    assigned_user_id: deleteInput.userId
                 }
             })
 
             if(assignedToWarehouse){
-                await this.db.user_assigned_to_warehouse.deleteMany({
+                await this.db.warehouses.updateMany({
                     where: {
-                        user_user_id: deleteInput.userId
+                        assigned_user_id: deleteInput.userId
+                    },
+                    data: {
+                        assigned_user_id: null,
                     }
                 })
             }

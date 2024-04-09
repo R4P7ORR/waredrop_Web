@@ -39,9 +39,9 @@ export class AddWarehouseDto {
     @IsNotEmpty()
     userId: number
 
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
-    warehouseName: string
+    warehouseId: number
 }
 
 @Injectable()
