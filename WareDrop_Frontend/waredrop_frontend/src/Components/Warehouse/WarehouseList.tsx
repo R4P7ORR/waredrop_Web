@@ -36,7 +36,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
         setSelectedItems(updatedItems);
         if (updatedItems.length === 0){
             setOverlayType("none");
-            (document.getElementById(warehouse_id.toString()))!.style.zIndex = "1";
+            (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
         } else {
             setOverlayType("empty");
             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "170";

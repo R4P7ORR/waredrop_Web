@@ -22,12 +22,30 @@ function Users({loginToken}: UsersProps){
         }
     }, [loginToken,overlayType]);
 
+    function SortUsers(sortBy: string){
+        let updateUsers: User[];
+        if (sortBy === "id"){
+             updateUsers = [...users].sort((a,b) => {
+                return a.user_id > b.user_id ? 1: -1;
+            });
+        } else if(sortBy === "name"){
+            updateUsers = [...users].sort((a,b) => {
+                return a.user_name < b.user_name ? 1: -1;
+            });
+        } else {
+            updateUsers = [...users].sort((a,b) => {
+                return a.user_email > b.user_email ? 1: -1;
+            });
+        }
+        setUsers(updateUsers)
+    }
+
     return (
         <div className="container-users container-box">
             <div className="item-name" style={{display: "flex"}}>
-                <h3 className="users-details">ID</h3>
-                <h3 className="users-details">NAME</h3>
-                <h3 className="users-details">EMAIL</h3>
+                <h3 className="users-details" onClick={() => SortUsers("id")}>ID</h3>
+                <h3 className="users-details" onClick={() => SortUsers("name")}>NAME</h3>
+                <h3 className="users-details" onClick={() => SortUsers("email")}>EMAIL</h3>
             </div>
             <div className="container-users-body">
                 {users.map((user: User) => (

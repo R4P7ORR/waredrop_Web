@@ -10,6 +10,8 @@ interface UsersDisplayProps{
 function UsersDisplay({user_id, user_name, user_email}: UsersDisplayProps){
     const {setOverlayType, setEditingUser, setSelectedId} = useContext(WarehouseContext);
 
+
+
     return (
         <div className="item-container">
             <div className="item-name align-horizontal">
