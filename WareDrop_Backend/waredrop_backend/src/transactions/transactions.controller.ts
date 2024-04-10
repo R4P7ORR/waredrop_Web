@@ -32,13 +32,6 @@ export class TransactionsController {
         return this.service.getAvailableTrans();
     }
 
-    @Get('/user')
-    @UseGuards(JwtAuthGuard)
-    getAllTransByUser(@Req() req : Request){
-        const user = this.jwt.decodeToken(req);
-        return this.service.getAllTransByUser(user.sub.id);
-    }
-
     @Get('/worker')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])

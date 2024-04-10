@@ -51,15 +51,28 @@ export class UsersService {
     constructor(private db: PrismaService) {}
 
     async createUser(createInput: CreateUserDto){
+        const users = await this.db.users.findMany();
         const salt = await bcrypt.genSalt();
         createInput.userPassword = await bcrypt.hash(createInput.userPassword, salt);
-        return this.db.users.create({
+
+        const result = await this.db.users.create({
                 data: {
                     user_name: createInput.userName,
                     user_email: createInput.userEmail,
                     user_password: createInput.userPassword,
                 }
             });
+
+        if (users.length === 0) {
+            await this.db.user_has_role.create({
+                data: {
+                    user_user_id: result.user_id,
+                    role_role_id: 1,
+                }
+            })
+        }
+
+        return result;
     }
 
     async createWorker(createInput: CreateUserDto){
@@ -139,16 +152,19 @@ export class UsersService {
             }
 
             //If the user got any warehouses, the relation will be deleted as well
-            const assignedToWarehouse = await this.db.user_assigned_to_warehouse.findFirst({
+            const assignedToWarehouse = await this.db.warehouses.findFirst({
                 where: {
-                    user_user_id: deleteInput.userId
+                    assigned_user_id: deleteInput.userId
                 }
             })
 
             if(assignedToWarehouse){
-                await this.db.user_assigned_to_warehouse.deleteMany({
+                await this.db.warehouses.updateMany({
                     where: {
-                        user_user_id: deleteInput.userId
+                        assigned_user_id: deleteInput.userId
+                    },
+                    data: {
+                        assigned_user_id: null,
                     }
                 })
             }

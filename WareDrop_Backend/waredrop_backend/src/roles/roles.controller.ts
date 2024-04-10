@@ -1,6 +1,5 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
 import {AddRoleInput, Role, RoleDto, RolesService} from "./roles.service";
-import {UserDto} from "../users/users.service";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
@@ -17,8 +16,9 @@ export class RolesController {
     }
 
     @Get('/:id')
-    getRole(@Param('id') userId: UserDto){
-        return this.service.getUserRoles(userId);
+    getRole(@Param('id') inputId: string){
+        const id = parseInt(inputId);
+        return this.service.getUserRoles({userId: id});
     }
 
     @Get()

@@ -2,7 +2,6 @@ import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
-import {StockService} from "../stock/stock.service";
 
 export class Transaction {
     @IsNumber()
@@ -13,17 +12,13 @@ export class Transaction {
     @IsOptional()
     transArrivedDate?: string
 
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
-    transOrigin: string
-
-    @IsString()
-    @IsNotEmpty()
-    transTarget: string
+    transOriginId: number
 
     @IsNumber()
     @IsNotEmpty()
-    warehouseId: number
+    transTargetId: number
 
     @IsNumber()
     @IsNotEmpty()
@@ -42,51 +37,17 @@ export class WorkerUpdateInput {
 
 @Injectable()
 export class TransactionsService {
-    constructor(private readonly db: PrismaService, private readonly stock: StockService) { }
+    constructor(private readonly db: PrismaService) { }
 
     async createTrans(newTrans: Transaction){
         return this.db.transactions.create({
             data: {
                 trans_post_date: new Date(Date.now()),
-                trans_origin: newTrans.transOrigin,
-                trans_target: newTrans.transTarget,
-                warehouse_warehouse_id: newTrans.warehouseId,
+                trans_origin_id: newTrans.transOriginId,
+                trans_target_id: newTrans.transTargetId,
                 item_item_id: newTrans.itemId
             }
         })
-    }
-
-    async addWorkerToTrans(addInput: WorkerUpdateInput, workerEmail: string ){
-        const trans = await this.db.transactions.findFirst({where: {trans_id: addInput.transId}});
-        const targetWarehouse = await this.db.warehouses.findFirst({where: {location: trans.trans_target}});
-        await this.stock.deleteStock({warehouseId: trans.warehouse_warehouse_id, itemId: trans.item_item_id});
-        return this.db.transactions.update({
-            where: {
-                trans_id: addInput.transId
-            },
-            data: {
-                worker_email: workerEmail,
-                warehouse_warehouse_id: targetWarehouse.warehouse_id
-            }
-        })
-    }
-    async getAllTransByUser(user: UserDto){
-        return this.db.transactions.findMany({
-            where: {
-                warehouses: {
-                    user_assigned_to_warehouse: {
-                        some: {
-                            user_user_id: user.userId
-                        }
-                    }
-                }
-            },
-            include: {
-                items: {
-                    select: {item_name: true, item_quantity: true}
-                }
-            }
-        });
     }
 
     async getAllTransByWorker(user: UserDto){
@@ -122,7 +83,7 @@ export class TransactionsService {
                 items: {
                     select: {item_name: true, item_quantity: true}
                 }
-            }
+            },
         })
     }
 
@@ -130,6 +91,17 @@ export class TransactionsService {
         return this.db.transactions.findMany({
             where: {
                 worker_email: input.userEmail,
+            }
+        })
+    }
+
+    async addWorkerToTrans(addInput: WorkerUpdateInput, workerEmail: string ){
+        return this.db.transactions.update({
+            where: {
+                trans_id: addInput.transId
+            },
+            data: {
+                worker_email: workerEmail,
             }
         })
     }
@@ -143,7 +115,14 @@ export class TransactionsService {
                 trans_id: updateInput.transId,
             }
         })
-        await this.stock.addStock({itemId: result.item_item_id, warehouseId: result.warehouse_warehouse_id});
+        await this.db.items.update({
+            where: {
+                item_id: result.item_item_id
+            },
+            data: {
+                warehouse_id: result.trans_target_id
+            }
+        })
         return result;
     }
 }
