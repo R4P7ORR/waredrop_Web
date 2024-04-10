@@ -14,7 +14,7 @@ POST http://localhost:3001/auth/login
 Content-Type: application/json
 
 {
-  "email": "asd@asd.hu",
+  "email": "admin@admin.hu",
   "password": "titkos123"
 }
 ###
@@ -30,13 +30,11 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3001/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5odSIsInVzZXJQZXJtaXNzaW9ucyI6W119LCJpYXQiOjE3MTI1OTMxNjMsImV4cCI6MTcxNTE4NTE2M30.g__4eFgM-NzaSbbHhKRTJQAoChnK5iXgmKASp9jdS7w
+PATCH http://localhost:3001/warehouses
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYWRtaW5AYWRtaW4uaHUiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25OYW1lIjoiQWxsIn1dfSwiaWF0IjoxNzEyNzQxNDA2LCJleHAiOjE3MTUzMzM0MDZ9.H143-dd9adQ1Uf25ZP2dNMBeyIHT_SvrQnqgMxgMIKg
 Content-Type: application/json
 
 {
-  "userId": 1,
-  "userName": "test_user",
-  "userEmail": "asd@asd.hu",
-  "userPassword": "titkos123"
+  "warehouseId": 3,
+  "warehouseLocation": "Temető"
 }
