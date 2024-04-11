@@ -20,12 +20,16 @@ export class WarehouseUpdateInput {
     warehouseId: number
 
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     warehouseName: string
 
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     warehouseLocation: string
+
+    @IsOptional()
+    @IsNotEmpty()
+    assignedUserId: number
 }
 
 export class WarehouseDto{

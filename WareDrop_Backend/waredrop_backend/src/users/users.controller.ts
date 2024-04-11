@@ -42,11 +42,6 @@ export class UsersController {
         return this.service.findUserById(id);
     }
 
-    @Get('/available')
-    getAvailableUsers(){
-        return this.service.findAvailableUsers();
-    }
-
     @Patch()
     updateUser(@Body() updateInput: UpdateInput){
         return this.service.updateUser(updateInput);
