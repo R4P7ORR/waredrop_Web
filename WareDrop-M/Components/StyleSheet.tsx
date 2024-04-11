@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {blueA100} from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 
 const styles = StyleSheet.create({
@@ -61,12 +62,26 @@ const styles = StyleSheet.create({
         padding:8,
         borderWidth:1,
         borderRadius:4,
-        borderColor:"#ddd"
+        borderColor:"#ddd",
+        fontSize:18
     },
-    ListItemText:{
+    TouchableOpacity:{
+        height:50,
+        backgroundColor:"#ddd",
+        justifyContent:'center',
+        alignItems:'center',
+        fontSize:18,
+        borderRadius:25,
+        width:'80%'
+    },
+    details_con:{
         flex:1,
-        marginRight:8,
-        color:"#333"
+        padding:24,
+    },
+    details:{
+        padding:4,
+        borderBottomColor:'grey'
     }
+
 });
 export default styles

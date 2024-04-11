@@ -62,7 +62,7 @@ export class WarehousesService {
     }
 
     async getWarehouseById(warehouseInput: WarehouseDto){
-        return this.db.warehouses.findMany({
+        return this.db.warehouses.findFirst({
             where: {
                 warehouse_id : warehouseInput.warehouseId,
             }
@@ -72,46 +72,27 @@ export class WarehousesService {
     async getWarehousesByUser(user: UserDto){
         return this.db.warehouses.findMany({
             where: {
-                user_assigned_to_warehouse: {
-                    some: {
-                        user_user_id: user.userId,
-                    }
-                }
+                assigned_user_id: user.userId
             }
         })
     }
 
     async getItemsInWarehouse(warehouseDto: WarehouseDto){
-        const result = await this.db.stock.findMany({
-            select: {
-                items: {
-                    select: {
-                        item_id: true,
-                        item_name: true,
-                        item_quantity: true,
-                    }
-                },
-            },
+        const result = await this.db.items.findMany({
             where: {
-                warehouse_warehouse_id: warehouseDto.warehouseId,
+                warehouse_id: warehouseDto.warehouseId,
             }
         })
-        return result.map((item) => item.items);
+        return result.map((item) => item);
     }
 
     async addWarehouseToUser(addInput: AddWarehouseDto){
-        const result = await this.db.warehouses.findFirst({
-            select: {
-                warehouse_id: true,
-            },
+        return this.db.warehouses.update({
             where: {
-                warehouse_name: addInput.warehouseName,
-            }
-        })
-        return this.db.user_assigned_to_warehouse.create({
+                warehouse_id: addInput.warehouseId
+            },
             data: {
-                user_user_id: addInput.userId,
-                warehouse_warehouse_id: result.warehouse_id
+                assigned_user_id: addInput.userId
             }
         })
     }

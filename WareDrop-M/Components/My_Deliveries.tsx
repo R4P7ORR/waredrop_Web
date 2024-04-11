@@ -1,18 +1,21 @@
 import {Text, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useState} from "react";
 import styles from "./StyleSheet";
-import TransDTO from "./AvailableShowList";
+import TransDTO from "./Interfaces/AvailableShowList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import baseUrl from "./BaseUrl";
 import axios from "axios";
-import AvailableList from "./AvailableList";
-import AvailableSelect from "./AvailableSelect";
+import AvailableList from "./Props/AvailableList";
+import AvailableSelect from "./Props/AvailableSelect";
+import WarehouseDTO from "./Interfaces/Warehouse";
 
 // @ts-ignore
 function My_Deliveries({navigation}){
         const [deliveries,setDeliveries] =useState<TransDTO[]>()
         const [transactionId,setTransactionId]=useState<number|null>(null)
         const [listId,setlistId]=useState<number|null>(null)
+        const [target,setTarget]=useState<WarehouseDTO>()
+        const [origin,setOrigin]=useState<WarehouseDTO>()
 
 
         useEffect(() => {
@@ -39,6 +42,10 @@ function My_Deliveries({navigation}){
                 }
             };
             List();
+            getOrigin();
+            getTarget();
+            console.log("UseEffect origin: ", origin)
+            console.log("UseEffect target: ", target)
         }, [listId]);
 
 
@@ -97,9 +104,60 @@ function My_Deliveries({navigation}){
         }
 
 
-        const goBackToStartMenu = () => {
-            navigation.navigate('StartMenu');
-        };
+
+    const getOrigin= async ()=> {
+        console.log("listaid ",listId)
+        try {
+            const storderToken = await AsyncStorage.getItem('token')
+            console.log("toooken: ", storderToken)
+            console.log("Deliveries jó lenne ha létezne: ", deliveries)
+            if (storderToken && deliveries ) {
+                axios.get(`${baseUrl}/warehouses/warehouse/${deliveries[listId!].trans_origin_id}`, {
+                    headers: {
+                        Authorization: `Bearer ${storderToken}`
+                    }
+                })
+                    .then((response) => {
+                        const data = response.data;
+                        setOrigin(data)
+                        console.log("Ez az origin: ", data)
+                    })
+                    .catch((error) => {
+                        console.log("Ez az origin error: ", error)
+                    })
+            }
+        }
+        catch (error){
+            console.log("Target catch error: ", error)
+        }
+    }
+
+    const getTarget= async ()=> {
+        console.log("lisstaid ", listId)
+        try {
+            const storderToken = await AsyncStorage.getItem('token')
+            console.log("Token: ",storderToken)
+            if (storderToken && deliveries) {
+                axios.get(`${baseUrl}/warehouses/warehouse/${deliveries[listId!].trans_target_id}`, {
+                    headers: {
+                        Authorization: `Bearer ${storderToken}`
+                    }
+                })
+                    .then((response) => {
+                        const data = response.data;
+                        setTarget(data)
+                        console.log("Ez a target: ", data)
+                        console.log("Ez a target stateben: ", target)
+                    })
+                    .catch((error) => {
+                        console.log("Ez a target error: ", error)
+                    })
+            }
+        }
+        catch (error){
+            console.log("Target catch error: ", error)
+        }
+    }
 
         return(
             <View>
@@ -112,15 +170,15 @@ function My_Deliveries({navigation}){
 
                             <TouchableOpacity
                                 style={styles.loginBtn}
-                                onPress={goBackToStartMenu}>
+                                onPress={()=>navigation.navigate('StartMenu')}>
                                 <Text style={styles.TextInput}>Go back</Text>
                             </TouchableOpacity>
 
                         </View>
                         :
                         <View>
-                            {deliveries &&
-                                <AvailableSelect list={deliveries[listId]} back={goBackToMyDeliveries} update={acceptTransaction}/>}
+                            {deliveries && origin && target &&
+                                <AvailableSelect target={target} origin={origin} list={deliveries[listId]} back={goBackToMyDeliveries} update={acceptTransaction}/>}
 
 
                         </View>
