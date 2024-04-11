@@ -14,8 +14,8 @@ POST http://localhost:3001/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@admin.hu",
-  "password": "titkos123"
+  "email": "attila@gmail.com",
+  "password": "beni"
 }
 ###
 POST http://localhost:3001/transactions
@@ -23,18 +23,38 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjIsI
 Content-Type: application/json
 
 {
-  "transOrigin": "Dánszentmiklós Altár út 23",
-  "transTarget": "Pécs Kút utca 6",
-  "itemId": 1,
-  "warehouseId": 2
+  "transOriginId": 2,
+  "transTargetId": 1,
+  "itemId": 9
 }
 
+
 ###
-PATCH http://localhost:3001/warehouses
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYWRtaW5AYWRtaW4uaHUiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25OYW1lIjoiQWxsIn1dfSwiaWF0IjoxNzEyNzQxNDA2LCJleHAiOjE3MTUzMzM0MDZ9.H143-dd9adQ1Uf25ZP2dNMBeyIHT_SvrQnqgMxgMIKg
+GET http://localhost:3001/transactions/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXNkQGFzZC5hc2QiLCJ1c2VyUGVybWlzc2lvbnMiOlt7InBlcm1pc3Npb25OYW1lIjoiQWxsIn1dfSwiaWF0IjoxNzEyMjE3NjM2LCJleHAiOjE3MTQ4MDk2MzZ9._oqe5tn6wVWjTrW7wuhsOZlcDCvWIGHADuKMYlQLgfM
+###
+GET http://localhost:3001/transactions/available
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImVtYWlsIjoiYXR0aWxhQGdtYWlsLmNvbSIsInVzZXJQZXJtaXNzaW9ucyI6W3sicGVybWlzc2lvbk5hbWUiOiJBbGwifSx7InBlcm1pc3Npb25OYW1lIjoiVHJhbnNhY3Rpb25zIn1dfSwiaWF0IjoxNzEyMzA4NTY2LCJleHAiOjE3MTQ5MDA1NjZ9.4a79LVzB5GLo-6l8ITdUnGhAqM3dHprd9cwzsHK6J5U
+###
+POST http://localhost:3001/items
 Content-Type: application/json
 
 {
-  "warehouseId": 3,
-  "warehouseLocation": "Temető"
+  "itemName": "Aranytömb",
+  "itemQuantity": 100,
+  "warehouseId":2
 }
+###
+POST http://localhost:3001/warehouses
+Content-Type: application/json
+
+{
+  "warehouse_name": "Fekete Rigó",
+  "location": "Budapest, Népliget utca 16",
+  "assigned_user_id": 1
+}
+###
+GET http://localhost:3001/warehouses/warehouse/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjIsImVtYWlsIjoiYXR0aWxhQGdtYWlsLmNvbSIsInVzZXJQZXJtaXNzaW9ucyI6W3sicGVybWlzc2lvbk5hbWUiOiJUcmFuc2FjdGlvbnMifV19LCJpYXQiOjE3MTI3NDQxMjcsImV4cCI6MTcxNTMzNjEyN30.wekouPI4mJI0DaAdFNJTYFEuTfCWxUsqN9RyvFsRrVU
+
+
