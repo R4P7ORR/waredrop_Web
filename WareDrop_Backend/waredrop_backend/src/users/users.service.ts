@@ -133,6 +133,18 @@ export class UsersService {
         })
     }
 
+    async findAvailableUsers(){
+       return this.db.users.findMany({
+           where: {
+               warehouses: {
+                   every: {
+                       assigned_user_id: null
+                   }
+               }
+           }
+       })
+    }
+
     async updateUser(updateInput: UpdateInput){
         return this.db.users.update({
             data: {

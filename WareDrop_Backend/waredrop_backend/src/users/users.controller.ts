@@ -14,6 +14,14 @@ export class UsersController {
                 private jwt: JwtDecoder,
     ) {}
 
+    @Get()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
+    getAllUsers(@Req() req :Request){
+        const user = this.jwt.decodeToken(req);
+        return this.service.listUsers({userId: user.sub.id, userEmail: user.sub.email});
+    }
+
     @Get('/permissions')
     @UseGuards(JwtAuthGuard)
     userPermissions(@Req() req: Request){
@@ -29,18 +37,14 @@ export class UsersController {
     }
 
     @Get('/byId/:id')
-    @UseGuards(JwtAuthGuard)
     getUserById(@Param('id') idParam: string){
         const id = parseInt(idParam);
         return this.service.findUserById(id);
     }
 
-    @Get()
-    @UseGuards(JwtAuthGuard, PermissionGuard)
-    @RequiredPermission([{permissionName: 'All'}])
-    getAllUsers(@Req() req :Request){
-        const user = this.jwt.decodeToken(req);
-        return this.service.listUsers({userId: user.sub.id, userEmail: user.sub.email});
+    @Get('/available')
+    getAvailableUsers(){
+        return this.service.findAvailableUsers();
     }
 
     @Patch()
