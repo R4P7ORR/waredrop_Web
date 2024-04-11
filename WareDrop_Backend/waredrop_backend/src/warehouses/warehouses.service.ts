@@ -99,7 +99,7 @@ export class WarehousesService {
 
     async updateWarehouse(input: WarehouseUpdateInput){
         let result;
-        if (input.warehouseLocation!) {
+        if (!input.warehouseLocation) {
             result = this.db.warehouses.update({
                 where: {
                     warehouse_id: input.warehouseId
@@ -108,7 +108,7 @@ export class WarehousesService {
                     warehouse_name: input.warehouseName
                 }
             })
-        } else if (input.warehouseName!) {
+        } else if (!input.warehouseName) {
             result = this.db.warehouses.update({
                 where: {
                     warehouse_id: input.warehouseId

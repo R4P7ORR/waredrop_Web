@@ -83,7 +83,7 @@ export class TransactionsService {
                 items: {
                     select: {item_name: true, item_quantity: true}
                 }
-            }
+            },
         })
     }
 

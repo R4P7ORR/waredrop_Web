@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 
 describe('Waredrop E2E test', () => {
    let app: INestApplication;
-   process.env.DATABASE_URL="postgresql://postgres:postgres@localhost:5432/waredrop-test?schema=public"
+   process.env.DATABASE_URL="postgresql://postgres:postgre@localhost:5432/waredrop-test?schema=public"
 
    async function loginAdminToken() {
        const response = await request(app.getHttpServer())
@@ -89,7 +89,6 @@ describe('Waredrop E2E test', () => {
 
    afterAll(async () => {
        const prisma = app.get<PrismaService>(PrismaService);
-       await prisma.user_assigned_to_warehouse.deleteMany();
        await prisma.user_has_role.deleteMany();
        await prisma.role_has_permission.deleteMany();
        await prisma.transactions.deleteMany();
@@ -98,7 +97,6 @@ describe('Waredrop E2E test', () => {
        await prisma.users.deleteMany();
        await prisma.roles.deleteMany();
        await prisma.permissions.deleteMany();
-       await prisma.stock.deleteMany();
    })
 
     describe('Authentication', () => {
