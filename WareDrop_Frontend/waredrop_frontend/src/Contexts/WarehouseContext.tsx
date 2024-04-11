@@ -6,6 +6,12 @@ export interface WarehouseContextValues {
     selectedId: number;
     setSelectedId: (selectedId: number) => void
 
+    selectedUserId: number;
+    setSelectedUserId: (id: number) => void;
+
+    users: User[] | [];
+    setUsers: (users: User[] | []) => void;
+
     overlayType: string;
     setOverlayType: (type: string) => void;
 

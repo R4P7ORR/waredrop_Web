@@ -8,14 +8,20 @@ import deleteImage from "../../../public/images/delete_button.png";
 import swal from "sweetalert";
 
 interface WarehouseListProps {
+    assigned_user_id: number | null;
     warehouse_id: number;
     warehouse_name: string;
     location: string;
 }
 
-function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListProps){
+function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
-    const {setSelectedId, overlayType, setOverlayType, editingWarehouse, deletingWarehouse,selectedItems, setSelectedItems} = useContext(WarehouseContext);
+    const [assignedUser, setAssignedUser] = useState<string>("No assigned user");
+    const {setSelectedId, setSelectedUserId,
+        overlayType, setOverlayType,
+        editingWarehouse, deletingWarehouse,
+        selectedItems, setSelectedItems
+    } = useContext(WarehouseContext);
 
     useEffect(() => {
         if (warehouse_id !== null){
@@ -23,6 +29,10 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
             }).then(res => {
                 setItemList(res.data);
             });
+            if (assigned_user_id !== null){
+                axios.get('http://localhost:3001/user/byId/' + assigned_user_id).then(res => {
+                    setAssignedUser(res.data.user_name);
+                })}
         }}, [overlayType]);
 
     const handleCheckBox = (item: Item) => {
@@ -49,10 +59,14 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
             <div className="container-header">
                 <h2>{warehouse_name.toUpperCase()}</h2>
                 <div className="align-horizontal">
-                    <h4 className="text-dim-yellow">{location}</h4>
+                    <div>
+                        <h4 className="text-dim-yellow">{location}</h4>
+                        <h4 className="text-dim-yellow">{assignedUser}</h4>
+                    </div>
                     {(editingWarehouse && overlayType !== "empty") &&
                         <button className="button-modify" onClick={() => {
                             setOverlayType("warehouseEditForm");
+                            setSelectedUserId(assigned_user_id===null? 0: assigned_user_id);
                             setSelectedId(warehouse_id);
                         }}>
                             <img className="button-image" src="/images/edit_button.png" alt="Edit"/>

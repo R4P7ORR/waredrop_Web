@@ -44,11 +44,11 @@ function Navbar({setCurrentPage}: NavbarProps){
                     <span/>
                 </label>
                 <ul className="menu-box">
-                    <button onClick={() => handlePageChange("warehouses")} className="menu-item">Warehouses</button>
-                    <button onClick={() => handlePageChange("transactions")} className="menu-item">Transactions</button>
                     {isAdmin &&
                         <button onClick={() => handlePageChange("users")} className="menu-item">Users</button>
                     }
+                    <button onClick={() => handlePageChange("warehouses")} className="menu-item">Warehouses</button>
+                    <button onClick={() => handlePageChange("transactions")} className="menu-item">Transactions</button>
                     <button onClick={() => handlePageChange("contact")} className="menu-item">Contact Us</button>
                 </ul>
                 <div className="lower-box"/>

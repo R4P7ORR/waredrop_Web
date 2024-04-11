@@ -34,6 +34,7 @@ function Register(props: RegisterProps) {
                     setFullNameInput('');
                     setEmailInput('');
                     setPasswordInput('');
+                    setPasswordAgainInput('');
                     props.handleRegister('container');
                     swal("Great!", "Account created successfully!", "success", {
                         buttons: {},

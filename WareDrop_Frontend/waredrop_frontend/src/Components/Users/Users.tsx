@@ -9,8 +9,7 @@ interface UsersProps{
 }
 
 function Users({loginToken}: UsersProps){
-    const [users, setUsers] = useState<User[]>([]);
-    const {overlayType} = useContext(WarehouseContext);
+    const {users, setUsers, overlayType} = useContext(WarehouseContext);
 
     useEffect(() => {
         if (overlayType === "none" && loginToken !== "none"){

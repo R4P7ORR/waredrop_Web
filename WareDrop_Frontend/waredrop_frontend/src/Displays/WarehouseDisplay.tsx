@@ -17,6 +17,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                 axios.get('http://localhost:3001/warehouses', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
+                    console.log(res.data)
                     setWareHouseList(res.data);
                 });
             } else {
@@ -55,6 +56,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                         return a.warehouse_id > b.warehouse_id ? 1: -1;
                     }).map((warehouse: Warehouse) => (
                         <WarehouseList key={warehouse.warehouse_id}
+                                       assigned_user_id={warehouse.assigned_user_id}
                                        warehouse_id={warehouse.warehouse_id}
                                        warehouse_name={warehouse.warehouse_name}
                                        location={warehouse.location}/>

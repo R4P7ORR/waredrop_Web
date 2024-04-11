@@ -3,6 +3,7 @@ import axios from "axios";
 import WarehouseContext from "../Contexts/WarehouseContext";
 import Item from "./Warehouse/Item";
 import swal from "sweetalert";
+import User from "./Users/User";
 
 interface OverlayProps{
     loginToken: string;
@@ -14,18 +15,20 @@ function Overlay({loginToken}: OverlayProps){
     const [locationInput, setLocationInput] = useState<string>("");
     const {
         selectedId, setSelectedId,
+        selectedUserId, setSelectedUserId,
         overlayType, setOverlayType,
         editingUser, setEditingUser,
         selectedItems,
-        setEditingWarehouse, setDeletingWarehouse
+        setEditingWarehouse, setDeletingWarehouse,
+        users
     } = useContext(WarehouseContext);
 
     useEffect(() => {
         if (overlayType === "warehouseEditForm" || overlayType === "warehouseDeleteForm"){
+            console.log("user ID: " + selectedUserId)
             axios.get('http://localhost:3001/warehouses/warehouse/'+ selectedId, {
                 headers: {authorization: "Bearer " + loginToken},
             }).then((res) => {
-                console.log(res)
                 setNameInput(res.data.warehouse_name);
                 setLocationInput(res.data.location);
             });
@@ -119,27 +122,28 @@ function Overlay({loginToken}: OverlayProps){
     }
     function handleEditWarehouse(){
         axios.patch('http://localhost:3001/warehouses', {
+            assignedUserId: (selectedUserId === 0? null: selectedUserId),
             warehouseId: selectedId,
             warehouseName: nameInput,
             warehouseLocation: locationInput
         },{
             headers: {authorization: "Bearer " + loginToken},
         }).then(() => {
-            swal("Great!", "Successfully updated warehouse details!", "success", {
-                buttons: {},
-                timer: 2500,
-            });
             console.log(nameInput, locationInput)
-            setNameInput("");
-            setLocationInput("");
-            setOverlayType("none");
-            setEditingWarehouse(false);
-            setSelectedId(0);
-        }).catch(() => {
-                swal("Error", "Something went wrong :(", "error", {
-                    buttons: {},
-                    timer: 3000,
-                });
+                setNameInput("");
+                setLocationInput("");
+                setOverlayType("none");
+                setEditingWarehouse(false);
+                setSelectedId(0);
+            }).catch(() => {
+            swal("Error", "Something went wrong :(", "error", {
+                buttons: {},
+                timer: 3000,
+            });
+        });
+        swal("Great!", "Successfully updated warehouse details!", "success", {
+            buttons: {},
+            timer: 2500,
         });
     }
     function handleDeleteWarehouse(){
@@ -209,7 +213,8 @@ function Overlay({loginToken}: OverlayProps){
                         <>
                             <h2 className="text-light">New Item</h2>
                             <hr className="hr-left"/>
-                            <input autoFocus={true} type="text" placeholder="Name" value={nameInput} maxLength={30} onChange={(e) => {
+                            <input autoFocus={true} type="text" placeholder="Name" value={nameInput} maxLength={30}
+                                   onChange={(e) => {
                                 const name = e.target.value;
                                 setNameInput(name);
                             }}
@@ -217,7 +222,8 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleAddItem();
                                }}/>
-                            <input type="number" placeholder="Quantity" value={quantityInput} onChange={(e) => {
+                            <input type="number" placeholder="Quantity" value={quantityInput}
+                                   onChange={(e) => {
                                 const quantity = e.target.value;
                                 if (quantity.length >9) {
                                     return null;
@@ -239,7 +245,8 @@ function Overlay({loginToken}: OverlayProps){
                     {overlayType === "warehouseAddForm" &&
                         <>
                             <h2 className="text-light">New Warehouse</h2>
-                            <input placeholder="Name" type="text" value={nameInput} maxLength={30} onChange={(e) => {
+                            <input autoFocus={true} placeholder="Name" type="text" value={nameInput} maxLength={30}
+                                   onChange={(e) => {
                                 const name = e.target.value;
                                 setNameInput(name);
                             }}
@@ -247,7 +254,8 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleCreateWarehouse();
                                }}/>
-                            <input placeholder="Location" type="text" value={locationInput} maxLength={30} onChange={(e) => {
+                            <input placeholder="Location" type="text" value={locationInput} maxLength={30}
+                                   onChange={(e) => {
                                 const location = e.target.value;
                                 setLocationInput(location);
                             }}
@@ -277,6 +285,15 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleEditWarehouse();
                                }}/>
+                            <select value={selectedUserId} defaultValue={1} onChange={(e) => {
+                                const user = e.target.value;
+                                setSelectedUserId(Number.parseInt(user));
+                            }}>
+                                <option value={0} selected={true}>Not Selected</option>
+                                {users.map(user => (
+                                    <option value={user.user_id}>{user.user_name}</option>
+                                ))}
+                            </select>
                             <button onClick={handleEditWarehouse}>Confirm</button>
                         </>
                     }
