@@ -96,8 +96,13 @@ export class UsersService {
         return newUser;
     }
 
-    async listUsers(){
+    async listUsers(user: UserDto){
         return this.db.users.findMany({
+            where: {
+                user_id: {
+                    not: user.userId
+                }
+            },
             include: {
                 user_has_role: {
                     select: {
@@ -121,7 +126,6 @@ export class UsersService {
     }
 
     async updateUser(updateInput: UpdateInput){
-
         return this.db.users.update({
             data: {
                 user_name: updateInput.userName,

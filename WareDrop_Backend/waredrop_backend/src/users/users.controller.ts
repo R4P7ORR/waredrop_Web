@@ -31,8 +31,9 @@ export class UsersController {
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    getAllUsers(){
-        return this.service.listUsers();
+    getAllUsers(@Req() req :Request){
+        const user = this.jwt.decodeToken(req);
+        return this.service.listUsers({userId: user.sub.id, userEmail: user.sub.email});
     }
 
     @Patch()
