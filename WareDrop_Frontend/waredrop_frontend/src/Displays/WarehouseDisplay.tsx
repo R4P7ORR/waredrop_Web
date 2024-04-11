@@ -4,6 +4,7 @@ import {useContext, useEffect, useState} from "react";
 import Warehouse from "../Components/Warehouse/Warehouse";
 import WarehouseList from "../Components/Warehouse/WarehouseList";
 import WarehouseContext from "../Contexts/WarehouseContext";
+
 interface WarehouseDisplayProps{
     loginToken: string;
 }
@@ -17,7 +18,6 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                 axios.get('http://localhost:3001/warehouses', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
-                    console.log(res.data)
                     setWareHouseList(res.data);
                 });
             } else {
@@ -29,6 +29,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                     }
                 });
             }
+            console.log("list" , warehouseList)
         }
     }, [isAdmin, overlayType]);
     return (

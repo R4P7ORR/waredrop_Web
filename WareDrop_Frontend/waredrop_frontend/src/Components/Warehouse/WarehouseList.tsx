@@ -33,7 +33,12 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 axios.get('http://localhost:3001/user/byId/' + assigned_user_id).then(res => {
                     setAssignedUser(res.data.user_name);
                 })}
-        }}, [overlayType]);
+            console.log("user: " +assigned_user_id)
+            if (assigned_user_id === null){
+                setAssignedUser("No assigned user");
+            }
+            console.log("user " + assignedUser + "id "+ assigned_user_id)
+        }}, [overlayType, assigned_user_id]);
 
     const handleCheckBox = (item: Item) => {
         let updatedItems = [...selectedItems];
@@ -61,7 +66,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 <div className="align-horizontal">
                     <div>
                         <h4 className="text-dim-yellow">{location}</h4>
-                        <h4 className="text-dim-yellow">{assignedUser}</h4>
+                        <h4 className="text-light">{assignedUser}</h4>
                     </div>
                     {(editingWarehouse && overlayType !== "empty") &&
                         <button className="button-modify" onClick={() => {
