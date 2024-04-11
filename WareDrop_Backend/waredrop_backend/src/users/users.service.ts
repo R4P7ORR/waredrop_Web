@@ -117,10 +117,18 @@ export class UsersService {
         });
     }
 
-    async findUser(email: string){
+    async findUserByEmail(email: string){
         return this.db.users.findFirst({
             where: {
                 user_email: email
+            }
+        })
+    }
+
+    async findUserById(id: number) {
+        return this.db.users.findUnique({
+            where: {
+                user_id: id
             }
         })
     }
