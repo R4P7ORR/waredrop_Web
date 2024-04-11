@@ -18,20 +18,28 @@ function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplay
     const {overlayType, setOverlayType, setEditingUser, setSelectedId} = useContext(WarehouseContext);
 
     useEffect(() => {
-        axios.get('http://localhost:3001/roles/'+ user_id,{
-            headers: {authorization: "Bearer " + loginToken}
-        }).then(res => {
-            if (res.data.length === 2){
-                setAdminSwitch(true);
-                setWorkerSwitch(true);
-            } else if(res.data[0] === "Admin"){
-                setAdminSwitch(true);
-            } else {
-                setWorkerSwitch(true);
-            }
-        }).catch(error => {
-            console.log(error.data);
+        setTimeout(() => {
+            axios.get('http://localhost:3001/roles/'+ user_id,{
+                headers: {authorization: "Bearer " + loginToken}
+            }).then(res => {
+                if (res.data.length === 2){
+                    setAdminSwitch(true);
+                    setWorkerSwitch(true);
+                } else if(res.data[0] === "Admin"){
+                    setWorkerSwitch(false);
+                    setAdminSwitch(true);
+                } else if(res.data[0] === "Worker"){
+                    setAdminSwitch(false);
+                    setWorkerSwitch(true);
+                } else {
+                    setAdminSwitch(false);
+                    setWorkerSwitch(false);
+                }
+            }).catch(error => {
+                console.log(error.data);
             });
+        }, 200);
+
     }, [overlayType]);
 
     function handleSwitch(type: string){
@@ -47,6 +55,7 @@ function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplay
             closeOnClickOutside: false,
             closeOnEsc: false
         }).then((willChange) => {
+            setOverlayType("none");
             if (willChange){
                 let remove = "";
                 if (type === "admin"){
@@ -66,18 +75,17 @@ function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplay
                         authorization: "Bearer " + loginToken
                     }
                 }).then(() => {
-                        swal("Great!", `Successfully changed roles for ${user_name}!`, "success", {
-                            buttons: {},
-                            timer: 2500,
-                        });
-                    }).catch(() => {
-                        swal("Oh-oh!!", `Something went wrong!`, "error", {
-                            buttons: {},
-                            timer: 2500,
-                        });
+                    swal("Great!", `Successfully changed roles for ${user_name}!`, "success", {
+                        buttons: {},
+                        timer: 2500,
                     });
-            }
-        });
+                }).catch(() => {
+                    swal("Oh-oh!", `Something went wrong!`, "error", {
+                        buttons: {},
+                        timer: 2500,
+                    });
+                });
+            }});
     }
 
     return (
@@ -87,8 +95,14 @@ function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplay
                 <h4 className="users-details">{user_name}</h4>
                 <h4 className="users-details">{user_email}</h4>
             </div>
-            <input type="checkbox" className="switch" checked={adminSwitch} onInput={() => {handleSwitch("admin")}}/>
-            <input type="checkbox" className="switch" checked={workerSwitch} onInput={() => {handleSwitch("worker")}}/>
+            <input type="checkbox" className="switch" checked={adminSwitch} onInput={() => {
+                handleSwitch("admin");
+                setOverlayType("empty");
+            }}/>
+            <input type="checkbox" className="switch" checked={workerSwitch} onInput={() => {
+                handleSwitch("worker");
+                setOverlayType("empty");
+            }}/>
             <button className="inline-button" onClick={() => {
                 setOverlayType("userEditForm");
                 setSelectedId(user_id);
