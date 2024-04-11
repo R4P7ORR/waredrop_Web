@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Patch, Req, UseGuards,} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Patch, Req, UseGuards,} from "@nestjs/common";
 import {UpdateInput, UserDto, UsersService} from "./users.service";
 import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
@@ -26,6 +26,13 @@ export class UsersController {
     getUserName(@Req() req: Request){
         const decodedJwt = this.jwt.decodeToken(req);
         return this.service.getUserName({ userId: decodedJwt.sub.id, userEmail: decodedJwt.sub.email});
+    }
+
+    @Get('/byId/:id')
+    @UseGuards(JwtAuthGuard)
+    getUserById(@Param('id') idParam: string){
+        const id = parseInt(idParam);
+        return this.service.findUserById(id);
     }
 
     @Get()

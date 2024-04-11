@@ -31,7 +31,7 @@ export class AuthService {
     ) { }
 
     async validateUser(input: AuthPayloadDto){
-        const user = await this.usersService.findUser(input.userEmail);
+        const user = await this.usersService.findUserByEmail(input.userEmail);
         if(user && await bcrypt.compare(input.userPassword, user.user_password)) {
             const payload :TokenData = {
                 sub: {
@@ -50,7 +50,7 @@ export class AuthService {
     }
 
     async register(newUser: CreateUserDto){
-        const user = await this.usersService.findUser(newUser.userEmail)
+        const user = await this.usersService.findUserByEmail(newUser.userEmail)
         if(user){
             throw new BadRequestException('User already exist');
         }
@@ -63,7 +63,7 @@ export class AuthService {
     }
 
     async registerWorker(newUser: CreateUserDto){
-        const user = await this.usersService.findUser(newUser.userEmail)
+        const user = await this.usersService.findUserByEmail(newUser.userEmail)
         if(user){
             throw new BadRequestException('User already exist');
         }
