@@ -3,8 +3,8 @@ import WarehouseListItem from "./WarehouseListItem";
 import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
-import editImage from "../../Images/edit_button.png";
-import deleteImage from "../../Images/delete_button.png";
+import editImage from "../../../public/images/edit_button.png";
+import deleteImage from "../../../public/images/delete_button.png";
 import swal from "sweetalert";
 
 interface WarehouseListProps {
@@ -34,6 +34,7 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
             updatedItems.splice(itemIndex, 1);
         }
         setSelectedItems(updatedItems);
+        console.log(updatedItems)
         if (updatedItems.length === 0){
             setOverlayType("none");
             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
@@ -47,37 +48,40 @@ function WarehouseList({warehouse_id, warehouse_name, location}: WarehouseListPr
         <div className="container-warehouse container-box" id={warehouse_id.toString()}>
             <div className="container-header">
                 <h2>{warehouse_name.toUpperCase()}</h2>
-                <h4>{location}</h4>
+                <div className="align-horizontal">
+                    <h4 className="text-dim-yellow">{location}</h4>
+                    {(editingWarehouse && overlayType !== "empty") &&
+                        <button className="button-modify" onClick={() => {
+                            setOverlayType("warehouseEditForm");
+                            setSelectedId(warehouse_id);
+                        }}>
+                            <img className="button-image" src="/images/edit_button.png" alt="Edit"/>
+                        </button>
+                    }
+                    {(deletingWarehouse && overlayType !== "empty") &&
+                        <button className="button-modify button-delete" onClick={() => {
+                            if (itemList.length !== 0){
+                                swal("Oh-oh!", "You cannot delete a warehouse that contains items!", "error", {
+                                    buttons: {},
+                                    timer: 2500
+                                });
+                            } else {
+                                setOverlayType("warehouseDeleteForm");
+                                setSelectedId(warehouse_id);
+                            }
+                        }}>
+                            <img className="button-image" src="/images/delete_button.png" alt="Delete"/>
+                        </button>
+                    }
+                </div>
+                {overlayType !== "empty"&&
                 <button onClick={() => {
                     setOverlayType("itemForm");
                     setSelectedId(warehouse_id);
-                    setSelectedItems(itemList);
                 }}>Add item
                 </button>
+                }
 
-                {editingWarehouse &&
-                    <button className="button-image" onClick={() => {
-                        setOverlayType("warehouseEditForm");
-                        setSelectedId(warehouse_id);
-                    }}>
-                        <img className="button-image" src={editImage} alt="Edit"/>
-                    </button>
-                }
-                {deletingWarehouse &&
-                    <button className="button-image" onClick={() => {
-                        if (itemList.length !== 0){
-                            swal("Oh-oh!", "You cannot delete a warehouse that contains items!", "error", {
-                                buttons: {},
-                                timer: 2500
-                            });
-                        } else {
-                            setOverlayType("warehouseDeleteForm");
-                            setSelectedId(warehouse_id);
-                        }
-                    }}>
-                        <img className="button-image" src={deleteImage} alt="Edit"/>
-                    </button>
-                }
             </div>
             <div className="container-body">
             {itemList.length === 0 ?

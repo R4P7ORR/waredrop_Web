@@ -25,8 +25,9 @@ function Overlay({loginToken}: OverlayProps){
             axios.get('http://localhost:3001/warehouses/warehouse/'+ selectedId, {
                 headers: {authorization: "Bearer " + loginToken},
             }).then((res) => {
-                setNameInput(res.data[0].warehouse_name);
-                setLocationInput(res.data[0].location);
+                console.log(res)
+                setNameInput(res.data.warehouse_name);
+                setLocationInput(res.data.location);
             });
         }
     }, [selectedId]);
@@ -128,10 +129,12 @@ function Overlay({loginToken}: OverlayProps){
                 buttons: {},
                 timer: 2500,
             });
+            console.log(nameInput, locationInput)
             setNameInput("");
             setLocationInput("");
             setOverlayType("none");
             setEditingWarehouse(false);
+            setSelectedId(0);
         }).catch(() => {
                 swal("Error", "Something went wrong :(", "error", {
                     buttons: {},

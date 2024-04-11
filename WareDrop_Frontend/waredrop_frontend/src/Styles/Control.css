@@ -3,7 +3,7 @@ body{
 }
 .main-container{
     z-index: -1;
-    padding: 3rem 1rem 1rem 1rem;
+    padding: 4rem 1rem 1rem 1rem;
 }
 .item-container {
     display: flex;
@@ -65,8 +65,8 @@ body{
     justify-items: center;
 }
 .container-warehouse{
-    min-width: 35vw;
-    max-width: 35vw;
+    min-width: 45vw;
+    max-width: 45vw;
 }
 .container-users{
     z-index: -1;
@@ -90,7 +90,7 @@ body{
     height: fit-content;
     border-radius: 1rem;
     padding: 0 0.5rem 0.5rem 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 .container-body{
     max-height: 300px;

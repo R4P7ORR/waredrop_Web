@@ -9,17 +9,8 @@ interface WarehouseDisplayProps{
 }
 function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
     const [warehouseList, setWareHouseList] = useState<Warehouse[]>([]);
-    const {overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin, setIsAdmin} = useContext(WarehouseContext);
+    const {overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin} = useContext(WarehouseContext);
 
-    useEffect(() => {
-        if (loginToken !== "none"){
-            axios.get('http://localhost:3001/auth/isAdmin',{
-                headers: {authorization: "Bearer " + loginToken}
-            }).then(res => {
-                setIsAdmin(res.data.isAdmin);
-            })
-
-        }}, [loginToken]);
     useEffect(() => {
         if(loginToken !== "none"){
             if (isAdmin){
@@ -39,15 +30,6 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
             }
         }
     }, [isAdmin, overlayType]);
-
-    function addNewWarehouse(name: string, location: string){
-        axios.post("http://localhost:3001/warehouses/new", {
-            warehouseName: name,
-            location: location
-        }).then(res =>{
-            console.log(res)
-        })
-    }
     return (
         <>
             {isAdmin&&
@@ -69,7 +51,9 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                 </div>
                 :
                 <div className="container-listed-warehouses">
-                    {warehouseList.map((warehouse: Warehouse) => (
+                    {warehouseList.sort((a,b) => {
+                        return a.warehouse_id > b.warehouse_id ? 1: -1;
+                    }).map((warehouse: Warehouse) => (
                         <WarehouseList key={warehouse.warehouse_id}
                                        warehouse_id={warehouse.warehouse_id}
                                        warehouse_name={warehouse.warehouse_name}

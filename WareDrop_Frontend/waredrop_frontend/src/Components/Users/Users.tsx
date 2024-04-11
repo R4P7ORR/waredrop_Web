@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useContext, useEffect, useState} from "react";
 import User from "./User";
-import UsersDisplay from "./UsersDisplay";
+import UsersDisplay from "../../Displays/UsersDisplay";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 
 interface UsersProps{
@@ -13,7 +13,7 @@ function Users({loginToken}: UsersProps){
     const {overlayType} = useContext(WarehouseContext);
 
     useEffect(() => {
-        if (overlayType === "none"){
+        if (overlayType === "none" && loginToken !== "none"){
             axios.get('http://localhost:3001/user', {
                 headers: {authorization: "Bearer " + loginToken}
             }).then(res => {
@@ -42,16 +42,18 @@ function Users({loginToken}: UsersProps){
 
     return (
         <div className="container-users container-box">
-            <div className="item-name" style={{display: "flex"}}>
-                <h3 className="users-details" onClick={() => SortUsers("id")}>ID</h3>
-                <h3 className="users-details" onClick={() => SortUsers("name")}>NAME</h3>
-                <h3 className="users-details" onClick={() => SortUsers("email")}>EMAIL</h3>
-            </div>
-            <div className="container-users-body">
-                {users.map((user: User) => (
-                    <UsersDisplay user_id={user.user_id} user_name={user.user_name} user_email={user.user_email}/>
-                ))}
-            </div>
+            {users.length === 0? <h1>There are no other users in the database!</h1>:<>
+                <div className="item-name clickable" style={{display: "flex"}}>
+                    <h3 className="users-details" onClick={() => SortUsers("id")}>ID</h3>
+                    <h3 className="users-details" onClick={() => SortUsers("name")}>NAME</h3>
+                    <h3 className="users-details" onClick={() => SortUsers("email")}>EMAIL</h3>
+                </div>
+                <div className="container-users-body">
+                    {users.map((user: User) => (
+                        <UsersDisplay loginToken={loginToken} user_id={user.user_id} user_name={user.user_name} user_email={user.user_email}/>
+                    ))}
+                </div>
+            </>}
         </div>
     )
 }

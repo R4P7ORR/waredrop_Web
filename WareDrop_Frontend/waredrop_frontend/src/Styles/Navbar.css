@@ -100,3 +100,19 @@
 #menu-toggle:checked ~ .lower-box {
     left: 0 !important;
 }
+.button-logout{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    height: 100%;
+    padding-right: 40px;
+    border-radius: 0 0 0 3rem;
+    background: var(--main-color);
+    color: black;
+    transition: background-color 100ms, color 100ms;
+}
+.button-logout:hover{
+    background: var(--dark-gray);
+    color: var(--main-color);
+}
