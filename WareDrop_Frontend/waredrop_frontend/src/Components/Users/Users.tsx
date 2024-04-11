@@ -20,7 +20,7 @@ function Users({loginToken}: UsersProps){
                 setUsers(res.data);
             });
         }
-    }, [loginToken,overlayType]);
+    }, [loginToken, overlayType]);
 
     function SortUsers(sortBy: string){
         let updateUsers: User[];
@@ -42,7 +42,7 @@ function Users({loginToken}: UsersProps){
 
     return (
         <div className="container-users container-box">
-            {users.length === 0? <h1>There are no other users in the database!</h1>:<>
+            {users.length === 0? <h1 style={{textAlign: "center"}}>There are no other users!</h1>:<>
                 <div className="item-name clickable" style={{display: "flex"}}>
                     <h3 className="users-details" onClick={() => SortUsers("id")}>ID</h3>
                     <h3 className="users-details" onClick={() => SortUsers("name")}>NAME</h3>
