@@ -28,7 +28,7 @@ export class WarehouseUpdateInput {
     warehouseLocation: string
 
     @IsOptional()
-    @IsNotEmpty()
+    @IsNumber()
     assignedUserId: number
 }
 
@@ -102,38 +102,16 @@ export class WarehousesService {
     }
 
     async updateWarehouse(input: WarehouseUpdateInput){
-        let result;
-        if (!input.warehouseLocation) {
-            result = this.db.warehouses.update({
-                where: {
-                    warehouse_id: input.warehouseId
-                },
-                data: {
-                    warehouse_name: input.warehouseName
-                }
-            })
-        } else if (!input.warehouseName) {
-            result = this.db.warehouses.update({
-                where: {
-                    warehouse_id: input.warehouseId
-                },
-                data: {
-                    location: input.warehouseLocation
-                }
-            })
-        } else {
-            result = this.db.warehouses.update({
-                where: {
-                    warehouse_id: input.warehouseId
-                },
-                data: {
-                    warehouse_name: input.warehouseName,
-                    location: input.warehouseLocation
-                }
-            })
-        }
-
-        return result;
+        return this.db.warehouses.update({
+            where: {
+                warehouse_id: input.warehouseId
+            },
+            data: {
+               warehouse_name: input.warehouseName,
+               location: input.warehouseLocation,
+               assigned_user_id: input.assignedUserId
+            }
+        })
     }
 
     async deleteWarehouse(deleteInput: WarehouseDto){
