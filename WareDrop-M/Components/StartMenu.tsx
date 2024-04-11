@@ -61,6 +61,14 @@ const [name,setName]=useState('User')
 
             <TouchableOpacity
                 style={styles.loginBtn}
+                onPress={()=>navigation.navigate('Completed_Deliveries')}
+            >
+                <Text style={styles.TextInput}>Completed Deliveries</Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+                style={styles.loginBtn}
             onPress={()=>handleLogout()}
             >
                 <Text style={styles.TextInput}>Log out</Text>

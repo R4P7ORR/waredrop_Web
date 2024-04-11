@@ -85,10 +85,12 @@ function Login({navigation}) {
 
                        }).then((response) => {
                            console.log(response.data)
+                           alert('Sikeresen megcsináltad a felhasználót')
                            loginFunction()
 
                        })
                            .catch(function (error) {
+                               alert('Nem sikerült a felhasználót megcsinálni :(')
                                console.log(error)
                            });
                    }else{
@@ -120,7 +122,7 @@ function Login({navigation}) {
         <View style={styles.container}>
             <Image
                 style={styles.img}
-                source={require("./assets/WareDrop_logo.png")}/>
+                source={require("../assets/WareDrop_logo.png")}/>
             <View style={styles.inputView} onTouchStart={handleViewPress}>
                 <TextInput
                     style={styles.TextInput}
@@ -156,7 +158,7 @@ function Login({navigation}) {
             <View style={styles.container}>
                 <Image
                     style={styles.img}
-                    source={require("./assets/WareDrop_logo.png")}/>
+                    source={require("../assets/WareDrop_logo.png")}/>
 
                 <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput

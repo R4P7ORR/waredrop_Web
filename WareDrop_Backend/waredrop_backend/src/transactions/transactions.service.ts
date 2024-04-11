@@ -91,6 +91,9 @@ export class TransactionsService {
         return this.db.transactions.findMany({
             where: {
                 worker_email: input.userEmail,
+            },
+            include: {
+                items: true
             }
         })
     }
