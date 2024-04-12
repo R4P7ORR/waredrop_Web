@@ -3,7 +3,6 @@ import axios from "axios";
 import WarehouseContext from "../Contexts/WarehouseContext";
 import Item from "./Warehouse/Item";
 import swal from "sweetalert";
-import User from "./Users/User";
 
 interface OverlayProps{
     loginToken: string;
@@ -195,7 +194,7 @@ function Overlay({loginToken}: OverlayProps){
                         timer: 2500
                     });
                     setOverlayType("none");
-            }).catch(res => {
+            }).catch(() => {
                 swal("Oh-oh!", "Something went wrong :(", "error", {
                     buttons: {},
                     timer: 2500

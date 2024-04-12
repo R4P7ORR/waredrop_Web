@@ -8,7 +8,6 @@ interface NavbarProps {
 }
 
 function Navbar({setCurrentPage}: NavbarProps){
-    const [countDown, setCountDown] = useState(5);
     const navigate = useNavigate();
     const {isAdmin} = useContext(warehouseContext);
 
