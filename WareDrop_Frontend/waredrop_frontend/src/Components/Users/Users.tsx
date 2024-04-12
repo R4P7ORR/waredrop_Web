@@ -29,7 +29,7 @@ function Users({loginToken}: UsersProps){
             });
         } else if(sortBy === "name"){
             updateUsers = [...users].sort((a,b) => {
-                return a.user_name < b.user_name ? 1: -1;
+                return a.user_name > b.user_name ? 1: -1;
             });
         } else {
             updateUsers = [...users].sort((a,b) => {
