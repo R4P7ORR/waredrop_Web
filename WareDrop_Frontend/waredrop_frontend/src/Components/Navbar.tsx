@@ -27,8 +27,8 @@ function Navbar({setCurrentPage}: NavbarProps){
             dangerMode: true,
             closeOnClickOutside: false,
             closeOnEsc: false
-        }).then((willDelete) => {
-                if (!willDelete) {
+        }).then((cancel) => {
+                if (!cancel) {
                     navigate('/');
                     localStorage.setItem("loginToken", "");
                 }

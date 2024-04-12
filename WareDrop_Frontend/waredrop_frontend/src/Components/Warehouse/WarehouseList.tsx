@@ -3,8 +3,6 @@ import WarehouseListItem from "./WarehouseListItem";
 import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
-import editImage from "../../../public/images/edit_button.png";
-import deleteImage from "../../../public/images/delete_button.png";
 import swal from "sweetalert";
 
 interface WarehouseListProps {
@@ -87,23 +85,50 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                             } else {
                                 setOverlayType("warehouseDeleteForm");
                                 setSelectedId(warehouse_id);
+                                /*swal({
+                                    title: "Are you sure?",
+                                    text: `Are you sure you want to remove ${warehouse_name}?`,
+                                    icon: "warning",
+                                    buttons: { "Yes": {value: false}, "No": {value: true} },
+                                    dangerMode: true,
+                                    closeOnClickOutside: false,
+                                    closeOnEsc: false
+                                }).then((willDelete) => {
+                                    if (!willDelete) {
+                                        swal("Removed!", "Successfully removed warehouse from the database!", "success", {
+                                            buttons: {},
+                                            timer: 2500
+                                        });
+                                    }
+                                }).catch(() => {
+                                    swal("Oh-oh!", "Something went wrong :(", "error", {
+                                        buttons: {},
+                                        timer: 2500
+                                    })
+                                });*/
                             }
                         }}>
                             <img className="button-image" src="/images/delete_button.png" alt="Delete"/>
                         </button>
                     }
                 </div>
-                {overlayType !== "empty"&&
-                <button onClick={() => {
-                    setOverlayType("itemForm");
-                    setSelectedId(warehouse_id);
-                }}>Add item
-                </button>
+                {overlayType !== "empty" ?
+                    <button onClick={() => {
+                        setOverlayType("itemForm");
+                        setSelectedId(warehouse_id);
+                    }}>Add item
+                    </button>
+                    :
+                    <button onClick={() => {
+                        setOverlayType("transactionForm");
+                        (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
+                        setSelectedId(warehouse_id);
+                    }}>Create Transaction
+                    </button>
                 }
-
             </div>
             <div className="container-body">
-            {itemList.length === 0 ?
+                {itemList.length === 0 ?
                     <p>No items in warehouse</p>
                     :
                     <>

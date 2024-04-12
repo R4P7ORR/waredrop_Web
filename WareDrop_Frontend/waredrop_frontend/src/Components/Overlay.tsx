@@ -269,7 +269,7 @@ function Overlay({loginToken}: OverlayProps){
                     {overlayType === "warehouseEditForm" &&
                         <>
                             <h2 className="text-light">Edit details of Warehouse</h2>
-                            <input type="text" value={nameInput} onChange={(e) => {
+                            <input title="Name" placeholder="Name" type="text" value={nameInput} onChange={(e) => {
                                 const name = e.target.value;
                                 setNameInput(name);
                             }}
@@ -277,7 +277,7 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleEditWarehouse();
                                }}/>
-                            <input type="text" value={locationInput} onChange={(e) => {
+                            <input title="Location" placeholder="Location" type="text" value={locationInput} onChange={(e) => {
                                 const location = e.target.value;
                                 setLocationInput(location);
                             }}
@@ -285,7 +285,7 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleEditWarehouse();
                                }}/>
-                            <select value={selectedUserId} defaultValue={1} onChange={(e) => {
+                            <select title="Assigned User" value={selectedUserId} defaultValue={1} onChange={(e) => {
                                 const user = e.target.value;
                                 setSelectedUserId(Number.parseInt(user));
                             }}>
