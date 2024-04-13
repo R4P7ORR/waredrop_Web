@@ -12,14 +12,17 @@ function Overlay({loginToken}: OverlayProps){
     const [nameInput, setNameInput] = useState<string>("");
     const [quantityInput, setQuantityInput] = useState<number>(1);
     const [locationInput, setLocationInput] = useState<string>("");
+    const [selectedWarehouseId, setSelectedWarehouseId] = useState(0);
     const {
         selectedId, setSelectedId,
+        selectedItems, setSelectedItems,
         selectedUserId, setSelectedUserId,
+        warehouseList,
         overlayType, setOverlayType,
-        editingUser, setEditingUser,
-        selectedItems,
         setEditingWarehouse, setDeletingWarehouse,
-        users
+        editingUser, setEditingUser,
+        users,
+        flushValues, setFlushValues,
     } = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -203,6 +206,38 @@ function Overlay({loginToken}: OverlayProps){
         }
     }
 
+    function handleCreateTransfer() {
+        if (selectedWarehouseId === 0){
+            swal("Not selected!", "You must select a target warehouse!", "error", {
+                buttons: {},
+                timer: 2500
+            });
+        } else {
+            selectedItems.forEach(item => {
+                axios.post('http://localhost:3001/transactions', {
+                    transOriginId: selectedId,
+                    transTargetId: selectedWarehouseId,
+                    itemId: item.item_id
+                }, {
+                    headers: {authorization: "Bearer " + loginToken},
+                }).then(() => {
+                    swal("Great!", "Successfully created transactions!", "success", {
+                        buttons: {},
+                        timer: 2500
+                    });
+                    setSelectedItems([]);
+                    setOverlayType("none");
+                    setFlushValues(flushValues + 1);
+                }).catch(() => {
+                    swal("Oh-oh!", "Something went wrong :(", "error", {
+                        buttons: {},
+                        timer: 2500
+                    });
+                });
+            });
+        }
+    }
+
     return(
         <>{overlayType !== "none" &&
             <div className="overlay-fullscreen">
@@ -324,13 +359,37 @@ function Overlay({loginToken}: OverlayProps){
                             <button onClick={handleEditUser}>Confirm</button>
                         </>
                     }
-                        <button onClick={() => {
-                            setNameInput("");
-                            setQuantityInput(1);
-                            setLocationInput("");
+                    {overlayType === "transactionForm"&&
+                        <>
+                            <h2 className="text-light">Transferring items from:</h2>
+                            {warehouseList.filter(selected => selected.warehouse_id === selectedId).map(warehouse =>
+                                <h4 className="text-dim-yellow">{warehouse.warehouse_name}</h4>
+                            )}
+                            <h2 className="text-light">to:</h2>
+                            <select title="Tranfer Destination" value={selectedWarehouseId} defaultValue={1} onChange={(e) => {
+                                const warehouse = e.target.value;
+                                setSelectedWarehouseId(Number.parseInt(warehouse));
+                            }}>
+                                <option value="0">Not Selected</option>
+                                {warehouseList.filter(selected => selected.warehouse_id !== selectedId).map(warehouse => (
+                                    <option value={warehouse.warehouse_id}>{warehouse.warehouse_name}</option>
+                                ))}
+                            </select>
+                            <button onClick={handleCreateTransfer}>Confirm</button>
+                        </>
+                    }
+                    <button onClick={() => {
+                        setNameInput("");
+                        setQuantityInput(1);
+                        setLocationInput("");
+                        if (overlayType === "transactionForm") {
+                            setOverlayType("empty");
+                        } else {
                             setOverlayType("none");
                             setSelectedId(0);
-                        }}>Cancel</button>
+                        }
+                    }}>Cancel
+                    </button>
                 </div>
                 }
             </div>

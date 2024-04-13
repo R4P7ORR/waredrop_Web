@@ -15,7 +15,8 @@ interface WarehouseListProps {
 function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location}: WarehouseListProps){
     const [itemList, setItemList] = useState<Item[]>([]);
     const [assignedUser, setAssignedUser] = useState<string>("No assigned user");
-    const {setSelectedId, setSelectedUserId,
+    const {selectedId, setSelectedId,
+        setSelectedUserId,
         overlayType, setOverlayType,
         editingWarehouse, deletingWarehouse,
         selectedItems, setSelectedItems
@@ -31,14 +32,18 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 axios.get('http://localhost:3001/user/byId/' + assigned_user_id).then(res => {
                     setAssignedUser(res.data.user_name);
                 })}
-            console.log("user: " +assigned_user_id)
             if (assigned_user_id === null){
                 setAssignedUser("No assigned user");
             }
-            console.log("user " + assignedUser + "id "+ assigned_user_id)
+            if (selectedId === warehouse_id && overlayType === "empty"){
+                (document.getElementById(warehouse_id.toString()))!.style.zIndex = "170";
+            } else {
+                (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
+            }
         }}, [overlayType, assigned_user_id]);
 
     const handleCheckBox = (item: Item) => {
+        setSelectedId(warehouse_id)
         let updatedItems = [...selectedItems];
         const itemIndex = updatedItems.findIndex((selectedItem) => selectedItem.item_id === item.item_id);
         if (itemIndex === -1) {
@@ -47,7 +52,6 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
             updatedItems.splice(itemIndex, 1);
         }
         setSelectedItems(updatedItems);
-        console.log(updatedItems)
         if (updatedItems.length === 0){
             setOverlayType("none");
             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
@@ -85,27 +89,6 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                             } else {
                                 setOverlayType("warehouseDeleteForm");
                                 setSelectedId(warehouse_id);
-                                /*swal({
-                                    title: "Are you sure?",
-                                    text: `Are you sure you want to remove ${warehouse_name}?`,
-                                    icon: "warning",
-                                    buttons: { "Yes": {value: false}, "No": {value: true} },
-                                    dangerMode: true,
-                                    closeOnClickOutside: false,
-                                    closeOnEsc: false
-                                }).then((willDelete) => {
-                                    if (!willDelete) {
-                                        swal("Removed!", "Successfully removed warehouse from the database!", "success", {
-                                            buttons: {},
-                                            timer: 2500
-                                        });
-                                    }
-                                }).catch(() => {
-                                    swal("Oh-oh!", "Something went wrong :(", "error", {
-                                        buttons: {},
-                                        timer: 2500
-                                    })
-                                });*/
                             }
                         }}>
                             <img className="button-image" src="/images/delete_button.png" alt="Delete"/>
@@ -115,6 +98,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 {overlayType !== "empty" ?
                     <button onClick={() => {
                         setOverlayType("itemForm");
+                        setSelectedItems(itemList);
                         setSelectedId(warehouse_id);
                     }}>Add item
                     </button>

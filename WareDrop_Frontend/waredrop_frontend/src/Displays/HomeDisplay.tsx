@@ -1,6 +1,6 @@
 import {useState} from "react";
-import Login from "../Components/Login";
-import Register from "../Components/Register";
+import Login from "../Components/Login - Register/Login";
+import Register from "../Components/Login - Register/Register";
 import '../Styles/LogRegForm.css';
 
 function HomeDisplay() {

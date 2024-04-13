@@ -9,8 +9,7 @@ interface WarehouseDisplayProps{
     loginToken: string;
 }
 function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
-    const [warehouseList, setWareHouseList] = useState<Warehouse[]>([]);
-    const {overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin} = useContext(WarehouseContext);
+    const {warehouseList, setWarehouseList, overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin} = useContext(WarehouseContext);
 
     useEffect(() => {
         if(loginToken !== "none"){
@@ -18,18 +17,17 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                 axios.get('http://localhost:3001/warehouses', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
-                    setWareHouseList(res.data);
+                    setWarehouseList(res.data);
                 });
             } else {
                 axios.get('http://localhost:3001/warehouses/user', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
                     if (res.data.length === 0) {
-                        setWareHouseList(res.data);
+                        setWarehouseList(res.data);
                     }
                 });
             }
-            console.log("list" , warehouseList)
         }
     }, [isAdmin, overlayType]);
     return (
@@ -49,7 +47,7 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
             }
             {warehouseList.length === 0 || warehouseList[0].warehouse_name === "empty" ?
                 <div>
-                    <h1>You don't have any Warehouses registered yet.</h1>
+                    <h1>You don't have any assigned Warehouses yet.</h1>
                 </div>
                 :
                 <div className="container-listed-warehouses">
