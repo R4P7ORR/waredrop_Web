@@ -3,6 +3,7 @@ import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {Prisma} from "@prisma/client";
+import {TransactionsService} from "../transactions/transactions.service";
 
 export class WarehouseCreateInput {
     @IsString()
@@ -50,7 +51,7 @@ export class AddWarehouseDto {
 
 @Injectable()
 export class WarehousesService {
-    constructor(private readonly db: PrismaService) { }
+    constructor(private readonly db: PrismaService, private readonly transService: TransactionsService) { }
 
     async addWarehouse(createInput: WarehouseCreateInput){
         return this.db.warehouses.create({
@@ -82,12 +83,40 @@ export class WarehousesService {
     }
 
     async getItemsInWarehouse(warehouseDto: WarehouseDto){
-        const result = await this.db.items.findMany({
+        const allItems = await this.db.items.findMany({
             where: {
                 warehouse_id: warehouseDto.warehouseId,
             }
         })
-        return result.map((item) => item);
+        const allTrans = await this.transService.getAllTrans();
+
+        allItems.forEach((item, index) => {
+            for (const trans of allTrans) {
+                if (item.item_id === trans.item_item_id && trans.trans_arrived_date === null) {
+                    allItems.splice(index,1);
+                }
+            }
+        })
+        return allItems.map((item) => item);
+    }
+
+    async getMovingItemsInWarehouse(warehouseDto: WarehouseDto){
+        const allItems = await this.db.items.findMany({
+            where: {
+                warehouse_id: warehouseDto.warehouseId,
+            }
+        })
+        const allTrans = await this.transService.getAllTrans();
+        const result = [];
+
+        allItems.forEach((item) => {
+            for (const trans of allTrans) {
+                if (item.item_id === trans.item_item_id && trans.trans_arrived_date === null) {
+                    result.push(item);
+                }
+            }
+        })
+        return result;
     }
 
     async addWarehouseToUser(addInput: AddWarehouseDto){

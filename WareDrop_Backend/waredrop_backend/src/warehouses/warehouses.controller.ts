@@ -52,6 +52,12 @@ export class WarehousesController {
         return this.service.getItemsInWarehouse(warehouseId);
     }
 
+    @Get('/movingItems/:id')
+    getMovingItemsInWarehouse(@Param('id') warehouseString: string){
+        const warehouseId: WarehouseDto = {warehouseId: parseInt(warehouseString)};
+        return this.service.getMovingItemsInWarehouse(warehouseId);
+    }
+
     @Patch()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
