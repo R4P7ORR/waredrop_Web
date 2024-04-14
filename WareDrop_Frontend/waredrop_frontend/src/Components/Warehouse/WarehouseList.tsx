@@ -43,7 +43,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
         }}, [overlayType, assigned_user_id]);
 
     const handleCheckBox = (item: Item) => {
-        setSelectedId(warehouse_id)
+        setSelectedId(warehouse_id);
         let updatedItems = [...selectedItems];
         const itemIndex = updatedItems.findIndex((selectedItem) => selectedItem.item_id === item.item_id);
         if (itemIndex === -1) {
