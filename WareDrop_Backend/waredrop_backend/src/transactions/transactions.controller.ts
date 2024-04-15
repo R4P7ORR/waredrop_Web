@@ -1,10 +1,11 @@
-import {Body, Controller, Get, Patch, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
 import {WorkerUpdateInput, Transaction, TransactionsService} from "./transactions.service";
 import JwtDecoder from "../auth/jwt.decoder";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {Request} from "express";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {WarehouseDto} from "../warehouses/warehouses.service";
 
 @Controller('transactions')
 export class TransactionsController {
@@ -23,6 +24,13 @@ export class TransactionsController {
     @RequiredPermission([{permissionName: 'All'}])
     getAllTrans(){
         return this.service.getAllTrans();
+    }
+
+    @Get('/warehouse/:id')
+    @UseGuards(JwtAuthGuard)
+    getTransOfWarehouse(@Param('id') warehouseIdString: string){
+        const warehouse: WarehouseDto = {warehouseId: parseInt(warehouseIdString)}
+        return this.service.getTransOfWarehouse(warehouse);
     }
 
     @Get('/available')
