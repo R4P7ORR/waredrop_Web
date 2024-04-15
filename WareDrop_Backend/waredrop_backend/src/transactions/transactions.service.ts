@@ -2,6 +2,7 @@ import {BadRequestException, Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
+import {WarehouseDto} from "../warehouses/warehouses.service";
 
 export class Transaction {
     @IsNumber()
@@ -60,6 +61,14 @@ export class TransactionsService {
                 }
             })
         }
+    }
+
+    async getTransOfWarehouse(warehouse: WarehouseDto){
+        return this.db.transactions.findMany({
+            where: {
+                trans_origin_id: warehouse.warehouseId,
+            }
+        });
     }
 
     async getAllTransByWorker(user: UserDto){
