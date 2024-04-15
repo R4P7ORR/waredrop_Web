@@ -10,7 +10,13 @@ interface WarehouseDisplayProps{
     setCurrentPage: (page: string) => void;
 }
 function WarehouseDisplay({loginToken, setCurrentPage}: WarehouseDisplayProps) {
-    const {warehouseList, setWarehouseList, overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin} = useContext(WarehouseContext);
+    const {
+        warehouseList, setWarehouseList,
+        overlayType, setOverlayType,
+        editingWarehouse, setEditingWarehouse,
+        deletingWarehouse, setDeletingWarehouse,
+        isAdmin
+    } = useContext(WarehouseContext);
 
     useEffect(() => {
         if(loginToken !== "none"){
@@ -24,9 +30,7 @@ function WarehouseDisplay({loginToken, setCurrentPage}: WarehouseDisplayProps) {
                 axios.get('http://localhost:3001/warehouses/user', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
-                    if (res.data.length === 0) {
-                        setWarehouseList(res.data);
-                    }
+                    setWarehouseList(res.data);
                 });
             }
         }

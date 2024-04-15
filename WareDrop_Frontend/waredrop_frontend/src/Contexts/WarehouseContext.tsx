@@ -25,7 +25,7 @@ export interface WarehouseContextValues {
     deletingWarehouse: boolean;
     setDeletingWarehouse: (set: boolean) => void;
 
-    isAdmin: boolean;
+    isAdmin: boolean | undefined;
     setIsAdmin: (set: boolean) => void;
 
     editingUser: userWOId;

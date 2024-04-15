@@ -16,7 +16,7 @@ function WarehouseContextProvider(props: WarehouseContextProviderProps) {
     const [overlayType, setOverlayType] = useState("none");
     const [editingWarehouse, setEditingWarehouse] = useState(false);
     const [deletingWarehouse, setDeletingWarehouse] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
     const [editingUser, setEditingUser] = useState<userWOId>({user_name: "default", user_email: "user"});
     const [selectedItems, setSelectedItems] = useState<Item[]>([]);
     const [flushValues, setFlushValues] = useState(0);
