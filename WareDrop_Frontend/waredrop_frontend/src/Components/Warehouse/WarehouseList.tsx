@@ -12,10 +12,13 @@ interface WarehouseListProps {
     location: string;
 }
 
-function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location}: WarehouseListProps){
-    const [itemList, setItemList] = useState<Item[]>([]);
+function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location}: WarehouseListProps) {
+    const [itemsInWarehouse, setItemsInWarehouse] = useState<Item[]>([]);
+    const [itemsInTransit, setItemsInTransit] = useState<Item[]>([]);
+    const [viewInTransit, setViewInTransit] = useState(false);
     const [assignedUser, setAssignedUser] = useState<string>("No assigned user");
-    const {selectedId, setSelectedId,
+    const {
+        selectedId, setSelectedId,
         setSelectedUserId,
         overlayType, setOverlayType,
         editingWarehouse, deletingWarehouse,
@@ -23,24 +26,30 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
     } = useContext(WarehouseContext);
 
     useEffect(() => {
-        if (warehouse_id !== null){
-            axios.get('http://localhost:3001/warehouses/items/' + warehouse_id, {
-            }).then(res => {
-                setItemList(res.data);
+        if (warehouse_id !== null) {
+            axios.get('http://localhost:3001/warehouses/items/' + warehouse_id, {}).then(res => {
+                setItemsInWarehouse(res.data);
             });
-            if (assigned_user_id !== null){
+            axios.get('http://localhost:3001/warehouses/movingItems/' + warehouse_id
+            ).then(res => {
+                setItemsInTransit(res.data);
+            });
+
+            if (assigned_user_id !== null) {
                 axios.get('http://localhost:3001/user/byId/' + assigned_user_id).then(res => {
                     setAssignedUser(res.data.user_name);
-                })}
-            if (assigned_user_id === null){
+                })
+            }
+            if (assigned_user_id === null) {
                 setAssignedUser("No assigned user");
             }
-            if (selectedId === warehouse_id && overlayType === "empty"){
+            if (selectedId === warehouse_id && overlayType === "empty") {
                 (document.getElementById(warehouse_id.toString()))!.style.zIndex = "170";
             } else {
                 (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
             }
-        }}, [overlayType, assigned_user_id]);
+        }
+    }, [overlayType, assigned_user_id]);
 
     const handleCheckBox = (item: Item) => {
         setSelectedId(warehouse_id);
@@ -52,13 +61,14 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
             updatedItems.splice(itemIndex, 1);
         }
         setSelectedItems(updatedItems);
-        if (updatedItems.length === 0){
+        if (updatedItems.length === 0) {
             setOverlayType("none");
             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
         } else {
             setOverlayType("empty");
             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "170";
         }
+        console.log(selectedItems)
     }
 
     return (
@@ -73,7 +83,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                     {(editingWarehouse && overlayType !== "empty") &&
                         <button className="button-modify" onClick={() => {
                             setOverlayType("warehouseEditForm");
-                            setSelectedUserId(assigned_user_id===null? 0: assigned_user_id);
+                            setSelectedUserId(assigned_user_id === null ? 0 : assigned_user_id);
                             setSelectedId(warehouse_id);
                         }}>
                             <img className="button-image" src="/images/edit_button.png" alt="Edit"/>
@@ -81,7 +91,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                     }
                     {(deletingWarehouse && overlayType !== "empty") &&
                         <button className="button-modify button-delete" onClick={() => {
-                            if (itemList.length !== 0){
+                            if (itemsInWarehouse.length !== 0 || itemsInTransit.length !== 0) {
                                 swal("Oh-oh!", "You cannot delete a warehouse that contains items!", "error", {
                                     buttons: {},
                                     timer: 2500
@@ -98,7 +108,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 {overlayType !== "empty" ?
                     <button onClick={() => {
                         setOverlayType("itemForm");
-                        setSelectedItems(itemList);
+                        setSelectedItems(itemsInWarehouse);
                         setSelectedId(warehouse_id);
                     }}>Add item
                     </button>
@@ -112,17 +122,34 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 }
             </div>
             <div className="container-body">
-                {itemList.length === 0 ?
+                {(itemsInWarehouse.length === 0 && itemsInTransit.length === 0) ?
                     <p>No items in warehouse</p>
                     :
                     <>
-                    {itemList.map((item) => (
-                        <WarehouseListItem key={item.item_id} itemName={item.item_name} itemQuantity={item.item_quantity} handleChecked={() => handleCheckBox(item)}/>
-                    ))}
+                        <button onClick={() => setViewInTransit(false)}>In storage</button>
+                        {selectedItems.length === 0&&
+                            <button onClick={() => setViewInTransit(true)}>In transit</button>
+                        }
+                        <div>
+                            {!viewInTransit ?
+                                itemsInWarehouse.map((item) => (
+                                    <WarehouseListItem itemName={item.item_name}
+                                                       itemQuantity={item.item_quantity}
+                                                       handleChecked={() => handleCheckBox(item)}/>
+                                ))
+                                :
+                                itemsInTransit.map((item) => (
+                                    <WarehouseListItem itemName={item.item_name}
+                                                       itemQuantity={item.item_quantity}
+                                                       handleChecked={() => handleCheckBox(item)}/>
+                                ))
+                            }
+                        </div>
                     </>
                 }
             </div>
         </div>
     )
 }
+
 export default WarehouseList;

@@ -27,7 +27,6 @@ function Overlay({loginToken}: OverlayProps){
 
     useEffect(() => {
         if (overlayType === "warehouseEditForm" || overlayType === "warehouseDeleteForm"){
-            console.log("user ID: " + selectedUserId)
             axios.get('http://localhost:3001/warehouses/warehouse/'+ selectedId, {
                 headers: {authorization: "Bearer " + loginToken},
             }).then((res) => {
@@ -131,7 +130,6 @@ function Overlay({loginToken}: OverlayProps){
         },{
             headers: {authorization: "Bearer " + loginToken},
         }).then(() => {
-            console.log(nameInput, locationInput)
                 setNameInput("");
                 setLocationInput("");
                 setOverlayType("none");
@@ -214,6 +212,7 @@ function Overlay({loginToken}: OverlayProps){
             });
         } else {
             selectedItems.forEach(item => {
+                console.log("transferring: " ,item.item_name)
                 axios.post('http://localhost:3001/transactions', {
                     transOriginId: selectedId,
                     transTargetId: selectedWarehouseId,
@@ -221,6 +220,7 @@ function Overlay({loginToken}: OverlayProps){
                 }, {
                     headers: {authorization: "Bearer " + loginToken},
                 }).then(() => {
+                    console.log("transferred")
                     swal("Great!", "Successfully created transactions!", "success", {
                         buttons: {},
                         timer: 2500
