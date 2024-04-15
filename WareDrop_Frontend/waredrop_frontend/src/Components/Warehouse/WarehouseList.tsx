@@ -4,7 +4,6 @@ import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 import swal from "sweetalert";
-import {useNavigate} from "react-router-dom";
 
 interface WarehouseListProps {
     assigned_user_id: number | null;
@@ -71,7 +70,6 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
             setOverlayType("empty");
             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "170";
         }
-        console.log(updatedItems)
     }
 
     return (
@@ -134,32 +132,39 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                     <p>No items in warehouse</p>
                     :
                     <>
-                        <button onClick={() => {
+                        <button id={`storage${warehouse_id}`} className="transfer-view-button-clicked storage-button" onClick={() => {
                             setViewInTransit(false);
                             setFlushValues(flushValues +1);
                             setSelectedItems([]);
                             setOverlayType("none");
+                            document.getElementById(`storage${warehouse_id}`)!.className = "transfer-view-button-clicked storage-button";
+                            document.getElementById(`transfer${warehouse_id}`)!.className = "transfer-view-button transfer-button";
                         }}>In storage</button>
                         {selectedItems.length === 0&&
-                            <button onClick={() => {
+                            <button id={`transfer${warehouse_id}`} className="transfer-view-button transfer-button" onClick={() => {
                                 setViewInTransit(true);
                                 setFlushValues(flushValues + 1);
+                                document.getElementById(`transfer${warehouse_id}`)!.className = "transfer-view-button-clicked transfer-button";
+                                document.getElementById(`storage${warehouse_id}`)!.className = "transfer-view-button storage-button";
                             }}>In transit</button>
                         }
                         <div>
                             {!viewInTransit ?
-                                itemsInWarehouse.map((item) => (
-                                    <WarehouseListItem itemName={item.item_name}
-                                                       itemQuantity={item.item_quantity}
-                                                       handleChecked={() => handleCheckBox(item)}
-                                    canCheck={true}/>
-                                ))
-                                :
-                                itemsInTransit.map((item) => (
-                                    <WarehouseListItem itemName={item.item_name}
-                                                       itemQuantity={item.item_quantity}
-                                                        canCheck={false}/>
-                                ))
+                                itemsInWarehouse.length === 0?
+                                    <p>All items are in transfer</p>
+                                    :
+                                    itemsInWarehouse.map((item) => (
+                                        <WarehouseListItem itemName={item.item_name}
+                                                           itemQuantity={item.item_quantity}
+                                                           handleChecked={() => handleCheckBox(item)}
+                                        canCheck={true}/>
+                                    ))
+                                    :
+                                    itemsInTransit.map((item) => (
+                                        <WarehouseListItem itemName={item.item_name}
+                                                           itemQuantity={item.item_quantity}
+                                                            canCheck={false}/>
+                                    ))
                             }
                         </div>
                     </>

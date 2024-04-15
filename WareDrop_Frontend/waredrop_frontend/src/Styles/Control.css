@@ -95,8 +95,12 @@ body{
 .container-body{
     max-height: 300px;
     overflow-y: auto;
-    background: var(--black);
+    background: var(--black); border: double 2px transparent;
     border-radius: 1rem;
+    background-image: linear-gradient(var(--black), var(--black)), radial-gradient(at left top, var(--main-color) 10%, transparent);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+
 }
 .container-header{
     overflow-x: hidden;
@@ -131,4 +135,32 @@ body{
 }
 .warehouse-operator-buttons > button{
     margin-inline: 1rem;
+}
+.transfer-view-button{
+    margin: 0;
+    border-radius: 0 0 1rem 0;
+    background: var(--bright-gray);
+    color: var(--main-color);
+}
+.transfer-view-button-clicked{
+    z-index: 1;
+    margin: 0;
+    border-radius: 0 0 1rem 0;
+    background: var(--main-color);
+    color: black;
+}
+.transfer-button{
+    position: relative;
+    left: -0.8rem;
+    border-radius: 1rem 0 1rem 0;
+}
+.transfer-button:active{
+    transform: scale(1);
+}
+.storage-button{
+    position: relative;
+    left: 0;
+}
+.storage-button:active{
+    transform: scale(1);
 }
