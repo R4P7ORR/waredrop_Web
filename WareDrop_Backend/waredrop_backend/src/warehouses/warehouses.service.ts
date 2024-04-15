@@ -87,18 +87,22 @@ export class WarehousesService {
             where: {
                 warehouse_id: warehouseDto.warehouseId,
             }
-        })
+        });
         const allTrans = await this.transService.getAllTrans();
 
-        allItems.forEach((item, index) => {
+        for (let i = allItems.length - 1; i >= 0; i--) {
+            const item = allItems[i];
             for (const trans of allTrans) {
                 if (item.item_id === trans.item_item_id && trans.trans_arrived_date === null) {
-                    allItems.splice(index,1);
+                    allItems.splice(i, 1);
+                    break;
                 }
             }
-        })
-        return allItems.map((item) => item);
+        }
+
+        return allItems;
     }
+
 
     async getMovingItemsInWarehouse(warehouseDto: WarehouseDto){
         const allItems = await this.db.items.findMany({

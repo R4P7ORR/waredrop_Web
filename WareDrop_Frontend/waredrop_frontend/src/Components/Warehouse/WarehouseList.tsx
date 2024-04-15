@@ -71,7 +71,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
             setOverlayType("empty");
             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "170";
         }
-        console.log(selectedItems)
+        console.log(updatedItems)
     }
 
     return (
