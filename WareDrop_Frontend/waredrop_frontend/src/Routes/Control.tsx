@@ -32,7 +32,7 @@ function Control(){
             </>
             <div className="main-container">
                 {currentPage === "warehouses" ?
-                    <WarehouseDisplay loginToken={loginToken}/> : null
+                    <WarehouseDisplay loginToken={loginToken} setCurrentPage={setCurrentPage}/> : null
                 }
                 {currentPage === "transactions" ?
                     <Transaction loginToken={loginToken}/> : null

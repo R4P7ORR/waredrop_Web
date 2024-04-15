@@ -4,15 +4,17 @@ import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 import swal from "sweetalert";
+import {useNavigate} from "react-router-dom";
 
 interface WarehouseListProps {
     assigned_user_id: number | null;
     warehouse_id: number;
     warehouse_name: string;
     location: string;
+    setCurrentPage: (page: string) => void;
 }
 
-function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location}: WarehouseListProps) {
+function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location, setCurrentPage}: WarehouseListProps) {
     const [itemsInWarehouse, setItemsInWarehouse] = useState<Item[]>([]);
     const [itemsInTransit, setItemsInTransit] = useState<Item[]>([]);
     const [viewInTransit, setViewInTransit] = useState(false);
@@ -22,7 +24,8 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
         setSelectedUserId,
         overlayType, setOverlayType,
         editingWarehouse, deletingWarehouse,
-        selectedItems, setSelectedItems
+        selectedItems, setSelectedItems,
+        flushValues, setFlushValues
     } = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -106,19 +109,24 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                     }
                 </div>
                 {overlayType !== "empty" ?
+                    !viewInTransit?
                     <button onClick={() => {
                         setOverlayType("itemForm");
                         setSelectedItems(itemsInWarehouse);
                         setSelectedId(warehouse_id);
-                    }}>Add item
+                    }}>Add Item
                     </button>
-                    :
-                    <button onClick={() => {
-                        setOverlayType("transactionForm");
-                        (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
-                        setSelectedId(warehouse_id);
-                    }}>Create Transaction
-                    </button>
+                        :
+                        <button onClick={() => {
+                            setCurrentPage('transactions');
+                        }}>View Transactions</button>
+                        :
+                        <button onClick={() => {
+                            setOverlayType("transactionForm");
+                            (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
+                            setSelectedId(warehouse_id);
+                        }}>Create Transaction
+                        </button>
                 }
             </div>
             <div className="container-body">
@@ -126,22 +134,31 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                     <p>No items in warehouse</p>
                     :
                     <>
-                        <button onClick={() => setViewInTransit(false)}>In storage</button>
+                        <button onClick={() => {
+                            setViewInTransit(false);
+                            setFlushValues(flushValues +1);
+                            setSelectedItems([]);
+                            setOverlayType("none");
+                        }}>In storage</button>
                         {selectedItems.length === 0&&
-                            <button onClick={() => setViewInTransit(true)}>In transit</button>
+                            <button onClick={() => {
+                                setViewInTransit(true);
+                                setFlushValues(flushValues + 1);
+                            }}>In transit</button>
                         }
                         <div>
                             {!viewInTransit ?
                                 itemsInWarehouse.map((item) => (
                                     <WarehouseListItem itemName={item.item_name}
                                                        itemQuantity={item.item_quantity}
-                                                       handleChecked={() => handleCheckBox(item)}/>
+                                                       handleChecked={() => handleCheckBox(item)}
+                                    canCheck={true}/>
                                 ))
                                 :
                                 itemsInTransit.map((item) => (
                                     <WarehouseListItem itemName={item.item_name}
                                                        itemQuantity={item.item_quantity}
-                                                       handleChecked={() => handleCheckBox(item)}/>
+                                                        canCheck={false}/>
                                 ))
                             }
                         </div>

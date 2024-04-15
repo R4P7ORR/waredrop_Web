@@ -43,7 +43,6 @@ export class TransactionsService {
         const inTransit = await this.db.transactions.findFirst({
             where: {
                 trans_origin_id: newTrans.transOriginId,
-                trans_target_id: newTrans.transTargetId,
                 item_item_id: newTrans.itemId,
                 trans_arrived_date: null
             }

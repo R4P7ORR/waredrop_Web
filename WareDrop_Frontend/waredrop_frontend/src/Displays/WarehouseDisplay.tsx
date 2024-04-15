@@ -7,8 +7,9 @@ import WarehouseContext from "../Contexts/WarehouseContext";
 
 interface WarehouseDisplayProps{
     loginToken: string;
+    setCurrentPage: (page: string) => void;
 }
-function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
+function WarehouseDisplay({loginToken, setCurrentPage}: WarehouseDisplayProps) {
     const {warehouseList, setWarehouseList, overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin} = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -58,7 +59,8 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
                                        assigned_user_id={warehouse.assigned_user_id}
                                        warehouse_id={warehouse.warehouse_id}
                                        warehouse_name={warehouse.warehouse_name}
-                                       location={warehouse.location}/>
+                                       location={warehouse.location}
+                                        setCurrentPage={setCurrentPage}/>
                     ))}
                 </div>
             }

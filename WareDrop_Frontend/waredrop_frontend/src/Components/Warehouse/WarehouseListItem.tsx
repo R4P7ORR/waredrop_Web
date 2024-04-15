@@ -4,7 +4,8 @@ import WarehouseContext from "../../Contexts/WarehouseContext";
 interface WarehouseListItemProps {
     itemName: string;
     itemQuantity: string;
-    handleChecked: () => void;
+    handleChecked?: () => void;
+    canCheck: boolean;
 }
 
 
@@ -19,10 +20,12 @@ function WarehouseListItem(props: WarehouseListItemProps){
         <div className="item-container">
             <p className="item-name" title={props.itemName}>{props.itemName}</p>
             <p className="item-quantity" title={props.itemQuantity}>{props.itemQuantity}x</p>
-            <label className="checkbox-container">
-                <input type="checkbox" checked={checked} onClick={() => setChecked(!checked)} onChange={props.handleChecked}/>
-                <span className="checkmark"></span>
-            </label>
+            {props.canCheck&&
+                <label className="checkbox-container">
+                    <input type="checkbox" checked={checked} onClick={() => setChecked(!checked)} onChange={props.handleChecked}/>
+                    <span className="checkmark"></span>
+                </label>
+            }
         </div>
     )
 }

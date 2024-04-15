@@ -85,6 +85,7 @@ function Overlay({loginToken}: OverlayProps){
                     });
                 });
             }
+            setSelectedItems([]);
         }
     }
     function handleCreateWarehouse(){
