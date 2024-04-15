@@ -4,7 +4,7 @@
 - PostgreSQL adatbázis létrehozása
 
 ## Backend futtatása
-1. Navigáljunk a projekt mappájába és nyissuk meg a WareDrop_Backend/waredrop_backend mappába
+1. Navigáljunk a projekt mappájába és nyissuk meg a WareDrop_Backend/waredrop_backend mappát
 2. Itt hozzunk létre egy `.env` fájlt
 3. A `.nev` fájlba hozzunk létre egy `DATABASE_URL` nevű változót az adatbáziunk eléréséhez használt **connection string**-jét értékül adva
 4. A `.env` fájlban hozzzunk létre egy `JWT_SECRET` nevű változót, aminek érékül adjuk a webtoken generálásához használ **secret stringet**
