@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
@@ -40,14 +40,26 @@ export class TransactionsService {
     constructor(private readonly db: PrismaService) { }
 
     async createTrans(newTrans: Transaction){
-        return this.db.transactions.create({
-            data: {
-                trans_post_date: new Date(Date.now()),
+        const inTransit = await this.db.transactions.findFirst({
+            where: {
                 trans_origin_id: newTrans.transOriginId,
                 trans_target_id: newTrans.transTargetId,
-                item_item_id: newTrans.itemId
+                item_item_id: newTrans.itemId,
+                trans_arrived_date: null
             }
         })
+        if (inTransit !== null){
+            throw new BadRequestException('Item already in transit')
+        } else {
+            return this.db.transactions.create({
+                data: {
+                    trans_post_date: new Date(Date.now()),
+                    trans_origin_id: newTrans.transOriginId,
+                    trans_target_id: newTrans.transTargetId,
+                    item_item_id: newTrans.itemId
+                }
+            })
+        }
     }
 
     async getAllTransByWorker(user: UserDto){
