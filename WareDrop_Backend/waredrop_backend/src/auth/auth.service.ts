@@ -83,4 +83,13 @@ export class AuthService {
         }
         return {isAdmin: false};
     }
+
+    async isWorker(user_permissions: Permission[]){
+        for (const permission of user_permissions) {
+            if (permission.permissionName === 'Transactions'){
+                return {isWorker: true};
+            }
+        }
+        return {isWorker: false};
+    }
 }
