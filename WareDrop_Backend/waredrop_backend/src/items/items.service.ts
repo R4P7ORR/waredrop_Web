@@ -27,6 +27,13 @@ export class UpdateItemDto{
     itemQuantity: number
 }
 
+export class ItemDto {
+
+    @IsNumber()
+    @IsNotEmpty()
+    itemId: number
+}
+
 @Injectable()
 export class ItemsService {
     constructor(private readonly db: PrismaService) {
@@ -68,5 +75,16 @@ export class ItemsService {
         } catch (e) {
             throw e;
         }
+    }
+
+    async deleteItem(item: ItemDto){
+        return this.db.items.update({
+            where: {
+                item_id: item.itemId
+            },
+            data: {
+                is_active: false
+            }
+        })
     }
 }
