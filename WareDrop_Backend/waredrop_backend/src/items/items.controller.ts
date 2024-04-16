@@ -1,5 +1,5 @@
-import {Body, Controller, Get, Patch, Post, UseGuards} from '@nestjs/common';
-import {CreateItemDto, ItemsService, UpdateItemDto} from "./items.service";
+import {Body, Controller, Delete, Get, Patch, Post, UseGuards} from '@nestjs/common';
+import {CreateItemDto, ItemDto, ItemsService, UpdateItemDto} from "./items.service";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
@@ -24,5 +24,10 @@ export class ItemsController {
     @Patch()
     updateItem(@Body() updateInput: UpdateItemDto){
         return this.service.updateItem(updateInput);
+    }
+
+    @Delete()
+    deleteItem(@Body() item: ItemDto) {
+        return this.service.deleteItem(item);
     }
 }
