@@ -4,50 +4,37 @@ import {useContext, useEffect, useState} from "react";
 import Warehouse from "../Components/Warehouse/Warehouse";
 import WarehouseList from "../Components/Warehouse/WarehouseList";
 import WarehouseContext from "../Contexts/WarehouseContext";
+
 interface WarehouseDisplayProps{
     loginToken: string;
+    setCurrentPage: (page: string) => void;
 }
-function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
-    const [warehouseList, setWareHouseList] = useState<Warehouse[]>([]);
-    const {overlayType, setOverlayType, editingWarehouse, setEditingWarehouse, deletingWarehouse, setDeletingWarehouse, isAdmin, setIsAdmin} = useContext(WarehouseContext);
+function WarehouseDisplay({loginToken, setCurrentPage}: WarehouseDisplayProps) {
+    const {
+        warehouseList, setWarehouseList,
+        overlayType, setOverlayType,
+        editingWarehouse, setEditingWarehouse,
+        deletingWarehouse, setDeletingWarehouse,
+        isAdmin
+    } = useContext(WarehouseContext);
 
-    useEffect(() => {
-        if (loginToken !== "none"){
-            axios.get('http://localhost:3001/auth/isAdmin',{
-                headers: {authorization: "Bearer " + loginToken}
-            }).then(res => {
-                setIsAdmin(res.data.isAdmin);
-            })
-
-        }}, [loginToken]);
     useEffect(() => {
         if(loginToken !== "none"){
             if (isAdmin){
                 axios.get('http://localhost:3001/warehouses', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
-                    setWareHouseList(res.data);
+                    setWarehouseList(res.data);
                 });
             } else {
                 axios.get('http://localhost:3001/warehouses/user', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
-                    if (res.data.length === 0) {
-                        setWareHouseList(res.data);
-                    }
+                    setWarehouseList(res.data);
                 });
             }
         }
     }, [isAdmin, overlayType]);
-
-    function addNewWarehouse(name: string, location: string){
-        axios.post("http://localhost:3001/warehouses/new", {
-            warehouseName: name,
-            location: location
-        }).then(res =>{
-            console.log(res)
-        })
-    }
     return (
         <>
             {isAdmin&&
@@ -65,15 +52,19 @@ function WarehouseDisplay({loginToken}: WarehouseDisplayProps) {
             }
             {warehouseList.length === 0 || warehouseList[0].warehouse_name === "empty" ?
                 <div>
-                    <h1>You don't have any Warehouses registered yet.</h1>
+                    <h1>You don't have any assigned Warehouses yet.</h1>
                 </div>
                 :
                 <div className="container-listed-warehouses">
-                    {warehouseList.map((warehouse: Warehouse) => (
+                    {warehouseList.sort((a,b) => {
+                        return a.warehouse_id > b.warehouse_id ? 1: -1;
+                    }).map((warehouse: Warehouse) => (
                         <WarehouseList key={warehouse.warehouse_id}
+                                       assigned_user_id={warehouse.assigned_user_id}
                                        warehouse_id={warehouse.warehouse_id}
                                        warehouse_name={warehouse.warehouse_name}
-                                       location={warehouse.location}/>
+                                       location={warehouse.location}
+                                        setCurrentPage={setCurrentPage}/>
                     ))}
                 </div>
             }

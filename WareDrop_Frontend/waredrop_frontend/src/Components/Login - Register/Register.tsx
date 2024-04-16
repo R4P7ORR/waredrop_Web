@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import RegisterDisplay from "../Displays/RegisterDisplay";
+import RegisterDisplay from "../../Displays/RegisterDisplay";
 import axios from "axios";
 import swal from "sweetalert";
 
@@ -34,6 +34,7 @@ function Register(props: RegisterProps) {
                     setFullNameInput('');
                     setEmailInput('');
                     setPasswordInput('');
+                    setPasswordAgainInput('');
                     props.handleRegister('container');
                     swal("Great!", "Account created successfully!", "success", {
                         buttons: {},

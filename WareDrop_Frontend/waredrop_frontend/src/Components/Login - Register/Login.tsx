@@ -1,6 +1,6 @@
 import {useState} from "react";
 import axios from "axios";
-import LoginDisplay from "../Displays/LoginDisplay";
+import LoginDisplay from "../../Displays/LoginDisplay";
 import {useNavigate} from "react-router-dom";
 import swal from "sweetalert";
 

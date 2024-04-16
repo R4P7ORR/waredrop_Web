@@ -7,5 +7,6 @@ import JwtDecoder from "../auth/jwt.decoder";
 @Module({
   providers: [TransactionsService, PrismaService, JwtDecoder],
   controllers: [TransactionsController],
+  exports: [TransactionsService]
 })
 export class TransactionsModule {}

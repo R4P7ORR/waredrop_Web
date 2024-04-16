@@ -3,6 +3,7 @@ import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {Prisma} from "@prisma/client";
+import {TransactionsService} from "../transactions/transactions.service";
 
 export class WarehouseCreateInput {
     @IsString()
@@ -20,12 +21,16 @@ export class WarehouseUpdateInput {
     warehouseId: number
 
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     warehouseName: string
 
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     warehouseLocation: string
+
+    @IsOptional()
+    @IsNumber()
+    assignedUserId: number
 }
 
 export class WarehouseDto{
@@ -46,7 +51,7 @@ export class AddWarehouseDto {
 
 @Injectable()
 export class WarehousesService {
-    constructor(private readonly db: PrismaService) { }
+    constructor(private readonly db: PrismaService, private readonly transService: TransactionsService) { }
 
     async addWarehouse(createInput: WarehouseCreateInput){
         return this.db.warehouses.create({
@@ -78,12 +83,44 @@ export class WarehousesService {
     }
 
     async getItemsInWarehouse(warehouseDto: WarehouseDto){
-        const result = await this.db.items.findMany({
+        const allItems = await this.db.items.findMany({
+            where: {
+                warehouse_id: warehouseDto.warehouseId,
+            }
+        });
+        const allTrans = await this.transService.getAllTrans();
+
+        for (let i = allItems.length - 1; i >= 0; i--) {
+            const item = allItems[i];
+            for (const trans of allTrans) {
+                if (item.item_id === trans.item_item_id && trans.trans_arrived_date === null) {
+                    allItems.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        return allItems;
+    }
+
+
+    async getMovingItemsInWarehouse(warehouseDto: WarehouseDto){
+        const allItems = await this.db.items.findMany({
             where: {
                 warehouse_id: warehouseDto.warehouseId,
             }
         })
-        return result.map((item) => item);
+        const allTrans = await this.transService.getAllTrans();
+        const result = [];
+
+        allItems.forEach((item) => {
+            for (const trans of allTrans) {
+                if (item.item_id === trans.item_item_id && trans.trans_arrived_date === null) {
+                    result.push(item);
+                }
+            }
+        })
+        return result;
     }
 
     async addWarehouseToUser(addInput: AddWarehouseDto){
@@ -98,38 +135,16 @@ export class WarehousesService {
     }
 
     async updateWarehouse(input: WarehouseUpdateInput){
-        let result;
-        if (!input.warehouseLocation) {
-            result = this.db.warehouses.update({
-                where: {
-                    warehouse_id: input.warehouseId
-                },
-                data: {
-                    warehouse_name: input.warehouseName
-                }
-            })
-        } else if (!input.warehouseName) {
-            result = this.db.warehouses.update({
-                where: {
-                    warehouse_id: input.warehouseId
-                },
-                data: {
-                    location: input.warehouseLocation
-                }
-            })
-        } else {
-            result = this.db.warehouses.update({
-                where: {
-                    warehouse_id: input.warehouseId
-                },
-                data: {
-                    warehouse_name: input.warehouseName,
-                    location: input.warehouseLocation
-                }
-            })
-        }
-
-        return result;
+        return this.db.warehouses.update({
+            where: {
+                warehouse_id: input.warehouseId
+            },
+            data: {
+               warehouse_name: input.warehouseName,
+               location: input.warehouseLocation,
+               assigned_user_id: input.assignedUserId
+            }
+        })
     }
 
     async deleteWarehouse(deleteInput: WarehouseDto){

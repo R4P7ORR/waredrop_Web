@@ -96,8 +96,13 @@ export class UsersService {
         return newUser;
     }
 
-    async listUsers(){
+    async listUsers(user: UserDto){
         return this.db.users.findMany({
+            where: {
+                user_id: {
+                    not: user.userId
+                }
+            },
             include: {
                 user_has_role: {
                     select: {
@@ -112,7 +117,7 @@ export class UsersService {
         });
     }
 
-    async findUser(email: string){
+    async findUserByEmail(email: string){
         return this.db.users.findFirst({
             where: {
                 user_email: email
@@ -120,8 +125,15 @@ export class UsersService {
         })
     }
 
-    async updateUser(updateInput: UpdateInput){
+    async findUserById(id: number) {
+        return this.db.users.findUnique({
+            where: {
+                user_id: id
+            }
+        })
+    }
 
+    async updateUser(updateInput: UpdateInput){
         return this.db.users.update({
             data: {
                 user_name: updateInput.userName,

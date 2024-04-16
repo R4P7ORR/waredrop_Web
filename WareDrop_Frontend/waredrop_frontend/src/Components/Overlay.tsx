@@ -12,12 +12,17 @@ function Overlay({loginToken}: OverlayProps){
     const [nameInput, setNameInput] = useState<string>("");
     const [quantityInput, setQuantityInput] = useState<number>(1);
     const [locationInput, setLocationInput] = useState<string>("");
+    const [selectedWarehouseId, setSelectedWarehouseId] = useState(0);
     const {
         selectedId, setSelectedId,
+        selectedItems, setSelectedItems,
+        selectedUserId, setSelectedUserId,
+        warehouseList,
         overlayType, setOverlayType,
+        setEditingWarehouse, setDeletingWarehouse,
         editingUser, setEditingUser,
-        selectedItems,
-        setEditingWarehouse, setDeletingWarehouse
+        users,
+        flushValues, setFlushValues,
     } = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -25,8 +30,8 @@ function Overlay({loginToken}: OverlayProps){
             axios.get('http://localhost:3001/warehouses/warehouse/'+ selectedId, {
                 headers: {authorization: "Bearer " + loginToken},
             }).then((res) => {
-                setNameInput(res.data[0].warehouse_name);
-                setLocationInput(res.data[0].location);
+                setNameInput(res.data.warehouse_name);
+                setLocationInput(res.data.location);
             });
         }
     }, [selectedId]);
@@ -80,6 +85,7 @@ function Overlay({loginToken}: OverlayProps){
                     });
                 });
             }
+            setSelectedItems([]);
         }
     }
     function handleCreateWarehouse(){
@@ -118,25 +124,27 @@ function Overlay({loginToken}: OverlayProps){
     }
     function handleEditWarehouse(){
         axios.patch('http://localhost:3001/warehouses', {
+            assignedUserId: (selectedUserId === 0? null: selectedUserId),
             warehouseId: selectedId,
             warehouseName: nameInput,
             warehouseLocation: locationInput
         },{
             headers: {authorization: "Bearer " + loginToken},
         }).then(() => {
-            swal("Great!", "Successfully updated warehouse details!", "success", {
+                setNameInput("");
+                setLocationInput("");
+                setOverlayType("none");
+                setEditingWarehouse(false);
+                setSelectedId(0);
+            }).catch(() => {
+            swal("Error", "Something went wrong :(", "error", {
                 buttons: {},
-                timer: 2500,
+                timer: 3000,
             });
-            setNameInput("");
-            setLocationInput("");
-            setOverlayType("none");
-            setEditingWarehouse(false);
-        }).catch(() => {
-                swal("Error", "Something went wrong :(", "error", {
-                    buttons: {},
-                    timer: 3000,
-                });
+        });
+        swal("Great!", "Successfully updated warehouse details!", "success", {
+            buttons: {},
+            timer: 2500,
         });
     }
     function handleDeleteWarehouse(){
@@ -188,12 +196,46 @@ function Overlay({loginToken}: OverlayProps){
                         timer: 2500
                     });
                     setOverlayType("none");
-            }).catch(res => {
+            }).catch(() => {
                 swal("Oh-oh!", "Something went wrong :(", "error", {
                     buttons: {},
                     timer: 2500
                 });
             })
+        }
+    }
+
+    function handleCreateTransfer() {
+        if (selectedWarehouseId === 0){
+            swal("Not selected!", "You must select a target warehouse!", "error", {
+                buttons: {},
+                timer: 2500
+            });
+        } else {
+            selectedItems.forEach(item => {
+                console.log("transferring: " ,item.item_name)
+                axios.post('http://localhost:3001/transactions', {
+                    transOriginId: selectedId,
+                    transTargetId: selectedWarehouseId,
+                    itemId: item.item_id
+                }, {
+                    headers: {authorization: "Bearer " + loginToken},
+                }).then(() => {
+                    console.log("transferred")
+                    swal("Great!", "Successfully created transactions!", "success", {
+                        buttons: {},
+                        timer: 2500
+                    });
+                    setSelectedItems([]);
+                    setOverlayType("none");
+                    setFlushValues(flushValues + 1);
+                }).catch(() => {
+                    swal("Oh-oh!", "Something went wrong :(", "error", {
+                        buttons: {},
+                        timer: 2500
+                    });
+                });
+            });
         }
     }
 
@@ -206,7 +248,8 @@ function Overlay({loginToken}: OverlayProps){
                         <>
                             <h2 className="text-light">New Item</h2>
                             <hr className="hr-left"/>
-                            <input autoFocus={true} type="text" placeholder="Name" value={nameInput} maxLength={30} onChange={(e) => {
+                            <input autoFocus={true} type="text" placeholder="Name" value={nameInput} maxLength={30}
+                                   onChange={(e) => {
                                 const name = e.target.value;
                                 setNameInput(name);
                             }}
@@ -214,7 +257,8 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleAddItem();
                                }}/>
-                            <input type="number" placeholder="Quantity" value={quantityInput} onChange={(e) => {
+                            <input type="number" placeholder="Quantity" value={quantityInput}
+                                   onChange={(e) => {
                                 const quantity = e.target.value;
                                 if (quantity.length >9) {
                                     return null;
@@ -236,7 +280,8 @@ function Overlay({loginToken}: OverlayProps){
                     {overlayType === "warehouseAddForm" &&
                         <>
                             <h2 className="text-light">New Warehouse</h2>
-                            <input placeholder="Name" type="text" value={nameInput} maxLength={30} onChange={(e) => {
+                            <input autoFocus={true} placeholder="Name" type="text" value={nameInput} maxLength={30}
+                                   onChange={(e) => {
                                 const name = e.target.value;
                                 setNameInput(name);
                             }}
@@ -244,7 +289,8 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleCreateWarehouse();
                                }}/>
-                            <input placeholder="Location" type="text" value={locationInput} maxLength={30} onChange={(e) => {
+                            <input placeholder="Location" type="text" value={locationInput} maxLength={30}
+                                   onChange={(e) => {
                                 const location = e.target.value;
                                 setLocationInput(location);
                             }}
@@ -258,7 +304,7 @@ function Overlay({loginToken}: OverlayProps){
                     {overlayType === "warehouseEditForm" &&
                         <>
                             <h2 className="text-light">Edit details of Warehouse</h2>
-                            <input type="text" value={nameInput} onChange={(e) => {
+                            <input title="Name" placeholder="Name" type="text" value={nameInput} onChange={(e) => {
                                 const name = e.target.value;
                                 setNameInput(name);
                             }}
@@ -266,7 +312,7 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleEditWarehouse();
                                }}/>
-                            <input type="text" value={locationInput} onChange={(e) => {
+                            <input title="Location" placeholder="Location" type="text" value={locationInput} onChange={(e) => {
                                 const location = e.target.value;
                                 setLocationInput(location);
                             }}
@@ -274,6 +320,15 @@ function Overlay({loginToken}: OverlayProps){
                                    if (e.key === "Enter")
                                        handleEditWarehouse();
                                }}/>
+                            <select title="Assigned User" value={selectedUserId} defaultValue={1} onChange={(e) => {
+                                const user = e.target.value;
+                                setSelectedUserId(Number.parseInt(user));
+                            }}>
+                                <option value={0} selected={true}>Not Selected</option>
+                                {users.map(user => (
+                                    <option value={user.user_id}>{user.user_name}</option>
+                                ))}
+                            </select>
                             <button onClick={handleEditWarehouse}>Confirm</button>
                         </>
                     }
@@ -305,13 +360,37 @@ function Overlay({loginToken}: OverlayProps){
                             <button onClick={handleEditUser}>Confirm</button>
                         </>
                     }
-                        <button onClick={() => {
-                            setNameInput("");
-                            setQuantityInput(1);
-                            setLocationInput("");
+                    {overlayType === "transactionForm"&&
+                        <>
+                            <h2 className="text-light">Transferring items from:</h2>
+                            {warehouseList.filter(selected => selected.warehouse_id === selectedId).map(warehouse =>
+                                <h4 className="text-dim-yellow">{warehouse.warehouse_name}</h4>
+                            )}
+                            <h2 className="text-light">to:</h2>
+                            <select title="Tranfer Destination" value={selectedWarehouseId} defaultValue={1} onChange={(e) => {
+                                const warehouse = e.target.value;
+                                setSelectedWarehouseId(Number.parseInt(warehouse));
+                            }}>
+                                <option value="0">Not Selected</option>
+                                {warehouseList.filter(selected => selected.warehouse_id !== selectedId).map(warehouse => (
+                                    <option value={warehouse.warehouse_id}>{warehouse.warehouse_name}</option>
+                                ))}
+                            </select>
+                            <button onClick={handleCreateTransfer}>Confirm</button>
+                        </>
+                    }
+                    <button onClick={() => {
+                        setNameInput("");
+                        setQuantityInput(1);
+                        setLocationInput("");
+                        if (overlayType === "transactionForm") {
+                            setOverlayType("empty");
+                        } else {
                             setOverlayType("none");
                             setSelectedId(0);
-                        }}>Cancel</button>
+                        }
+                    }}>Cancel
+                    </button>
                 </div>
                 }
             </div>
