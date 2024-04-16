@@ -77,8 +77,13 @@ body{
 }
 .container-users-body{
     overflow: hidden;
+    background: linear-gradient(0deg,var(--black), var(--dark-gray));
     background: var(--black);
+    border: double 2px transparent;
     border-radius: 1rem 0 0 1rem;
+    background-image: linear-gradient(var(--dark-gray), var(--black)), radial-gradient(at left, var(--main-color) 50%, transparent);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
 }
 .users-details{
     width: 40%;
@@ -101,7 +106,8 @@ body{
 }
 .container-body{
     overflow: hidden;
-    background: var(--black); border: double 2px transparent;
+    background: var(--black);
+    border: double 2px transparent;
     border-radius: 1rem;
     background-image: linear-gradient(var(--dark-gray), var(--black)), radial-gradient(at left top, var(--main-color) 10%, transparent);
     background-origin: border-box;
@@ -170,4 +176,44 @@ body{
 }
 .text-info{
     padding-inline: 1rem;
+}
+.transaction-container-body{
+    overflow: clip;
+    background: var(--black);
+    border: double 2px transparent;
+    border-radius: 1rem;
+    background-image: linear-gradient(var(--dark-gray), var(--black)), radial-gradient(at left top, var(--main-color) 10%, transparent);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+.transaction-container-inner-body{
+    max-height: 75vh;
+    overflow-x: clip;
+    overflow-y: auto;
+}
+.transaction-container-inner-body::-webkit-scrollbar-track {
+    border-radius: 1rem;
+    background: linear-gradient(0deg, var(--dark-gray), var(--bright-gray));
+}
+.transaction-container-inner-body::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    border-radius: 1rem;
+    box-shadow: 0 0 0 0 transparent;
+}
+.transaction-line{
+    width: 100%;
+    padding-inline: 0.5rem;
+}
+.transaction-location{
+    width:calc(100% / 3);
+    text-overflow: ellipsis;
+    overflow-x: clip;
+}
+.transaction-date{
+    width: calc(100% / 6);
+    text-overflow: ellipsis;
+    overflow-x: clip;
+}
+.transaction-view-button{
+    width: 15rem;
 }

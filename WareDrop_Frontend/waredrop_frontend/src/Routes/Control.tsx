@@ -6,7 +6,7 @@ import Users from "../Components/Users/Users";
 import Overlay from "../Components/Overlay";
 import WarehouseContext from "../Contexts/WarehouseContextProvider";
 import CheckForPermissions from "../Components/CheckForPermissions";
-import Transaction from "../Components/Transactions/Transaction";
+import Transactions from "../Components/Transactions/Transactions";
 
 function Control(){
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ function Control(){
                     <WarehouseDisplay loginToken={loginToken} setCurrentPage={setCurrentPage}/> : null
                 }
                 {currentPage === "transactions" ?
-                    <Transaction loginToken={loginToken}/> : null
+                    <Transactions loginToken={loginToken}/> : null
                 }
                 {currentPage === "users" ?
                     <Users loginToken={loginToken}/> : null
