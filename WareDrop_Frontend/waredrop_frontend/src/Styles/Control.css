@@ -81,7 +81,14 @@ body{
     border-radius: 1rem 0 0 1rem;
 }
 .users-details{
-    width: calc(100% / 3);
+    width: 40%;
+}
+.users-id{
+    width: 15%;
+}
+.user-role-checkers{
+    position: relative;
+    left: -1.3rem;
 }
 .container-box{
     background: var(--dark-gray);

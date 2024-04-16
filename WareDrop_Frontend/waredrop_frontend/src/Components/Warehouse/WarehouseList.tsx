@@ -76,6 +76,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
         <div className="container-warehouse container-box" id={warehouse_id.toString()}>
             <div className="container-header">
                 <h2>{warehouse_name.toUpperCase()}</h2>
+                <hr className="hr-left no-margin"/>
                 <div className="align-horizontal">
                     <div>
                         <h4 className="text-dim-yellow">{location}</h4>
