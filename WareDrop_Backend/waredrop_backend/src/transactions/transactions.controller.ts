@@ -22,8 +22,15 @@ export class TransactionsController {
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
-    getAllTrans(){
-        return this.service.getAllTrans();
+    getAllCompletedTrans(){
+        return this.service.getAllCompletedTrans();
+    }
+
+    @Get()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
+    getAllActiveTrans(){
+        return this.service.getAllActiveTrans();
     }
 
     @Get('/warehouse/:id')
