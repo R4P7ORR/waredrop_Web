@@ -53,9 +53,15 @@ function Users({loginToken}: UsersProps){
                     </div>
                 </div>
                 <div className="container-users-body">
-                    {users.map((user: User) => (
+                    {users.length!== 0?
+                        users.map((user: User) => (
                         <UsersDisplay loginToken={loginToken} user_id={user.user_id} user_name={user.user_name} user_email={user.user_email}/>
-                    ))}
+                        ))
+                        :
+                        <>
+                            <h2 style={{textAlign: "center"}}>Registered users will appear here</h2>
+                        </>
+                    }
                 </div>
             </>}
         </div>
