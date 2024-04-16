@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from "react-native";
+import {ScrollView, Text, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useState} from "react";
 import styles from "./StyleSheet";
 import TransDTO from "./Interfaces/AvailableShowList";
@@ -8,44 +8,27 @@ import axios from "axios";
 import AvailableList from "./Props/AvailableList";
 import AvailableSelect from "./Props/AvailableSelect";
 import WarehouseDTO from "./Interfaces/Warehouse";
+import AwesomeAlert from "react-native-awesome-alerts";
+import GetTransactions from "./Props/GetTransactions";
 
 // @ts-ignore
 function My_Deliveries({navigation}){
-        const [deliveries,setDeliveries] =useState<TransDTO[]>()
-        const [transactionId,setTransactionId]=useState<number|null>(null)
-        const [listId,setlistId]=useState<number|null>(null)
-        const [target,setTarget]=useState<WarehouseDTO>()
-        const [origin,setOrigin]=useState<WarehouseDTO>()
+const [deliveries,setDeliveries] =useState<TransDTO[]>()
+const [transactionId,setTransactionId]=useState<number|null>(null)
+const [listId,setlistId]=useState<number|null>(null)
+const [target,setTarget]=useState<WarehouseDTO>()
+const [origin,setOrigin]=useState<WarehouseDTO>()
+const [showAlert,setShowAlert]=useState(false)
 
 
-        useEffect(() => {
-            const List = async () => {
-                try {
-                    const storedToken = await AsyncStorage.getItem('token');
-                    if (baseUrl && storedToken) {
-                        axios.get(`${baseUrl}/transactions/worker`,{
-                            headers:{
-                                Authorization: `Bearer ${storedToken}`
-                            }
-                        })
-                            .then((response) => {
-                                const data=response.data;
-                                setDeliveries(data);
-                                console.log("Ez a lista: ", data)
-                            })
-                            .catch((error) => {
-                                console.log("Ez egy error: ", error);
-                            });
-                    }
-                } catch (error) {
-                    console.log("Ez egy error: ", error);
-                }
-            };
-            List();
-            getOrigin();
-            getTarget();
-            console.log("UseEffect origin: ", origin)
-            console.log("UseEffect target: ", target)
+        useEffect( () => {
+            GetTransactions({url:`${baseUrl}/transactions/worker`,setState:setDeliveries})
+                .then(()=>{
+                    GetTransactions({url:`${baseUrl}/warehouses/warehouse/${deliveries![listId!].trans_origin_id}`, setTarget:setOrigin})
+                    GetTransactions({url:`${baseUrl}/warehouses/warehouse/${deliveries![listId!].trans_target_id}`, setTarget:setTarget})
+                }).catch((error)=>{
+                    console.log('Fetching error: ',error)
+            })
         }, [listId]);
 
 
@@ -72,36 +55,6 @@ function My_Deliveries({navigation}){
             console.log("listId: "+listId)
         }
 
-        const acceptTransaction= async (id:number)=>{
-            console.log("Transaction idja: " +id)
-            try {
-                const storedToken = await AsyncStorage.getItem('token');
-                console.log("Ez a token: " +storedToken)
-                if (baseUrl&&storedToken){
-                    axios.patch(`${baseUrl}/transactions`,{
-                            transId:id
-                        },
-                        {
-                            headers:{
-                                Authorization: `Bearer ${storedToken}`,
-                            }
-                        })
-                        .then((response)=>{
-                            goBackToMyDeliveries()
-                            alert('Transaction successfully completed')
-                        })
-                        .catch((error)=>{
-                            console.log('Patch errorja: ' + error)
-                        })
-                }
-            }
-            catch (error){
-                console.log('try cath error: ' + error)
-
-
-            }
-
-        }
 
 
 
@@ -160,17 +113,26 @@ function My_Deliveries({navigation}){
     }
 
         return(
-            <View>
+            <View style={styles.background}>
                 {
                     listId===null ?
 
-                        <View>
-                            {deliveries !== undefined ? <AvailableList list={deliveries} onClick={showTransactions}/> :
-                                <Text>There aren't any available transactions </Text>}
+                        <View style={styles.page}>
+                            <ScrollView style={{height:'80%'}}>
+                            {deliveries === undefined||deliveries.length===0 ?  <Text>There aren't any transactions </Text>:
+                                <AvailableList list={deliveries} onClick={showTransactions}/>  }
 
+                            <AwesomeAlert
+                                show={showAlert}
+                                title="Transaction successfully completed"
+                                titleStyle={{fontSize:22,color:"#ffa600"}}
+                                useNativeDriver={true}
+
+                            />
+                            </ScrollView>
                             <TouchableOpacity
-                                style={styles.loginBtn}
-                                onPress={()=>navigation.navigate('StartMenu')}>
+                                style={styles.TouchableOpacity}
+                                onPress={()=>navigation.navigate('StartMenu',{id:2})}>
                                 <Text style={styles.TextInput}>Go back</Text>
                             </TouchableOpacity>
 
@@ -178,7 +140,7 @@ function My_Deliveries({navigation}){
                         :
                         <View>
                             {deliveries && origin && target &&
-                                <AvailableSelect target={target} origin={origin} list={deliveries[listId]} back={goBackToMyDeliveries} update={acceptTransaction}/>}
+                                <AvailableSelect target={target} origin={origin} list={deliveries[listId]} back={goBackToMyDeliveries} update={true} url={`${baseUrl}/transactions`} setState={setShowAlert} Back={goBackToMyDeliveries}/>}
 
 
                         </View>
