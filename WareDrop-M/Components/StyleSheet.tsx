@@ -1,11 +1,20 @@
 import {StyleSheet} from 'react-native';
-import {blueA100} from "react-native-paper/lib/typescript/styles/themes/v2/colors";
+const main_color= '#ffa600';
+const main_color_alpha= 'rgb(255, 166, 0)';
+const secondary_color= '#381ac0';
+const dark_gray= '#171717';
+const dar_blue= '#2e1372';
+const bright_gray= '#2a2a2a';
 
 
 const styles = StyleSheet.create({
+    background:{
+        backgroundColor:bright_gray,
+        flex:1,
+    },
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor:bright_gray,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -13,7 +22,7 @@ const styles = StyleSheet.create({
         marginBottom:40
     },
     inputView:{
-        backgroundColor: "#DD8538",
+        backgroundColor: dar_blue,
         borderRadius: 30,
         width: "70%",
         height: 45,
@@ -22,14 +31,34 @@ const styles = StyleSheet.create({
         justifyContent:"center",
 
     },
+    Text:{
+      color:main_color,
+      fontSize:20,
+      fontWeight:"bold"
+    },
+    SimpleText:{
+       marginTop:5,
+      color:main_color
+    },
     TextInput: {
         height:"100%",
         width:"100%",
         flex: 1,
         padding: 10,
         marginLeft: 20,
-        color:"#FFFFFF",
+        color:main_color,
         textAlign:"center",
+        fontSize:15,
+    },
+    LoginText:{
+        height:"100%",
+        width:"100%",
+        flex: 1,
+        padding: 10,
+        marginLeft: 20,
+        color:'white',
+        textAlign:"center",
+        fontSize:15,
     },
     loginBtn:
         {
@@ -39,14 +68,14 @@ const styles = StyleSheet.create({
             alignItems:"center",
             justifyContent:"center",
             marginTop:40,
-            backgroundColor:"#B55828",
+            backgroundColor:dark_gray,
         },
     img: {
         width: 300,
         height: 300,
     },
     list:{
-        backgroundColor: '#FFF',
+        backgroundColor:bright_gray,
         padding: 15,
         borderRadius: 10,
         flexDirection: 'column',
@@ -62,26 +91,50 @@ const styles = StyleSheet.create({
         padding:8,
         borderWidth:1,
         borderRadius:4,
-        borderColor:"#ddd",
-        fontSize:18
+        borderColor:main_color,
+        fontSize:18,
+        width:'100%',
+    },
+    listText:{
+        color:'white',
+
     },
     TouchableOpacity:{
         height:50,
-        backgroundColor:"#ddd",
+        backgroundColor:dar_blue,
         justifyContent:'center',
         alignItems:'center',
         fontSize:18,
         borderRadius:25,
-        width:'80%'
+        width:'80%',
     },
+    touchable2:{
+        width:'50%',
+    },
+    touchable1:{
+        width:'80%'
+    }
+    ,
     details_con:{
-        flex:1,
-        padding:24,
+        flexDirection:"row",
+        justifyContent:"center",
+        margin:10
     },
     details:{
+        fontSize:18,
         padding:4,
-        borderBottomColor:'grey'
+        borderBottomColor:main_color,
+        borderRadius:10,
+        color:'white',
+        borderBottomWidth:StyleSheet.hairlineWidth,
+    },
+    page:{
+        paddingTop:40,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
     }
+
 
 });
 export default styles
