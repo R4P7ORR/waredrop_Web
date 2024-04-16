@@ -94,6 +94,24 @@ export class TransactionsService {
         });
     }
 
+    async getAllCompletedTrans(){
+        return this.db.transactions.findMany({
+            where: {
+                NOT: {
+                    trans_arrived_date: null
+                }
+            }
+        });
+    }
+
+    async getAllActiveTrans(){
+        return this.db.transactions.findMany({
+            where: {
+                trans_arrived_date: null
+            }
+        });
+    }
+
     async getAvailableTrans(){
         return this.db.transactions.findMany({
             where: {

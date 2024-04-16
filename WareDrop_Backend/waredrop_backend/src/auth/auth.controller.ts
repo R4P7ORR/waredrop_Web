@@ -38,4 +38,11 @@ export class AuthController {
         const user_token = this.jwt.decodeToken(req);
         return this.service.isAdmin(user_token.sub.userPermissions);
     }
+
+    @Get('isWorker')
+    @UseGuards(JwtAuthGuard)
+    isWorker(@Req() req : Request){
+        const user_token = this.jwt.decodeToken(req);
+        return this.service.isWorker(user_token.sub.userPermissions);
+    }
 }

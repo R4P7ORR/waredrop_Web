@@ -53,7 +53,7 @@ body{
     left: 50%;
     transform: translate(-50%, -50%);
 
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.85);
     padding: 1rem;
     border: 2px var(--main-color) solid;
     border-radius: 0.5rem;
@@ -93,34 +93,31 @@ body{
     margin-bottom: 1.5rem;
 }
 .container-body{
-    max-height: 300px;
-    overflow-y: auto;
+    overflow: hidden;
     background: var(--black); border: double 2px transparent;
     border-radius: 1rem;
-    background-image: linear-gradient(var(--black), var(--black)), radial-gradient(at left top, var(--main-color) 10%, transparent);
+    background-image: linear-gradient(var(--dark-gray), var(--black)), radial-gradient(at left top, var(--main-color) 10%, transparent);
     background-origin: border-box;
     background-clip: content-box, border-box;
-
+}
+.container-body > .container-inner-body{
+    max-height: 250px;
+    overflow-y: auto;
+}
+.container-inner-body::-webkit-scrollbar-track {
+    border-radius: 1rem;
+    background: linear-gradient(0deg, var(--dark-gray), var(--bright-gray));
+}
+.container-inner-body::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    border-radius: 1rem;
+    box-shadow: 0 0 0 0 transparent;
 }
 .container-header{
     overflow-x: hidden;
 }
 .container-header > h4{
     color: rgba(var(--main-color-alpha), 0.5);
-}
-::-webkit-scrollbar {
-    width: 12px;
-}
-::-webkit-scrollbar-track {
-    background: var(--dar-blue);
-    border-radius: 1rem;
-}
-::-webkit-scrollbar-thumb {
-    background: var(--secondary-color);
-    border-radius: 1rem;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--main-color);
 }
 .align-horizontal{
     display: flex;
@@ -131,7 +128,7 @@ body{
     left: 50%;
     transform: translate(-50%);
     align-items: center;
-    z-index: 1;
+    z-index: 3;
 }
 .warehouse-operator-buttons > button{
     margin-inline: 1rem;
@@ -163,4 +160,7 @@ body{
 }
 .storage-button:active{
     transform: scale(1);
+}
+.text-info{
+    padding-inline: 1rem;
 }

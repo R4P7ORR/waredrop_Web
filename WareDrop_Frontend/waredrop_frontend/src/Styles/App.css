@@ -122,6 +122,20 @@ hr{
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--dark-gray);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--main-color);
+  border-radius: 1rem;
+  box-shadow: 0 -100vh 0 90vh var(--main-color);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
 .swal-modal {
   background: var(--dark-gray);
   border: 3px solid var(--main-color);

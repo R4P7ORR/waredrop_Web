@@ -389,6 +389,7 @@ function Overlay({loginToken}: OverlayProps){
                             setOverlayType("none");
                             setSelectedId(0);
                         }
+                        setSelectedItems([]);
                     }}>Cancel
                     </button>
                 </div>

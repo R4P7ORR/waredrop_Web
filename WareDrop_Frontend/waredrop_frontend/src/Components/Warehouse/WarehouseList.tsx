@@ -108,18 +108,18 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 </div>
                 {overlayType !== "empty" ?
                     !viewInTransit?
-                    <button onClick={() => {
+                    <button style={{marginBottom: "0.5rem"}} onClick={() => {
                         setOverlayType("itemForm");
                         setSelectedItems(itemsInWarehouse);
                         setSelectedId(warehouse_id);
                     }}>Add Item
                     </button>
                         :
-                        <button onClick={() => {
+                        <button style={{marginBottom: "0.5rem"}} onClick={() => {
                             setCurrentPage('transactions');
                         }}>View Transactions</button>
                         :
-                        <button onClick={() => {
+                        <button style={{marginBottom: "0.5rem"}} onClick={() => {
                             setOverlayType("transactionForm");
                             (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
                             setSelectedId(warehouse_id);
@@ -129,7 +129,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
             </div>
             <div className="container-body">
                 {(itemsInWarehouse.length === 0 && itemsInTransit.length === 0) ?
-                    <p>No items in warehouse</p>
+                    <p className="text-info">No items in warehouse</p>
                     :
                     <>
                         <button id={`storage${warehouse_id}`} className="transfer-view-button-clicked storage-button" onClick={() => {
@@ -138,8 +138,16 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                             setSelectedItems([]);
                             setOverlayType("none");
                             document.getElementById(`storage${warehouse_id}`)!.className = "transfer-view-button-clicked storage-button";
-                            document.getElementById(`transfer${warehouse_id}`)!.className = "transfer-view-button transfer-button";
-                        }}>In storage</button>
+                            if (selectedItems.length === 0) {
+                                document.getElementById(`transfer${warehouse_id}`)!.className = "transfer-view-button transfer-button";
+                            }
+                        }}>
+                            {selectedItems.length === 0?
+                                "In storage"
+                                :
+                                "Unselect all"
+                            }
+                        </button>
                         {selectedItems.length === 0&&
                             <button id={`transfer${warehouse_id}`} className="transfer-view-button transfer-button" onClick={() => {
                                 setViewInTransit(true);
@@ -148,22 +156,24 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                                 document.getElementById(`storage${warehouse_id}`)!.className = "transfer-view-button storage-button";
                             }}>In transit</button>
                         }
-                        <div>
+                        <div className="container-inner-body">
                             {!viewInTransit ?
                                 itemsInWarehouse.length === 0?
-                                    <p>All items are in transfer</p>
+                                    <p className="text-info">All items are in transfer</p>
                                     :
                                     itemsInWarehouse.map((item) => (
                                         <WarehouseListItem itemName={item.item_name}
                                                            itemQuantity={item.item_quantity}
                                                            handleChecked={() => handleCheckBox(item)}
-                                        canCheck={true}/>
+                                                           canCheck={true}/>
                                     ))
+                                    : itemsInTransit.length === 0 ?
+                                    <p>No items are in transit</p>
                                     :
                                     itemsInTransit.map((item) => (
                                         <WarehouseListItem itemName={item.item_name}
                                                            itemQuantity={item.item_quantity}
-                                                            canCheck={false}/>
+                                                           canCheck={false}/>
                                     ))
                             }
                         </div>
