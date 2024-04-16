@@ -15,13 +15,15 @@ function AvailableList(props:List){
     return(
         <View style={styles.list}>
             {props.list.map((item) =>
+         <View style={styles.listItem}>
         <TouchableOpacity
          key={item.trans_id}
         onPress={()=>props.onClick(item.trans_id)}
         >
-            <Text style={styles.listItem}>
+            <Text style={styles.listText}>
                 {item.trans_post_date ? format(item.trans_post_date, "yyyy-MM-dd") : "Unknown Date"}  {item.items.item_name}  {item.items.item_quantity}x  </Text>
-        </TouchableOpacity>)}
+        </TouchableOpacity>
+         </View>)}
         </View>
     )
 }

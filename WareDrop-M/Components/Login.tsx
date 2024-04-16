@@ -47,7 +47,7 @@ function Login({navigation}) {
              console.log(response.data)
             await AsyncStorage.setItem('token', response.data.accessToken)
              setLoggedIn(true)
-             navigation.navigate('StartMenu')
+             navigation.navigate('StartMenu',{id:-1})
         })
             .catch(function (error) {
                 console.log(error)
@@ -125,7 +125,7 @@ function Login({navigation}) {
                 source={require("../assets/WareDrop_logo.png")}/>
             <View style={styles.inputView} onTouchStart={handleViewPress}>
                 <TextInput
-                    style={styles.TextInput}
+                    style={styles.LoginText}
                     placeholder="Enter your email"
                     placeholderTextColor="#FFFFFF"
                     value={email}
@@ -134,7 +134,7 @@ function Login({navigation}) {
             </View>
             <View style={styles.inputView} onTouchStart={handleViewPress}>
                 <TextInput
-                    style={styles.TextInput}
+                    style={styles.LoginText}
                     placeholder="Enter your password"
                     placeholderTextColor="#FFFFFF"
                     value={password}
@@ -145,12 +145,12 @@ function Login({navigation}) {
             <TouchableOpacity
                 style={styles.loginBtn}
                 onPress={() => loginFunction()}>
-                <Text>Login</Text>
+                <Text style={styles.TextInput}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() =>toggleRegister()}
             >
-            <Text>Don't have account?</Text>
+            <Text style={styles.SimpleText}>Don't have account?</Text>
             </TouchableOpacity>
         </View>
 
@@ -162,7 +162,7 @@ function Login({navigation}) {
 
                 <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
-                    style={styles.TextInput}
+                    style={styles.LoginText}
                     placeholder="Enter your name"
                     placeholderTextColor="#FFFFFF"
                     value={name}
@@ -172,7 +172,7 @@ function Login({navigation}) {
                 </View>
                 <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
-                        style={styles.TextInput}
+                        style={styles.LoginText}
                         placeholder="Enter your email"
                         placeholderTextColor="#FFFFFF"
                         value={email}
@@ -181,7 +181,7 @@ function Login({navigation}) {
                 </View>
                 <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
-                        style={styles.TextInput}
+                        style={styles.LoginText}
                         placeholder="Enter your password"
                         placeholderTextColor="#FFFFFF"
                         value={password}
@@ -191,7 +191,7 @@ function Login({navigation}) {
                 </View>
                 <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
-                        style={styles.TextInput}
+                        style={styles.LoginText}
                         placeholder="Enter your password agian"
                         placeholderTextColor="#FFFFFF"
                         value={password2}
@@ -202,14 +202,14 @@ function Login({navigation}) {
                 <TouchableOpacity
                     style={styles.loginBtn}
                     onPress={() => registerFunction()}>
-                    <Text>Register</Text>
+                    <Text style={styles.TextInput}>Register</Text>
                 </TouchableOpacity>
 
 
                 <TouchableOpacity
                     onPress={() =>toggleRegister()}
                 >
-                    <Text>Do you have an account?</Text>
+                    <Text style={styles.SimpleText}>Do you have an account?</Text>
                 </TouchableOpacity>
             </View>
     )

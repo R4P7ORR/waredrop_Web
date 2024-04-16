@@ -227,3 +227,6 @@ hr{
 .clickable{
   cursor: pointer;
 }
+.no-margin{
+  margin: 0;
+}

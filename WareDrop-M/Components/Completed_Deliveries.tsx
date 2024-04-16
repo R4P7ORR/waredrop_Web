@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from "react-native";
+import {ScrollView, Text, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useState} from "react";
 import styles from "./StyleSheet";
 import TransDTO from "./Interfaces/AvailableShowList";
@@ -8,6 +8,8 @@ import axios from "axios";
 import AvailableList from "./Props/AvailableList";
 import AvailableSelect from "./Props/AvailableSelect";
 import WarehouseDTO from "./Interfaces/Warehouse";
+import GetTransactions from "./Props/GetTransactions";
+import GetOrigin_Target from "./Props/GetOrigin_Target";
 
 // @ts-ignore
 function Completed_Deliveries({navigation}){
@@ -19,43 +21,27 @@ function Completed_Deliveries({navigation}){
 
 
     useEffect(() => {
-        const List = async () => {
-            try {
-                const storedToken = await AsyncStorage.getItem('token');
-                if (baseUrl && storedToken) {
-                    axios.get(`${baseUrl}/transactions/doneBy`,{
-                        headers:{
-                            Authorization: `Bearer ${storedToken}`
-                        }
-                    })
-                        .then((response) => {
-                            const data=response.data;
-                            setCompletedDeliveries(data);
-                            console.log("Ez a lista: ", data)
-                        })
-                        .catch((error) => {
-                            console.log("Ez axios egy error: ", error);
-                        });
-                }
-            } catch (error) {
-                console.log("Ez try catch egy error: ", error);
-            }
-        };
-        List();
-        getOrigin();
-        getTarget();
-        console.log("UseEffect origin: ", origin)
-        console.log("UseEffect target: ", target)
+
+        GetTransactions({url:`${baseUrl}/transactions/doneBy`,setState:setCompletedDeliveries})
+
+            /*    GetOrigin_Target({
+                    url: `${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_origin_id}`,
+                    setTarget: setOrigin,
+                    state:completedDeliveries
+                })
+                GetOrigin_Target({
+                    url: `${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_target_id}`,
+                    setTarget: setTarget,
+                    state:completedDeliveries
+                }) */
+        getOrigin()
+        getTarget()
+
     }, [listId]);
-
-
 
     const showTransactions = (id:number) =>{
         console.log("Clicked transaction with ID:", id)
         setTransactionId(id)
-
-
-
     };
 
     useEffect(() => {
@@ -66,18 +52,10 @@ function Completed_Deliveries({navigation}){
     }, [transactionId]);
 
 
-    const goBackToCompletedDeliveries=()=>{
-        setlistId(null)
-        setTransactionId(null)
-        console.log("listId: "+listId)
-    }
-
-
     const getOrigin= async ()=> {
-        console.log("listaid ",listId)
         try {
             const storderToken = await AsyncStorage.getItem('token')
-            if (storderToken && completedDeliveries ) {
+            if (storderToken&&completedDeliveries) {
                 axios.get(`${baseUrl}/warehouses/warehouse/${completedDeliveries[listId!].trans_origin_id}`, {
                     headers: {
                         Authorization: `Bearer ${storderToken}`
@@ -99,11 +77,9 @@ function Completed_Deliveries({navigation}){
     }
 
     const getTarget= async ()=> {
-        console.log("lisstaid ", listId)
         try {
             const storderToken = await AsyncStorage.getItem('token')
-            console.log("Token: ",storderToken)
-            if (storderToken && completedDeliveries) {
+            if (storderToken&&completedDeliveries) {
                 axios.get(`${baseUrl}/warehouses/warehouse/${completedDeliveries[listId!].trans_target_id}`, {
                     headers: {
                         Authorization: `Bearer ${storderToken}`
@@ -124,24 +100,25 @@ function Completed_Deliveries({navigation}){
             console.log("Target catch error: ", error)
         }
     }
-
-    const kiiras=()=>{
-        console.log('asd')
-        console.log('kiírás: ',completedDeliveries)
-        return 'kiiras'
+    const goBackToCompletedDeliveries=()=>{
+        setlistId(null)
+        setTransactionId(null)
+        console.log("listId: "+listId)
     }
 
     return(
-        <View>
+        <View style={styles.background}>
             {listId===null ?
-                <View>
-                    {completedDeliveries !== undefined ?
-                 <AvailableList list={completedDeliveries} onClick={showTransactions}/>
+                <View style={styles.page}>
+                    <ScrollView style={{height:'80%'}}>
+                    {completedDeliveries === undefined||completedDeliveries.length===0 ?
+                        <Text>There aren't any completed transactions </Text>
                         :
-                        <Text>There aren't any available transactions </Text>}
+                        <AvailableList list={completedDeliveries} onClick={showTransactions}/>}
+                    </ScrollView>
                         <TouchableOpacity
-                            style={styles.loginBtn}
-                            onPress={()=>navigation.navigate('StartMenu')}>
+                            style={styles.TouchableOpacity}
+                            onPress={()=>navigation.navigate('StartMenu',{id:3})}>
                             <Text style={styles.TextInput}>Go back</Text>
                         </TouchableOpacity>
                     </View> :
@@ -154,10 +131,5 @@ function Completed_Deliveries({navigation}){
 
 
     );
-
-    /*
-     */
 }
-
-
 export default Completed_Deliveries
