@@ -108,6 +108,9 @@ export class TransactionsService {
         return this.db.transactions.findMany({
             where: {
                 trans_arrived_date: null
+            },
+            include: {
+                items: true
             }
         });
     }
