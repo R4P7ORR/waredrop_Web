@@ -129,7 +129,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
             </div>
             <div className="container-body">
                 {(itemsInWarehouse.length === 0 && itemsInTransit.length === 0) ?
-                    <p>No items in warehouse</p>
+                    <p className="text-info">No items in warehouse</p>
                     :
                     <>
                         <button id={`storage${warehouse_id}`} className="transfer-view-button-clicked storage-button" onClick={() => {
@@ -159,7 +159,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                         <div className="container-inner-body">
                             {!viewInTransit ?
                                 itemsInWarehouse.length === 0?
-                                    <p>All items are in transfer</p>
+                                    <p className="text-info">All items are in transfer</p>
                                     :
                                     itemsInWarehouse.map((item) => (
                                         <WarehouseListItem itemName={item.item_name}
