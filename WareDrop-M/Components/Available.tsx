@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from "react-native";
+import {ScrollView, Text, TouchableOpacity, View} from "react-native";
 import styles from "./StyleSheet";
 import React, {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,6 +8,8 @@ import AvailableList from "./Props/AvailableList";
 import TransDTO from "./Interfaces/AvailableShowList";
 import AvailableSelect from "./Props/AvailableSelect";
 import WarehouseDTO from "./Interfaces/Warehouse";
+import AwesomeAlert from "react-native-awesome-alerts";
+import GetTransactions from "./Props/GetTransactions";
 
 
 // @ts-ignore
@@ -17,37 +19,19 @@ const [transactionId,setTransactionId]=useState<number|null>(null)
 const [listId,setlistId]=useState<number|null>(null)
 const [target, setTarget]=useState<WarehouseDTO>()
 const [origin, setOrigin]=useState<WarehouseDTO>()
+const [showAlert,setShowAlert]=useState(false)
 
 
 
     useEffect(() => {
-        const List = async () => {
-            try {
-                const storedToken = await AsyncStorage.getItem('token');
-                if (baseUrl && storedToken) {
-                    axios.get(`${baseUrl}/transactions/available`,{
-                        headers:{
-                            Authorization: `Bearer ${storedToken}`
-                        }
-                    })
-                        .then((response) => {
-                            const data=response.data;
-                            setAvailable(data);
-                        })
-                        .catch((error) => {
-                            console.log("Ez egy error: ", error);
-                        });
-                }
-            } catch (error) {
-                console.log("Ez egy error: ", error);
-            }
-        };
-        List()
-        getOrigin()
-        getTarget();
+        GetTransactions({url:`${baseUrl}/transactions/available`,setState:setAvailable})
+            .then(()=>{
+                GetTransactions({url:`${baseUrl}/warehouses/warehouse/${available![listId!].trans_origin_id}`, setTarget:setOrigin})
+                GetTransactions({url:`${baseUrl}/warehouses/warehouse/${available![listId!].trans_target_id}`, setTarget:setTarget})
+            }).catch((error)=>{
+            console.log('Fetching error: ',error)
+        })
     }, [listId]);
-
-
 
 
     const showTransactions = (id:number) => {
@@ -72,36 +56,6 @@ const [origin, setOrigin]=useState<WarehouseDTO>()
         console.log("listId: "+listId)
     }
 
-    const acceptTransaction= async (id:number)=>{
-        console.log("Transaction idja: " +id)
-            try {
-                const storedToken = await AsyncStorage.getItem('token');
-                console.log("Ez a token: " +storedToken)
-                if (baseUrl&&storedToken){
-                    axios.patch(`${baseUrl}/transactions/assignWorker`,{
-                      transId:id
-                    },
-                        {
-                            headers:{
-                                Authorization: `Bearer ${storedToken}`,
-                            }
-                        })
-                        .then((response)=>{
-                            goBackToAvailable()
-                            alert('Transaction successfully accepted')
-                        })
-                        .catch((error)=>{
-                            console.log('Patch errorja: ' + error)
-                        })
-                }
-            }
-            catch (error){
-                console.log('try cath error: ' + error)
-
-
-            }
-
-    }
 
 
 
@@ -109,7 +63,7 @@ const [origin, setOrigin]=useState<WarehouseDTO>()
     const getOrigin= async ()=> {
         try {
             const storderToken = await AsyncStorage.getItem('token')
-            if (storderToken && available) {
+            if (storderToken&&available) {
                 axios.get(`${baseUrl}/warehouses/warehouse/${available[listId!].trans_origin_id}`, {
                     headers: {
                         Authorization: `Bearer ${storderToken}`
@@ -133,7 +87,7 @@ const [origin, setOrigin]=useState<WarehouseDTO>()
     const getTarget= async ()=> {
         try {
             const storderToken = await AsyncStorage.getItem('token')
-            if (storderToken && available) {
+            if (storderToken&&available) {
                 axios.get(`${baseUrl}/warehouses/warehouse/${available[listId!].trans_target_id}`, {
                     headers: {
                         Authorization: `Bearer ${storderToken}`
@@ -154,18 +108,28 @@ const [origin, setOrigin]=useState<WarehouseDTO>()
             console.log("Target catch error: ", error)
         }
     }
+
+
         return(
-            <View >
+            <View style={styles.background}>
                 {
                     listId===null ?
 
-                <View>
-                        {available !== undefined ? <AvailableList list={available} onClick={showTransactions}/> :
-                        <Text>There aren't any available transactions </Text>}
+                <View style={styles.page} >
+                    <ScrollView style={{height:'80%'}}>
+                        {available===undefined||available.length===0 ? <Text style={styles.Text}>There aren't any available transactions </Text> :
+                            <AvailableList list={available} onClick={showTransactions}/>                       }
+                    <AwesomeAlert
+                        show={showAlert}
+                        title="Transaction successfully accepted"
+                        titleStyle={{fontSize:22,color:"#ffa600"}}
+                        useNativeDriver={true}
+                    />
+                    </ScrollView>
 
                     <TouchableOpacity
                         style={styles.TouchableOpacity}
-                        onPress={()=>navigation.navigate('StartMenu')}>
+                        onPress={()=>navigation.navigate('StartMenu',{id:1})}>
                         <Text style={styles.TextInput}>Go back</Text>
                     </TouchableOpacity>
 
@@ -173,10 +137,11 @@ const [origin, setOrigin]=useState<WarehouseDTO>()
                   :
                         <View>
                             {available && target&& origin &&
-                                <AvailableSelect origin={origin} target={target} list={available[listId]} back={goBackToAvailable} update={acceptTransaction}/>}
+                                <AvailableSelect origin={origin} target={target} list={available[listId]} back={goBackToAvailable} update={true} setState={setShowAlert} url={`${baseUrl}/transactions/assignWorker`} Back={goBackToAvailable}/>}
 
 
                         </View>
+
                 }
             </View>
 

@@ -22,7 +22,19 @@
 3. Majd a futtatáshoz a `npm start` parancsot, ezutánk meg fog nyílni a weboldal az alapértelmezett bőngészőben
 
 ## Mobil alakalmazás futtatása
-...
+1. Telefonra telepíteni kell az Expo Go alkalmazást.
+2. Navigáljunk a projekt mappájában és nyissuk meg a WareDrop-M mappát.
+3. Itt a BaseUrl.tsx-be írjuk át a baseUrl változót a saját ip-címünkre, a portszám marad.
+4. Majd a mappában kiadjuk a következő parancsokat:
+5.```
+6. npm i
+7. npx expo start
+8. ```
+9. A parancs kiadása után a terminálba megjelenik egy QR kód is.
+10. Az applikációban van egy olyan opció hogy Scan QR code ezzel olvassuk le a terminálban megjelent QR kódot.
+12. Fontos hogy ugyanazon a hálozaton legyen a mobileszközünk és a számítógépünk.
+13. Az első betöltés elég hosszú ideig fog eltartani de utána már jelentősen lerövidül.
+14. Az első szkennelés után az applikációban létrejön egy recently open-ed fül alatt az app, ott addig mindig újra tudjuk renderelni amíg ugyanazon a hálozaton vagyunk.
 
 ## Adat szerkezet
 ![image](https://github.com/DonkoHunor/waredrop_web/assets/144147106/3ff15b39-c315-412b-83bc-30f5211f585a)

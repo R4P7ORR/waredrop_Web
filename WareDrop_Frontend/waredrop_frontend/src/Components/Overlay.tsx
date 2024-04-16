@@ -324,7 +324,7 @@ function Overlay({loginToken}: OverlayProps){
                                 const user = e.target.value;
                                 setSelectedUserId(Number.parseInt(user));
                             }}>
-                                <option value={0} selected={true}>Not Selected</option>
+                                <option value={0} selected={true}>No Assigned User</option>
                                 {users.map(user => (
                                     <option value={user.user_id}>{user.user_name}</option>
                                 ))}
