@@ -85,7 +85,6 @@ function Login({navigation}) {
 
                        }).then((response) => {
                            console.log(response.data)
-                           alert('Sikeresen megcsináltad a felhasználót')
                            loginFunction()
 
                        })

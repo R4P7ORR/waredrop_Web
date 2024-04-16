@@ -59,57 +59,6 @@ const [showAlert,setShowAlert]=useState(false)
 
 
 
-
-    const getOrigin= async ()=> {
-        try {
-            const storderToken = await AsyncStorage.getItem('token')
-            if (storderToken&&available) {
-                axios.get(`${baseUrl}/warehouses/warehouse/${available[listId!].trans_origin_id}`, {
-                    headers: {
-                        Authorization: `Bearer ${storderToken}`
-                    }
-                })
-                    .then((response) => {
-                        const data = response.data;
-                        setOrigin(data)
-                        console.log("Ez az origin: ", data)
-                    })
-                    .catch((error) => {
-                        console.log("Ez az origin error: ", error)
-                    })
-            }
-        }
-        catch (error){
-            console.log("Target catch error: ", error)
-        }
-    }
-
-    const getTarget= async ()=> {
-        try {
-            const storderToken = await AsyncStorage.getItem('token')
-            if (storderToken&&available) {
-                axios.get(`${baseUrl}/warehouses/warehouse/${available[listId!].trans_target_id}`, {
-                    headers: {
-                        Authorization: `Bearer ${storderToken}`
-                    }
-                })
-                    .then((response) => {
-                        const data = response.data;
-                        setTarget(data)
-                        console.log("Ez a target: ", data)
-                        console.log("Ez a target stateben: ", target)
-                    })
-                    .catch((error) => {
-                        console.log("Ez a target error: ", error)
-                    })
-            }
-        }
-        catch (error){
-            console.log("Target catch error: ", error)
-        }
-    }
-
-
         return(
             <View style={styles.background}>
                 {
@@ -135,7 +84,7 @@ const [showAlert,setShowAlert]=useState(false)
 
                 </View>
                   :
-                        <View>
+                        <View style={{marginTop:50}}>
                             {available && target&& origin &&
                                 <AvailableSelect origin={origin} target={target} list={available[listId]} back={goBackToAvailable} update={true} setState={setShowAlert} url={`${baseUrl}/transactions/assignWorker`} Back={goBackToAvailable}/>}
 

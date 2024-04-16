@@ -119,7 +119,8 @@ const [showAlert,setShowAlert]=useState(false)
 
                         <View style={styles.page}>
                             <ScrollView style={{height:'80%'}}>
-                            {deliveries === undefined||deliveries.length===0 ?  <Text>There aren't any transactions </Text>:
+                            {deliveries === undefined||deliveries.length===0 ?
+                                <Text style={styles.Text}>There aren't any transactions </Text>:
                                 <AvailableList list={deliveries} onClick={showTransactions}/>  }
 
                             <AwesomeAlert
