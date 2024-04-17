@@ -54,6 +54,7 @@ const [showAlert,setShowAlert]=useState(false)
         setlistId(null)
         setTransactionId(null)
         console.log("listId: "+listId)
+        setShowAlert(false)
     }
 
 
