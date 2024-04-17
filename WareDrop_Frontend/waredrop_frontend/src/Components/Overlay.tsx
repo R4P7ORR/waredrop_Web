@@ -23,6 +23,7 @@ function Overlay({loginToken}: OverlayProps){
         editingUser, setEditingUser,
         users,
         flushValues, setFlushValues,
+        viewTransaction
     } = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -377,6 +378,24 @@ function Overlay({loginToken}: OverlayProps){
                                 ))}
                             </select>
                             <button onClick={handleCreateTransfer}>Confirm</button>
+                        </>
+                    }
+                    {overlayType === "transactionDetails"&&
+                        <>
+                            <h4 className="text-light">Sent on: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.trans_post_date}</p>
+                            <h4 className="text-light">Arrived on: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.trans_arrived_date !== null?
+                                viewTransaction!.trans_arrived_date : "In Transit"
+                            }</p>
+                            <h4 className="text-light">Item name: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.items.item_name}</p>
+                            <h4 className="text-light">Item quantity: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.items.item_quantity}x</p>
+                            <h4 className="text-light">Courier email: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.worker_email !== null?
+                                viewTransaction!.worker_email : "No Courier"
+                            }</p>
                         </>
                     }
                     <button onClick={() => {
