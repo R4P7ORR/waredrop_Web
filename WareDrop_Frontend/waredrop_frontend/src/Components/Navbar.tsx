@@ -50,7 +50,6 @@ function Navbar({setCurrentPage}: NavbarProps){
                     <button onClick={() => handlePageChange("transactions")} className="menu-item">Transactions</button>
                     <button onClick={() => handlePageChange("contact")} className="menu-item">Contact Us</button>
                 </ul>
-                <div className="lower-box"/>
             </div>
         </nav>
     )

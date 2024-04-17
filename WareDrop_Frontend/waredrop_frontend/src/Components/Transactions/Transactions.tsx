@@ -41,7 +41,7 @@ function Transactions({loginToken}: TransactionProps){
                 })
             })
         }
-    }, [loginToken, isAdmin]);
+    }, [loginToken, isAdmin, viewCompleted]);
 
     function FindWarehouse(id: number): string {
         for (const warehouse of warehouseList) {
