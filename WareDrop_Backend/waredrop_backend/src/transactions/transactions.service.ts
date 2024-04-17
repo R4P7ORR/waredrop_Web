@@ -66,6 +66,14 @@ export class TransactionsService {
         return this.db.transactions.findMany({
             where: {
                 trans_origin_id: warehouse.warehouseId,
+            },
+            include: {
+                items: {
+                    select: {
+                        item_name: true,
+                        item_quantity: true
+                    }
+                }
             }
         });
     }
