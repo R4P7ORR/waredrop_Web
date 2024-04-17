@@ -6,7 +6,9 @@ import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import JwtDecoder from "../auth/jwt.decoder";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Users')
 @Controller('/user')
 export class UsersController {
     constructor(private service: UsersService,

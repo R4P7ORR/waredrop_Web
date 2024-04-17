@@ -3,7 +3,9 @@ import {AddRoleInput, Role, RoleDto, RolesService} from "./roles.service";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Roles')
 @Controller('roles')
 @UseGuards(JwtAuthGuard, PermissionGuard)
 export class RolesController {

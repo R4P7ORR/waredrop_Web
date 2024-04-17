@@ -4,7 +4,9 @@ import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
 import {UserDto} from "../users/users.service";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Permissions')
 @Controller('permissions')
 @UseGuards(JwtAuthGuard, PermissionGuard)
 export class PermissionsController {

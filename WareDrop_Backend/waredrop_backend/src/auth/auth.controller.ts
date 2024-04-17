@@ -5,11 +5,17 @@ import {Request} from "express";
 import {JwtAuthGuard} from "./guards/jwt.guard";
 import {CreateUserDto} from "../users/users.service";
 import JwtDecoder from "./jwt.decoder";
+import {ApiCreatedResponse, ApiOperation, ApiParam, ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(private readonly service: AuthService, private readonly jwt: JwtDecoder) { }
 
+    @ApiOperation({summary: 'Login', description: 'Returns the accessToken when successfully logged in'})
+    @ApiCreatedResponse({description: 'Successful login'})
+    @ApiParam({name: 'password', description: 'Password of a user'})
+    @ApiParam({name: 'email', description: 'Email of a user'})
     @Post('login')
     @UseGuards(LocalGuard)
     validate (@Req() req: Request){

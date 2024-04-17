@@ -6,7 +6,8 @@ import {ApiProperty} from "@nestjs/swagger";
 export class CreateItemDto {
     @ApiProperty({
         description: 'The name of the new item',
-        maxLength: 30
+        maxLength: 30,
+        default: 'New item'
     })
     @IsString()
     @IsNotEmpty()
@@ -14,14 +15,16 @@ export class CreateItemDto {
     itemName: string
 
     @ApiProperty({
-        description: 'The quantity of the new item'
+        description: 'The quantity of the new item',
+        default: 2
     })
     @IsNumber()
     @IsNotEmpty()
     itemQuantity: number
 
     @ApiProperty({
-        description: 'The id of the warehouse which the new item will be put into'
+        description: 'The id of the warehouse which the new item will be put into',
+        default: 1
     })
     @IsNumber()
     @IsNotEmpty()
