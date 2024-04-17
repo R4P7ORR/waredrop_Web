@@ -101,7 +101,7 @@
 
 .overlay {
     /*background: linear-gradient( 90deg, var(--secondary-color), var(--main-color));*/
-    background: url("../../public/images/Untitled_Artwork.png");
+    background: url("../../public/images/LogReg_bg.png");
     background-size: cover;
     color: #FFFFFF;
     position: relative;
