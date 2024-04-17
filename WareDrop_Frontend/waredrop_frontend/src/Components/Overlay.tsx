@@ -391,7 +391,7 @@ function Overlay({loginToken}: OverlayProps){
                             <h4 className="text-light">Item name: </h4>
                             <p className="text-dim-yellow"> - {viewTransaction!.items.item_name}</p>
                             <h4 className="text-light">Item quantity: </h4>
-                            <p className="text-dim-yellow"> - {viewTransaction!.items.item_quantity}</p>
+                            <p className="text-dim-yellow"> - {viewTransaction!.items.item_quantity}x</p>
                             <h4 className="text-light">Courier email: </h4>
                             <p className="text-dim-yellow"> - {viewTransaction!.worker_email !== null?
                                 viewTransaction!.worker_email : "No Courier"

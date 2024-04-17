@@ -10,8 +10,8 @@ body{
     height: 50px;
     align-items: center;
 }
-.item-container:hover{
-    background: var(--dar-blue);
+.item-container:hover {
+    background: linear-gradient(90deg, var(--dar-blue), transparent);
 }
 .item-container > .inline-button{
     border-radius: 0 0 0 20px;
@@ -19,22 +19,18 @@ body{
     margin: 0 0 0 auto;
 }
 .item-name {
-    width: 75%;
+    width: 70%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
     padding-left: 0.5rem;
 }
-.item-name:hover {
-}
 .item-quantity{
     text-align: center;
-    width: 15%;
+    width: 20%;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.item-quantity:hover {
 }
 .overlay-fullscreen{
     position: fixed;

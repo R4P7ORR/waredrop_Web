@@ -1,6 +1,7 @@
 import {useContext, useEffect} from "react";
 import axios from "axios";
 import WarehouseContext from "../Contexts/WarehouseContext";
+import {useNavigate} from "react-router-dom";
 
 interface CheckForPermissionsProps{
     loginToken: string;
@@ -8,6 +9,7 @@ interface CheckForPermissionsProps{
 }
 function CheckForPermissions({loginToken, setCurrentPage}: CheckForPermissionsProps){
     const {isAdmin, setIsAdmin} = useContext(WarehouseContext);
+    const navigate = useNavigate();
     useEffect(() => {
         if (loginToken !== "none"){
             axios.get('http://localhost:3001/auth/isAdmin',{
@@ -17,8 +19,9 @@ function CheckForPermissions({loginToken, setCurrentPage}: CheckForPermissionsPr
                 if (isAdmin){
                     setCurrentPage("users");
                 }
-            })
-
+            }).catch(() =>{
+                navigate('/unauthorized');
+            });
         }}, [loginToken, isAdmin]);
     return (
         <></>
