@@ -1,5 +1,5 @@
 import {Body, Controller, Delete, Get, Param, Patch, Req, UseGuards,} from "@nestjs/common";
-import {UpdateInput, UserDto, UsersService} from "./users.service";
+import {UserUpdateInput, UserDto, UsersService} from "./users.service";
 import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
@@ -13,7 +13,6 @@ export class UsersController {
                 private permissions: PermissionsService,
                 private jwt: JwtDecoder,
     ) {}
-
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
@@ -43,7 +42,7 @@ export class UsersController {
     }
 
     @Patch()
-    updateUser(@Body() updateInput: UpdateInput){
+    updateUser(@Body() updateInput: UserUpdateInput){
         return this.service.updateUser(updateInput);
     }
 

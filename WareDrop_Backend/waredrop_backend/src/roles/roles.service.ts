@@ -3,32 +3,52 @@ import {PrismaService} from "../database/prisma.service";
 import {Prisma} from "@prisma/client";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {IsStringArray} from "../validation/IsStringArrayConstraint";
+import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 
 export class AddRoleInput {
+    @ApiProperty({
+        description: 'The id of the role which will be assigned to a user'
+    })
     @IsNumber()
     @IsNotEmpty()
     roleId: number
 
+    @ApiProperty({
+        description: 'The id of the user which the role will be assigned to'
+    })
     @IsNumber()
     @IsNotEmpty()
     userId: number
 }
 
 export class Role {
+    @ApiPropertyOptional({
+        description: 'The id of a role'
+    })
     @IsNumber()
     @IsOptional()
     roleId?: number
 
+    @ApiProperty({
+        description: 'The name of a role'
+    })
     @IsString()
     @IsNotEmpty()
     roleName: string
 
+    @ApiPropertyOptional({
+        description: 'The permissions of a role',
+        type: 'string[]'
+    })
     @IsStringArray()
     @IsOptional()
     permissions?: string[]
 }
 
 export class RoleDto {
+    @ApiProperty({
+        description: 'The id of a role'
+    })
     @IsNumber()
     @IsNotEmpty()
     roleId: number
