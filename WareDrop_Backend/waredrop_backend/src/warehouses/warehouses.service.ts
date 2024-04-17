@@ -2,7 +2,6 @@ import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
-import {Prisma} from "@prisma/client";
 import {TransactionsService} from "../transactions/transactions.service";
 
 export class WarehouseCreateInput {
@@ -63,6 +62,14 @@ export class WarehousesService {
     }
 
     async getWarehouses(){
+        return this.db.warehouses.findMany({
+            where: {
+                is_active: true
+            }
+        });
+    }
+
+    async getAllWarehouses(){
         return this.db.warehouses.findMany();
     }
 
@@ -77,7 +84,8 @@ export class WarehousesService {
     async getWarehousesByUser(user: UserDto){
         return this.db.warehouses.findMany({
             where: {
-                assigned_user_id: user.userId
+                assigned_user_id: user.userId,
+                is_active: true
             }
         })
     }
@@ -86,6 +94,7 @@ export class WarehousesService {
         const allItems = await this.db.items.findMany({
             where: {
                 warehouse_id: warehouseDto.warehouseId,
+                is_active: true
             }
         });
         const allTrans = await this.transService.getAllTrans();
@@ -108,6 +117,7 @@ export class WarehousesService {
         const allItems = await this.db.items.findMany({
             where: {
                 warehouse_id: warehouseDto.warehouseId,
+                is_active: true
             }
         })
         const allTrans = await this.transService.getAllTrans();
@@ -148,23 +158,13 @@ export class WarehousesService {
     }
 
     async deleteWarehouse(deleteInput: WarehouseDto){
-        try {
-            const result = await this.db.warehouses.delete({
-                where: {
-                    warehouse_id: deleteInput.warehouseId
-                }
-            })
-
-            if (result){
-                return {result, message: 'Warehouse deleted'};
+        return this.db.warehouses.update({
+            where: {
+                warehouse_id: deleteInput.warehouseId
+            },
+            data: {
+                is_active: false
             }
-
-        } catch (e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2003'){
-                return {errorMassage: "Warehouse is not empty"};
-            } else {
-                throw e;
-            }
-        }
+        })
     }
 }

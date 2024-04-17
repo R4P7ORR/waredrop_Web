@@ -42,15 +42,26 @@ function Users({loginToken}: UsersProps){
     return (
         <div className="container-users container-box">
             {users.length === 0? <h1 style={{textAlign: "center"}}>There are no other users!</h1>:<>
-                <div className="item-name clickable" style={{display: "flex"}}>
-                    <h3 className="users-details" onClick={() => SortUsers("id")}>ID</h3>
-                    <h3 className="users-details" onClick={() => SortUsers("name")}>NAME</h3>
-                    <h3 className="users-details" onClick={() => SortUsers("email")}>EMAIL</h3>
+                <div className="align-horizontal">
+                    <div className="item-name clickable align-horizontal">
+                        <h3 className="users-id" onClick={() => SortUsers("id")}>ID</h3>
+                        <h3 className="users-details" onClick={() => SortUsers("name")}>NAME</h3>
+                        <h3 className="users-details" onClick={() => SortUsers("email")}>EMAIL</h3>
+                    </div>
+                    <div className="user-role-checkers">
+                        <h3>ADMIN/WORKER</h3>
+                    </div>
                 </div>
                 <div className="container-users-body">
-                    {users.map((user: User) => (
+                    {users.length!== 0?
+                        users.map((user: User) => (
                         <UsersDisplay loginToken={loginToken} user_id={user.user_id} user_name={user.user_name} user_email={user.user_email}/>
-                    ))}
+                        ))
+                        :
+                        <>
+                            <h2 style={{textAlign: "center"}}>Registered users will appear here</h2>
+                        </>
+                    }
                 </div>
             </>}
         </div>

@@ -24,7 +24,12 @@ function Register(props: RegisterProps) {
                 buttons: {},
                 timer: 1500,
             });
-        }else{
+        }else if(passwordInput.length < 6){
+            swal("Password must be at least six characters long!"," ", "error", {
+                buttons: {},
+                timer: 1500,
+            });
+        } else{
             axios.post('http://localhost:3001/auth/register', {
                 userName: fullNameInput,
                 userEmail: emailInput,

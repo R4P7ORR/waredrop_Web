@@ -4,6 +4,7 @@ import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 import swal from "sweetalert";
+import {buttonMarkup} from "sweetalert/typings/modules/markup";
 
 interface WarehouseListProps {
     assigned_user_id: number | null;
@@ -51,7 +52,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 (document.getElementById(warehouse_id.toString()))!.style.zIndex = "";
             }
         }
-    }, [overlayType, assigned_user_id]);
+    }, [overlayType, assigned_user_id, viewInTransit]);
 
     const handleCheckBox = (item: Item) => {
         setSelectedId(warehouse_id);
@@ -76,6 +77,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
         <div className="container-warehouse container-box" id={warehouse_id.toString()}>
             <div className="container-header">
                 <h2>{warehouse_name.toUpperCase()}</h2>
+                <hr className="hr-left no-margin"/>
                 <div className="align-horizontal">
                     <div>
                         <h4 className="text-dim-yellow">{location}</h4>
@@ -132,6 +134,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                     <p className="text-info">No items in warehouse</p>
                     :
                     <>
+                        <div style={{width: "100%"}}>
                         <button id={`storage${warehouse_id}`} className="transfer-view-button-clicked storage-button" onClick={() => {
                             setViewInTransit(false);
                             setFlushValues(flushValues +1);
@@ -148,14 +151,18 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                                 "Unselect all"
                             }
                         </button>
-                        {selectedItems.length === 0&&
+                        {selectedItems.length === 0?
                             <button id={`transfer${warehouse_id}`} className="transfer-view-button transfer-button" onClick={() => {
                                 setViewInTransit(true);
                                 setFlushValues(flushValues + 1);
                                 document.getElementById(`transfer${warehouse_id}`)!.className = "transfer-view-button-clicked transfer-button";
                                 document.getElementById(`storage${warehouse_id}`)!.className = "transfer-view-button storage-button";
                             }}>In transit</button>
-                        }
+                            :
+                            <button className="transfer-view-button remove-button" onClick={() => {
+                                setOverlayType("itemRemoveAlert")
+                            }}>Remove Items</button>
+                        }</div>
                         <div className="container-inner-body">
                             {!viewInTransit ?
                                 itemsInWarehouse.length === 0?

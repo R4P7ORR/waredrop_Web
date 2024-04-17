@@ -40,6 +40,9 @@ button.ghost {
   background: transparent;
   border-color: #FFFFFF;
 }
+button.ghost:hover{
+  color: var(--main-color);
+}
 input {
   font-size: 0.8rem;
   background: #fff;
@@ -224,6 +227,12 @@ hr{
 .text-dim-yellow{
   color: rgba(var(--main-color-alpha), 0.7);
 }
+.text-spaced{
+  letter-spacing: 5px;
+}
 .clickable{
   cursor: pointer;
+}
+.no-margin{
+  margin: 0;
 }

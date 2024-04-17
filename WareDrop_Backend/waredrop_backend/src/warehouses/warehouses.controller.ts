@@ -31,6 +31,13 @@ export class WarehousesController {
         return this.service.getWarehouses();
     }
 
+    @Get('/all')
+    @UseGuards(JwtAuthGuard,PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
+    getAllWarehouses(){
+        return this.service.getAllWarehouses();
+    }
+
     @Get('/warehouse/:id')
     @UseGuards(JwtAuthGuard,PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}, {permissionName: 'Transactions'}])

@@ -14,6 +14,7 @@ model items {
   warehouse_id  Int
   warehouses    warehouses     @relation(fields: [warehouse_id], references: [warehouse_id], map: "warehouse_item_relation")
   transactions  transactions[]
+  is_active     Boolean        @default(true)
 }
 
 model permissions {
@@ -74,4 +75,5 @@ model warehouses {
   assigned_user_id Int?
   items            items[]
   users            users?  @relation(fields: [assigned_user_id], references: [user_id], map: "assign_user_relation")
+  is_active        Boolean @default(true)
 }

@@ -26,7 +26,7 @@ export class TransactionsController {
         return this.service.getAllCompletedTrans();
     }
 
-    @Get()
+    @Get('/active')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
     getAllActiveTrans(){

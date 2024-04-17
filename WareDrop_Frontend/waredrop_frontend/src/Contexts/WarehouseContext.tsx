@@ -2,6 +2,7 @@ import React from "react";
 import User from "../Components/Users/User";
 import Item from "../Components/Warehouse/Item";
 import Warehouse from "../Components/Warehouse/Warehouse";
+import Transaction from "../Components/Transactions/Transaction";
 
 export interface WarehouseContextValues {
     selectedId: number;
@@ -35,7 +36,10 @@ export interface WarehouseContextValues {
     setSelectedItems: (items: Item[]) => void;
 
     flushValues: number;
-    setFlushValues: (number: number) => void
+    setFlushValues: (number: number) => void;
+
+    viewTransaction: Transaction | undefined;
+    setViewTransaction: (transaction: Transaction) => void;
 }
 
 const WarehouseContext = React.createContext<WarehouseContextValues>(null as unknown as WarehouseContextValues);

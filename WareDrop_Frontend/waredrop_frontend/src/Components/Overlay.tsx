@@ -23,6 +23,7 @@ function Overlay({loginToken}: OverlayProps){
         editingUser, setEditingUser,
         users,
         flushValues, setFlushValues,
+        viewTransaction
     } = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -87,6 +88,29 @@ function Overlay({loginToken}: OverlayProps){
             }
             setSelectedItems([]);
         }
+    }
+    function handleRemoveItem(){
+        selectedItems.forEach(item => {
+            axios.delete('http://localhost:3001/items', {
+                headers: {authorization: "Bearer " + loginToken},
+                data: {
+                    itemId: item.item_id,
+                }
+            }).then(() => {
+                swal("Great!", "Successfully removed items!", "success", {
+                    buttons: {},
+                    timer: 1500,
+                });
+                setSelectedItems([]);
+                setOverlayType("none");
+                setFlushValues(flushValues +1);
+            }).catch(() => {
+                swal("Oh-oh!", "Something went wrong!", "error", {
+                    buttons: {},
+                    timer: 1500,
+                });
+            });
+        });
     }
     function handleCreateWarehouse(){
         if (nameInput.trim().length === 0) {
@@ -277,6 +301,12 @@ function Overlay({loginToken}: OverlayProps){
                             <button onClick={handleAddItem}>Add</button>
                         </>
                     }
+                    {overlayType === "itemRemoveAlert" &&
+                        <>
+                            <h2 className="text-light">Are you sure you want to remove these items from the database?</h2>
+                            <button onClick={handleRemoveItem}>Remove</button>
+                        </>
+                    }
                     {overlayType === "warehouseAddForm" &&
                         <>
                             <h2 className="text-light">New Warehouse</h2>
@@ -324,7 +354,7 @@ function Overlay({loginToken}: OverlayProps){
                                 const user = e.target.value;
                                 setSelectedUserId(Number.parseInt(user));
                             }}>
-                                <option value={0} selected={true}>Not Selected</option>
+                                <option value={0} selected={true}>No Assigned User</option>
                                 {users.map(user => (
                                     <option value={user.user_id}>{user.user_name}</option>
                                 ))}
@@ -379,17 +409,35 @@ function Overlay({loginToken}: OverlayProps){
                             <button onClick={handleCreateTransfer}>Confirm</button>
                         </>
                     }
+                    {overlayType === "transactionDetails"&&
+                        <>
+                            <h4 className="text-light">Sent on: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.trans_post_date}</p>
+                            <h4 className="text-light">Arrived on: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.trans_arrived_date !== null?
+                                viewTransaction!.trans_arrived_date : "In Transit"
+                            }</p>
+                            <h4 className="text-light">Item name: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.items.item_name}</p>
+                            <h4 className="text-light">Item quantity: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.items.item_quantity}x</p>
+                            <h4 className="text-light">Courier email: </h4>
+                            <p className="text-dim-yellow"> - {viewTransaction!.worker_email !== null?
+                                viewTransaction!.worker_email : "No Courier"
+                            }</p>
+                        </>
+                    }
                     <button onClick={() => {
                         setNameInput("");
                         setQuantityInput(1);
                         setLocationInput("");
-                        if (overlayType === "transactionForm") {
+                        if (overlayType === "transactionForm" || overlayType === "itemRemoveAlert") {
                             setOverlayType("empty");
                         } else {
                             setOverlayType("none");
                             setSelectedId(0);
+                            setSelectedItems([]);
                         }
-                        setSelectedItems([]);
                     }}>Cancel
                     </button>
                 </div>

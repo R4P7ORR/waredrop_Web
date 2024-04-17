@@ -91,9 +91,9 @@ function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplay
     return (
         <div className="item-container">
             <div className="item-name align-horizontal">
-                <h4 className="users-details">{user_id}</h4>
-                <h4 className="users-details">{user_name}</h4>
-                <h4 className="users-details">{user_email}</h4>
+                <h4 className="users-id" style={{margin: 0}}>{user_id}</h4>
+                <h4 className="users-details" style={{margin: 0}}>{user_name}</h4>
+                <h4 className="users-details" style={{margin: 0}}>{user_email}</h4>
             </div>
             <input type="checkbox" className="switch" checked={adminSwitch} onInput={() => {
                 handleSwitch("admin");

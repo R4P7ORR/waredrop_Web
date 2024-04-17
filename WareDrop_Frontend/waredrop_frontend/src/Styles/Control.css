@@ -10,8 +10,8 @@ body{
     height: 50px;
     align-items: center;
 }
-.item-container:hover{
-    background: var(--dar-blue);
+.item-container:hover {
+    background: linear-gradient(90deg, var(--dar-blue), transparent);
 }
 .item-container > .inline-button{
     border-radius: 0 0 0 20px;
@@ -19,22 +19,18 @@ body{
     margin: 0 0 0 auto;
 }
 .item-name {
-    width: 75%;
+    width: 70%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
     padding-left: 0.5rem;
 }
-.item-name:hover {
-}
 .item-quantity{
     text-align: center;
-    width: 15%;
+    width: 20%;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.item-quantity:hover {
 }
 .overlay-fullscreen{
     position: fixed;
@@ -77,11 +73,23 @@ body{
 }
 .container-users-body{
     overflow: hidden;
+    background: linear-gradient(0deg,var(--black), var(--dark-gray));
     background: var(--black);
+    border: double 2px transparent;
     border-radius: 1rem 0 0 1rem;
+    background-image: linear-gradient(var(--dark-gray), var(--black)), radial-gradient(at left, var(--main-color) 50%, transparent);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
 }
 .users-details{
-    width: calc(100% / 3);
+    width: 40%;
+}
+.users-id{
+    width: 15%;
+}
+.user-role-checkers{
+    position: relative;
+    left: -1.3rem;
 }
 .container-box{
     background: var(--dark-gray);
@@ -94,7 +102,8 @@ body{
 }
 .container-body{
     overflow: hidden;
-    background: var(--black); border: double 2px transparent;
+    background: var(--black);
+    border: double 2px transparent;
     border-radius: 1rem;
     background-image: linear-gradient(var(--dark-gray), var(--black)), radial-gradient(at left top, var(--main-color) 10%, transparent);
     background-origin: border-box;
@@ -121,6 +130,11 @@ body{
 }
 .align-horizontal{
     display: flex;
+}
+.align-vertical{
+    vertical-align: center;
+    text-align: center;
+    align-items: center;
 }
 .warehouse-operator-buttons{
     position: fixed;
@@ -161,6 +175,81 @@ body{
 .storage-button:active{
     transform: scale(1);
 }
+.remove-button{
+    position: relative;
+    float: right;
+    border-radius: 0 0 0 1rem;
+    background: #d91919;
+    color: black;
+    border: black;
+}
+.remove-button:active{
+    background: red;
+    transform: scale(1);
+ }
 .text-info{
     padding-inline: 1rem;
+}
+.transaction-container-body{
+    overflow: clip;
+    background: var(--black);
+    border: double 2px transparent;
+    border-radius: 1rem;
+    background-image: linear-gradient(var(--dark-gray), var(--black)), radial-gradient(at left top, var(--main-color) 10%, transparent);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+.transaction-container-inner-body{
+    max-height: 75vh;
+    overflow-x: clip;
+    overflow-y: auto;
+}
+.transaction-container-inner-body::-webkit-scrollbar-track {
+    border-radius: 1rem;
+    background: linear-gradient(0deg, var(--dark-gray), var(--bright-gray));
+}
+.transaction-container-inner-body::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    border-radius: 1rem;
+    box-shadow: 0 0 0 0 transparent;
+}
+.transaction-line{
+    width: 100%;
+    padding-inline: 0.5rem;
+}
+.transaction-location{
+    width:calc(100% / 3);
+    text-overflow: ellipsis;
+    overflow-x: clip;
+}
+.transaction-date{
+    width: calc(100% / 6);
+    text-overflow: ellipsis;
+    overflow-x: clip;
+}
+.transaction-view-button{
+    width: 15rem;
+}
+.image-email{
+    margin-inline: 1rem;
+    background: var(--black);
+    mask-size: cover;
+    width: 2.5rem;
+    height: 2.5rem;
+    -webkit-mask-image: url(../../public/images/envelope.svg);
+    mask-image: url(../../public/images/envelope.svg);
+}
+.image-logo{
+    background: var(--black);
+    -webkit-mask-image: url(../../public/images/WareDrop_logoSVG.svg);
+    mask-image: url(../../public/images/WareDrop_logoSVG.svg);
+    mask-size: cover;
+    width: 20rem;
+    height: 15rem;
+}
+.contact-container{
+    background: linear-gradient(90deg, var(--secondary-color), var(--main-color));
+    border-radius: 1rem;
+    border: 3px solid var(--black);
+    overflow: clip;
 }
