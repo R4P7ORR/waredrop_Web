@@ -18,8 +18,11 @@ function RegisterDisplay(props: RegisterDisplayProps) {
     return(
         <div className="form-block">
             <h1>Register</h1>
-            <input placeholder="Email" type="email" value={props.emailInput} onChange={(e) => {
+            <input placeholder="Email" type="text" value={props.emailInput} onChange={(e) => {
                 const email = e.target.value;
+                if (email.includes(' ')) {
+                    return
+                }
                 props.setEmailInput(email);
             }} onKeyDown={(e) => {
                 if (e.key === "Enter")
@@ -36,6 +39,9 @@ function RegisterDisplay(props: RegisterDisplayProps) {
             <hr/>
             <input placeholder="Password" type="password" value={props.passwordInput} onChange={(e) => {
                 const password = e.target.value;
+                if (password.includes(' ')) {
+                    return
+                }
                 props.setPasswordInput(password);
             }} onKeyDown={(e) => {
                 if (e.key === "Enter")
@@ -44,6 +50,9 @@ function RegisterDisplay(props: RegisterDisplayProps) {
             <hr/>
             <input placeholder="Password Again" type="password" value={props.passwordAgainInput} onChange={(e) => {
                 const password = e.target.value;
+                if (password.includes(' ')) {
+                    return
+                }
                 props.setPasswordAgainInput(password);
             }} onKeyDown={(e) => {
                 if (e.key === "Enter")

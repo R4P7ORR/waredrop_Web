@@ -381,6 +381,9 @@ function Overlay({loginToken}: OverlayProps){
                                }}/>
                             <input placeholder="Email" type="text" value={editingUser.user_email} onChange={(e) => {
                                 const email = e.target.value;
+                                if (email.includes(' ')) {
+                                    return
+                                }
                                 setEditingUser({user_name: editingUser.user_name, user_email: email});
                             }}
                                onKeyDown={(e) => {
