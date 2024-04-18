@@ -228,7 +228,11 @@ body{
     overflow-x: clip;
 }
 .transaction-view-button{
-    width: 15rem;
+    width: 20vw;
+}
+.selected-button{
+    background: var(--main-color);
+    color: black;
 }
 .image-email{
     margin-inline: 1rem;

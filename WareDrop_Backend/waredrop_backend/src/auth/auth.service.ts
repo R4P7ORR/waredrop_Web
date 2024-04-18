@@ -45,7 +45,7 @@ export class AuthService {
                 accessToken: this.jwtService.sign(payload),
             }
         } else {
-            throw new BadRequestException("Wrong password or user name");
+            throw new BadRequestException("Wrong password or email");
         }
     }
 
@@ -70,7 +70,7 @@ export class AuthService {
         else {
             const result = await this.usersService.createWorker(newUser);
             if (result) {
-                return {message: "User created"}
+                return {message: "Worker created"}
             }
         }
     }

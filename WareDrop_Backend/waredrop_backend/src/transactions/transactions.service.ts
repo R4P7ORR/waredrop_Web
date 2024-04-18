@@ -3,34 +3,56 @@ import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {WarehouseDto} from "../warehouses/warehouses.service";
+import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 
 export class Transaction {
+    @ApiPropertyOptional({
+        description: 'The id of a transaction',
+    })
     @IsNumber()
     @IsOptional()
     transId?: number
 
+    @ApiPropertyOptional({
+        description: 'The timestamp of when the transaction was finished'
+    })
     @IsString()
     @IsOptional()
     transArrivedDate?: string
 
+    @ApiProperty({
+        description: 'The id of the warehouse which the item will be moved out of'
+    })
     @IsNumber()
     @IsNotEmpty()
     transOriginId: number
 
+    @ApiProperty({
+        description: 'The id of the warehouse which the item will be moved to'
+    })
     @IsNumber()
     @IsNotEmpty()
     transTargetId: number
 
+    @ApiProperty({
+        description: 'The id of the item which will be moved'
+    })
     @IsNumber()
     @IsNotEmpty()
     itemId: number
 
+    @ApiPropertyOptional({
+        description: 'The email address of the worker who managed the transaction'
+    })
     @IsString()
     @IsOptional()
     workerEmail?: string
 }
 
 export class WorkerUpdateInput {
+    @ApiProperty({
+        description: 'The id of a worker'
+    })
     @IsNumber()
     @IsNotEmpty()
     transId: number
@@ -116,13 +138,9 @@ export class TransactionsService {
         return this.db.transactions.findMany({
             where: {
                 trans_arrived_date: null
-            },include:{
-                items: {
-                    select: {
-                        item_name: true,
-                        item_quantity: true,
-                    }
-                }
+            },
+            include: {
+                items: true
             }
         });
     }

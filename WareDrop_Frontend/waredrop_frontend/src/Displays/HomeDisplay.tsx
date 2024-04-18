@@ -16,6 +16,10 @@ function HomeDisplay() {
                 </div>
                 <div className="overlay-container">
                     <div className="overlay">
+                        <div className="orb-animate orb-animate-1"/>
+                        <div className="orb-animate orb-animate-2"/>
+                        <div className="orb-animate orb-animate-3"/>
+                        <div className="orb-animate orb-animate-4"/>
                         <div className="overlay-panel overlay-left">
                             <h1>Hello there!</h1>
                             <p>Already have an account? Login here!</p>

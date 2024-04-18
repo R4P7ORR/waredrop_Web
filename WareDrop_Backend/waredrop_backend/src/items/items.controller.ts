@@ -3,7 +3,9 @@ import {CreateItemDto, ItemDto, ItemsService, UpdateItemDto} from "./items.servi
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Items')
 @Controller('items')
 export class ItemsController {
     constructor( private readonly service: ItemsService,) {
@@ -27,6 +29,8 @@ export class ItemsController {
     }
 
     @Delete()
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission([{permissionName: 'All'}])
     deleteItem(@Body() item: ItemDto) {
         return this.service.deleteItem(item);
     }

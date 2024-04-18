@@ -1,19 +1,20 @@
 import {Body, Controller, Delete, Get, Param, Patch, Req, UseGuards,} from "@nestjs/common";
-import {UpdateInput, UserDto, UsersService} from "./users.service";
+import {UserUpdateInput, UserDto, UsersService} from "./users.service";
 import {PermissionsService} from "../permissions/permissions.service";
 import {Request} from "express";
 import {JwtAuthGuard} from "../auth/guards/jwt.guard";
 import JwtDecoder from "../auth/jwt.decoder";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Users')
 @Controller('/user')
 export class UsersController {
     constructor(private service: UsersService,
                 private permissions: PermissionsService,
                 private jwt: JwtDecoder,
     ) {}
-
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
@@ -43,7 +44,7 @@ export class UsersController {
     }
 
     @Patch()
-    updateUser(@Body() updateInput: UpdateInput){
+    updateUser(@Body() updateInput: UserUpdateInput){
         return this.service.updateUser(updateInput);
     }
 

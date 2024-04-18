@@ -1,34 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaService} from "../database/prisma.service";
 import {IsNotEmpty, IsNumber, IsString, MaxLength} from "class-validator";
+import {ApiProperty} from "@nestjs/swagger";
 
 export class CreateItemDto {
+    @ApiProperty({
+        description: 'The name of the new item',
+        maxLength: 30,
+        default: 'New item'
+    })
     @IsString()
     @IsNotEmpty()
     @MaxLength(30)
     itemName: string
 
+    @ApiProperty({
+        description: 'The quantity of the new item',
+        default: 2
+    })
     @IsNumber()
     @IsNotEmpty()
     itemQuantity: number
 
+    @ApiProperty({
+        description: 'The id of the warehouse which the new item will be put into',
+        default: 1
+    })
     @IsNumber()
     @IsNotEmpty()
     warehouseId: number
 }
 
 export class UpdateItemDto{
+    @ApiProperty({
+        description: 'The id of the item which will be updated'
+    })
     @IsNumber()
     @IsNotEmpty()
     itemId: number
 
+    @ApiProperty({
+        description: 'The updated quantity'
+    })
     @IsNumber()
     @IsNotEmpty()
     itemQuantity: number
 }
 
 export class ItemDto {
-
+    @ApiProperty({
+        description: 'The id of an item'
+    })
     @IsNumber()
     @IsNotEmpty()
     itemId: number
