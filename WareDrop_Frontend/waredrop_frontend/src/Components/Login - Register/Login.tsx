@@ -8,6 +8,7 @@ function Login() {
     const [emailInput, setEmailInput] = useState<string>('');
     const [passwordInput, setPasswordInput] = useState<string>('');
     const navigate = useNavigate();
+    localStorage.setItem("loginToken", "");
 
     function sendLoginRequest() {
         if (!emailInput){
@@ -27,6 +28,8 @@ function Login() {
             }).then(res => {
                 if (res.data.hasOwnProperty("accessToken")) {
                     localStorage.setItem("loginToken", res.data.accessToken);
+                    localStorage.setItem("loginDate", Date.now().toString());
+                    console.log(Date.now().toString())
                     navigate('/Control');
                 } else {
                     swal("Oops", "Something went wrong!", "error", {

@@ -3,12 +3,14 @@ import {useContext, useEffect, useState} from "react";
 import User from "./User";
 import UsersDisplay from "../../Displays/UsersDisplay";
 import WarehouseContext from "../../Contexts/WarehouseContext";
+import {useNavigate} from "react-router-dom";
 
 interface UsersProps{
     loginToken: string;
 }
 
 function Users({loginToken}: UsersProps){
+    const navigate = useNavigate();
     const {users, setUsers, overlayType} = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -17,6 +19,10 @@ function Users({loginToken}: UsersProps){
                 headers: {authorization: "Bearer " + loginToken}
             }).then(res => {
                 setUsers(res.data);
+            }).catch(error => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
         }
     }, [loginToken, overlayType]);

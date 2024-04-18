@@ -19,8 +19,10 @@ function CheckForPermissions({loginToken, setCurrentPage}: CheckForPermissionsPr
                 if (isAdmin){
                     setCurrentPage("users");
                 }
-            }).catch(() =>{
-                navigate('/unauthorized');
+            }).catch((error) =>{
+                if (error.response.status === 401) {
+                    navigate('/unauthorized');
+                }
             });
         }}, [loginToken, isAdmin]);
     return (

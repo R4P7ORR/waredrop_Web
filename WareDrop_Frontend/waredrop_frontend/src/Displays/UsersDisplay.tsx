@@ -2,8 +2,7 @@ import {useContext, useEffect, useState} from "react";
 import WarehouseContext from "../Contexts/WarehouseContext";
 import axios from "axios";
 import swal from "sweetalert";
-import {log} from "node:util";
-import users from "../Components/Users/Users";
+import {useNavigate} from "react-router-dom";
 
 interface UsersDisplayProps{
     user_id: number;
@@ -13,6 +12,7 @@ interface UsersDisplayProps{
 }
 
 function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplayProps){
+    const navigate = useNavigate();
     const [adminSwitch, setAdminSwitch] = useState<boolean>(false);
     const [workerSwitch, setWorkerSwitch] = useState<boolean>(false);
     const {overlayType, setOverlayType, setEditingUser, setSelectedId} = useContext(WarehouseContext);
@@ -36,56 +36,71 @@ function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplay
                     setWorkerSwitch(false);
                 }
             }).catch(error => {
-                console.log(error.data);
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
         }, 200);
 
     }, [overlayType]);
 
     function handleSwitch(type: string){
-        swal({
-            title: "Are you sure?",
-            text: `Are you sure you want to turn ${type === "admin" ?
-                `${adminSwitch? "OFF" : "ON"} administrative permissions`:
-                `${workerSwitch? "OFF" : "ON"} worker permissions`
-            } for ${user_name}?`,
-            icon: "warning",
-            buttons: {"Yes": {value: true}, "No": {value: false}},
-            dangerMode: true,
-            closeOnClickOutside: false,
-            closeOnEsc: false
-        }).then((willChange) => {
-            setOverlayType("none");
-            if (willChange){
-                let remove = "";
-                if (type === "admin"){
-                    if (adminSwitch){
-                        remove = "/remove"
+        if (user_id === 1){
+            swal("Forbidden!", `You cannot change that, because ${user_name} is a root administrator!`, "error", {
+                buttons: {},
+                timer: 2500,
+            }).then(() => {
+                setOverlayType("none");
+            });
+        } else {
+            swal({
+                title: "Are you sure?",
+                text: `Are you sure you want to turn ${type === "admin" ?
+                    `${adminSwitch ? "OFF" : "ON"} administrative permissions` :
+                    `${workerSwitch ? "OFF" : "ON"} worker permissions`
+                } for ${user_name}?`,
+                icon: "warning",
+                buttons: {"Yes": {value: true}, "No": {value: false}},
+                dangerMode: true,
+                closeOnClickOutside: false,
+                closeOnEsc: false
+            }).then((willChange) => {
+                setOverlayType("none");
+                if (willChange) {
+                    let remove = "";
+                    if (type === "admin") {
+                        if (adminSwitch) {
+                            remove = "/remove"
+                        }
+                    } else {
+                        if (workerSwitch) {
+                            remove = "/remove";
+                        }
                     }
-                } else {
-                    if (workerSwitch){
-                        remove = "/remove";
-                    }
+                    axios.patch('http://localhost:3001/roles' + remove, {
+                        roleId: type === "admin" ? 1 : 2,
+                        userId: user_id,
+                    }, {
+                        headers: {
+                            authorization: "Bearer " + loginToken
+                        }
+                    }).then(() => {
+                        swal("Great!", `Successfully changed roles for ${user_name}!`, "success", {
+                            buttons: {},
+                            timer: 2500,
+                        });
+                    }).catch((error) => {
+                        if (error.response.status === 401){
+                            navigate('/unauthorized');
+                        }
+                        swal("Oh-oh!", `Something went wrong!`, "error", {
+                            buttons: {},
+                            timer: 2500,
+                        });
+                    });
                 }
-                axios.patch('http://localhost:3001/roles' + remove,{
-                    roleId: type === "admin" ? 1 : 2,
-                    userId: user_id,
-                    },{
-                    headers: {
-                        authorization: "Bearer " + loginToken
-                    }
-                }).then(() => {
-                    swal("Great!", `Successfully changed roles for ${user_name}!`, "success", {
-                        buttons: {},
-                        timer: 2500,
-                    });
-                }).catch(() => {
-                    swal("Oh-oh!", `Something went wrong!`, "error", {
-                        buttons: {},
-                        timer: 2500,
-                    });
-                });
-            }});
+            });
+        }
     }
 
     return (
@@ -104,9 +119,13 @@ function UsersDisplay({user_id, user_name, user_email, loginToken}: UsersDisplay
                 setOverlayType("empty");
             }}/>
             <button className="inline-button" onClick={() => {
-                setOverlayType("userEditForm");
-                setSelectedId(user_id);
-                setEditingUser({user_name, user_email});
+                if (user_id === 1) {
+                    handleSwitch("admin");
+                } else {
+                    setOverlayType("userEditForm");
+                    setSelectedId(user_id);
+                    setEditingUser({user_name, user_email});
+                }
             }}>Edit
             </button>
         </div>

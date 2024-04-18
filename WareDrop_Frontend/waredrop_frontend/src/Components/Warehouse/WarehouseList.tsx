@@ -4,7 +4,6 @@ import Item from "./Item";
 import axios from "axios";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 import swal from "sweetalert";
-import {buttonMarkup} from "sweetalert/typings/modules/markup";
 
 interface WarehouseListProps {
     assigned_user_id: number | null;
@@ -95,7 +94,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                     {(deletingWarehouse && overlayType !== "empty") &&
                         <button className="button-modify button-delete" onClick={() => {
                             if (itemsInWarehouse.length !== 0 || itemsInTransit.length !== 0) {
-                                swal("Oh-oh!", "You cannot delete a warehouse that contains items!", "error", {
+                                swal("Forbidden!", "You cannot delete a warehouse that contains items!", "error", {
                                     buttons: {},
                                     timer: 2500
                                 });
@@ -110,7 +109,7 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                 </div>
                 {overlayType !== "empty" ?
                     !viewInTransit?
-                    <button style={{marginBottom: "0.5rem"}} onClick={() => {
+                    <button style={{marginBottom: "0.5rem", borderRadius: "1rem 1rem 0 1rem", width: "7.4rem"}} onClick={() => {
                         setOverlayType("itemForm");
                         setSelectedItems(itemsInWarehouse);
                         setSelectedId(warehouse_id);

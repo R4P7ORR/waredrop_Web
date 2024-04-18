@@ -3,13 +3,14 @@ import axios from "axios";
 import {useContext, useEffect, useState} from "react";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 import Transaction from "./Transaction";
-import User from "../Users/User";
+import {useNavigate} from "react-router-dom";
 
 interface TransactionProps{
     loginToken: string;
 }
 
 function Transactions({loginToken}: TransactionProps){
+    const navigate = useNavigate();
     const {isAdmin, warehouseList, setOverlayType, setViewTransaction} = useContext(WarehouseContext);
     const [viewCompleted, setViewCompleted] = useState<boolean>(false);
     const [activeTransactions, setActiveTransactions] = useState<Transaction[]>([]);
@@ -21,16 +22,19 @@ function Transactions({loginToken}: TransactionProps){
             }).then(res => {
                 console.log("active ",res.data)
                 setActiveTransactions(res.data);
+            }).catch(error => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
             axios.get('http://localhost:3001/transactions', {
                 headers: {authorization: "Bearer " + loginToken},
             }).then(res => {
                 setCompletedTransactions(res.data);
-            });
-            axios.get('http://localhost:3001/warehouses/all', {
-                headers: {authorization: "Bearer " + loginToken},
-            }).then(res => {
-                console.log(res.data)
+            }).catch(error => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
         } else {
             warehouseList.forEach(warehouse => {
@@ -38,7 +42,11 @@ function Transactions({loginToken}: TransactionProps){
                 ).then(res => {
                     console.log(res.data)
                     setActiveTransactions(res.data);
-                })
+                }).catch(error => {
+                    if (error.response.status === 401){
+                        navigate('/unauthorized');
+                    }
+                });
             })
         }
     }, [loginToken, isAdmin, viewCompleted]);
