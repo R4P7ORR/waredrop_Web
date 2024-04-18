@@ -3,28 +3,44 @@ import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {Prisma} from "@prisma/client";
+import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 
 export class Permission{
+    @ApiPropertyOptional({
+        description: 'The id of a permission'
+    })
     @IsNumber()
     @IsOptional()
     permissionId?: number
 
+    @ApiProperty({
+        description: 'The name of a permission'
+    })
     @IsString()
     @IsNotEmpty()
     permissionName: string
 }
 
 export class PermissionDto {
+    @ApiProperty({
+        description: 'The id of a permission'
+    })
     @IsNumber()
     @IsNotEmpty()
     permissionId: number
 }
 
 export class AssignPermissionDto {
+    @ApiProperty({
+        description: 'The id of the permission which will be assigned'
+    })
     @IsNumber()
     @IsNotEmpty()
     permissionId: number
 
+    @ApiProperty({
+        description: 'The id of the role which the permission will be assigned to'
+    })
     @IsNumber()
     @IsNotEmpty()
     roleId: number

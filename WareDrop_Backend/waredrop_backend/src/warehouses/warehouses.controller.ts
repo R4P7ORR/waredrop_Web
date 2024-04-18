@@ -11,7 +11,9 @@ import {
 } from "./warehouses.service";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Warehouses')
 @Controller('warehouses')
 export class WarehousesController {
     constructor(private readonly jwt: JwtDecoder,

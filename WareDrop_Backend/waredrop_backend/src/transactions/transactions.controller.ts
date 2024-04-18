@@ -6,7 +6,9 @@ import {Request} from "express";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
 import {WarehouseDto} from "../warehouses/warehouses.service";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Transactions')
 @Controller('transactions')
 export class TransactionsController {
     constructor(private readonly service: TransactionsService,

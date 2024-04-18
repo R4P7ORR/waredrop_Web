@@ -3,44 +3,72 @@ import {PrismaService} from "../database/prisma.service";
 import {Prisma} from "@prisma/client"
 import * as bcrypt from 'bcrypt'
 import {IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength} from "class-validator";
+import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 
 
 export class CreateUserDto {
+    @ApiProperty({
+        description: 'The username of the new user',
+        minLength: 3
+    })
     @IsString()
     @IsNotEmpty()
     @MinLength(3)
     userName: string
 
+    @ApiProperty({
+        description: 'The email of the new user'
+    })
     @IsEmail()
     @IsNotEmpty()
     userEmail: string
 
+    @ApiProperty({
+        description: 'The password of the new user',
+        minLength: 6
+    })
     @IsString()
     @IsNotEmpty()
     @MinLength(6)
     userPassword: string
 }
 
-export class UpdateInput {
+export class UserUpdateInput {
+    @ApiProperty({
+        description: 'The id of the user which will be updated'
+    })
     @IsNumber()
     @IsNotEmpty()
     userId: number
 
+    @ApiPropertyOptional({
+        description: 'The updated name of the user',
+        minLength: 3
+    })
     @IsString()
     @IsOptional()
     @MinLength(3)
     userName?: string
 
+    @ApiPropertyOptional({
+        description: 'The updated email of the user',
+    })
     @IsString()
     @IsOptional()
     userEmail?: string
 }
 
 export class UserDto{
+    @ApiProperty({
+        description: 'The id of a user'
+    })
     @IsNumber()
     @IsNotEmpty()
     userId: number
 
+    @ApiProperty({
+        description: 'The email of a user'
+    })
     @IsString()
     @IsNotEmpty()
     userEmail: string
@@ -133,7 +161,7 @@ export class UsersService {
         })
     }
 
-    async updateUser(updateInput: UpdateInput){
+    async updateUser(updateInput: UserUpdateInput){
         return this.db.users.update({
             data: {
                 user_name: updateInput.userName,

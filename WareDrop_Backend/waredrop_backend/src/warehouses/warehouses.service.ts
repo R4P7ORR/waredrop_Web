@@ -3,46 +3,74 @@ import {PrismaService} from "../database/prisma.service";
 import {UserDto} from "../users/users.service";
 import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {TransactionsService} from "../transactions/transactions.service";
+import {ApiProperty} from "@nestjs/swagger";
 
 export class WarehouseCreateInput {
+    @ApiProperty({
+        description: 'The name of the new warehouse'
+    })
     @IsString()
     @IsNotEmpty()
     warehouseName: string
 
+    @ApiProperty({
+        description: 'The location of the new warehouse'
+    })
     @IsString()
     @IsNotEmpty()
     warehouseLocation: string
 }
 
 export class WarehouseUpdateInput {
+    @ApiProperty({
+        description: 'The id of the warehouse which will be updated'
+    })
     @IsNumber()
     @IsNotEmpty()
     warehouseId: number
 
+    @ApiProperty({
+        description: 'The new name of the warehouse'
+    })
     @IsString()
     @IsNotEmpty()
     warehouseName: string
 
+    @ApiProperty({
+        description: 'The new location of the warehouse'
+    })
     @IsString()
     @IsNotEmpty()
     warehouseLocation: string
 
+    @ApiProperty({
+        description: 'The new user which the warehouse will be assigned to'
+    })
     @IsOptional()
     @IsNumber()
     assignedUserId: number
 }
 
 export class WarehouseDto{
+    @ApiProperty({
+        description: 'The id of a warehouse'
+    })
     @IsNumber()
     @IsNotEmpty()
     warehouseId: number
 }
 
 export class AddWarehouseDto {
+    @ApiProperty({
+        description: 'The id of the user which will be assigned'
+    })
     @IsNumber()
     @IsNotEmpty()
     userId: number
 
+    @ApiProperty({
+        description: 'The id of the warehouse which the user will be assigned to'
+    })
     @IsNumber()
     @IsNotEmpty()
     warehouseId: number
