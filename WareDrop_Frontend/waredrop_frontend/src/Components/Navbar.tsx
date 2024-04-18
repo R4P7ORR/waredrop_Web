@@ -28,8 +28,17 @@ function Navbar({setCurrentPage}: NavbarProps){
         if (timeLeft < 120000 && timeLeft > 119000){
             swal("You will be automatically logged out in 3 minutes!", " ", "info", {
                 buttons: {},
-                timer: 1500,
+                timer: 4000,
             });
+        }
+        if (timeLeft < 11000 && timeLeft > 10000){
+            swal("You will be automatically logged out in 10 seconds!", " ", "info", {
+                buttons: {},
+                timer: 4000,
+            });
+        }
+        if (timeLeft < 10){
+            navigate('/');
         }
 
         return () => {
