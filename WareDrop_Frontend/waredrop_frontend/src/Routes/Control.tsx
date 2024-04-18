@@ -7,6 +7,7 @@ import Overlay from "../Components/Overlay";
 import WarehouseContext from "../Contexts/WarehouseContextProvider";
 import CheckForPermissions from "../Components/CheckForPermissions";
 import Transactions from "../Components/Transactions/Transactions";
+import ContactPage from "../Components/ContactPage";
 
 function Control(){
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ function Control(){
                     <Users loginToken={loginToken}/> : null
                 }
                 {currentPage === "contact" ?
-                    <>contact</> : null
+                    <ContactPage/> : null
                 }
             </div>
         </WarehouseContext>

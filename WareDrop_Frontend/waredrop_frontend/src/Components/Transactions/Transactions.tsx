@@ -41,7 +41,7 @@ function Transactions({loginToken}: TransactionProps){
                 })
             })
         }
-    }, [loginToken, isAdmin]);
+    }, [loginToken, isAdmin, viewCompleted]);
 
     function FindWarehouse(id: number): string {
         for (const warehouse of warehouseList) {
@@ -73,20 +73,26 @@ function Transactions({loginToken}: TransactionProps){
 
     function SortTransactions(sortBy: string){
         let updateTransactions: Transaction[];
+        let currentTransactions: Transaction[];
+        if (viewCompleted){
+            currentTransactions = [...completedTransactions];
+        } else {
+            currentTransactions = [...activeTransactions]
+        }
         if (sortBy === "origin"){
-            updateTransactions = [...activeTransactions].sort((a,b) => {
+            updateTransactions = [...currentTransactions].sort((a,b) => {
                 return FindWarehouse(a.trans_origin_id).toLowerCase() > FindWarehouse(b.trans_origin_id).toLowerCase() ? 1: -1;
             });
         } else if(sortBy === "destination"){
-            updateTransactions = [...activeTransactions].sort((a,b) => {
+            updateTransactions = [...currentTransactions].sort((a,b) => {
                 return FindWarehouse(a.trans_target_id).toLowerCase() > FindWarehouse(b.trans_target_id).toLowerCase() ? 1: -1;
             });
         } else if (sortBy === "sent"){
-            updateTransactions = [...activeTransactions].sort((a,b) => {
+            updateTransactions = [...currentTransactions].sort((a,b) => {
                 return a.trans_post_date > b.trans_post_date ? 1: -1;
             });
         } else {
-            updateTransactions = [...activeTransactions].sort((a,b) => {
+            updateTransactions = [...currentTransactions].sort((a,b) => {
                 return CheckForNull(a.trans_arrived_date) > CheckForNull(b.trans_arrived_date) ? 1: -1;
             });
         }
@@ -97,8 +103,17 @@ function Transactions({loginToken}: TransactionProps){
         <>
         {isAdmin&&
         <div className="warehouse-operator-buttons">
-            <button className="transaction-view-button" onClick={() => setViewCompleted(false)}>In Progress</button>
-            <button className="transaction-view-button" onClick={() => setViewCompleted(true)}>Completed</button>
+            {viewCompleted?
+                <>
+                    <button className="transaction-view-button" onClick={() => setViewCompleted(false)}>In Progress</button>
+                    <button className="transaction-view-button selected-button" onClick={() => setViewCompleted(true)}>Completed</button>
+                </>
+                :
+                <>
+                    <button className="transaction-view-button selected-button" onClick={() => setViewCompleted(false)}>In Progress</button>
+                    <button className="transaction-view-button" onClick={() => setViewCompleted(true)}>Completed</button>
+                </>
+            }
         </div>
 }
         <div className="container-users container-box">

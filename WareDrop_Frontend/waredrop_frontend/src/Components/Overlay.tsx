@@ -89,6 +89,29 @@ function Overlay({loginToken}: OverlayProps){
             setSelectedItems([]);
         }
     }
+    function handleRemoveItem(){
+        selectedItems.forEach(item => {
+            axios.delete('http://localhost:3001/items', {
+                headers: {authorization: "Bearer " + loginToken},
+                data: {
+                    itemId: item.item_id,
+                }
+            }).then(() => {
+                swal("Great!", "Successfully removed items!", "success", {
+                    buttons: {},
+                    timer: 1500,
+                });
+                setSelectedItems([]);
+                setOverlayType("none");
+                setFlushValues(flushValues +1);
+            }).catch(() => {
+                swal("Oh-oh!", "Something went wrong!", "error", {
+                    buttons: {},
+                    timer: 1500,
+                });
+            });
+        });
+    }
     function handleCreateWarehouse(){
         if (nameInput.trim().length === 0) {
             swal("Oops", "Name cannot be empty!", "error", {
@@ -278,6 +301,12 @@ function Overlay({loginToken}: OverlayProps){
                             <button onClick={handleAddItem}>Add</button>
                         </>
                     }
+                    {overlayType === "itemRemoveAlert" &&
+                        <>
+                            <h2 className="text-light">Are you sure you want to remove these items from the database?</h2>
+                            <button onClick={handleRemoveItem}>Remove</button>
+                        </>
+                    }
                     {overlayType === "warehouseAddForm" &&
                         <>
                             <h2 className="text-light">New Warehouse</h2>
@@ -352,6 +381,9 @@ function Overlay({loginToken}: OverlayProps){
                                }}/>
                             <input placeholder="Email" type="text" value={editingUser.user_email} onChange={(e) => {
                                 const email = e.target.value;
+                                if (email.includes(' ')) {
+                                    return
+                                }
                                 setEditingUser({user_name: editingUser.user_name, user_email: email});
                             }}
                                onKeyDown={(e) => {
@@ -402,13 +434,13 @@ function Overlay({loginToken}: OverlayProps){
                         setNameInput("");
                         setQuantityInput(1);
                         setLocationInput("");
-                        if (overlayType === "transactionForm") {
+                        if (overlayType === "transactionForm" || overlayType === "itemRemoveAlert") {
                             setOverlayType("empty");
                         } else {
                             setOverlayType("none");
                             setSelectedId(0);
+                            setSelectedItems([]);
                         }
-                        setSelectedItems([]);
                     }}>Cancel
                     </button>
                 </div>

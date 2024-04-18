@@ -131,6 +131,11 @@ body{
 .align-horizontal{
     display: flex;
 }
+.align-vertical{
+    vertical-align: center;
+    text-align: center;
+    align-items: center;
+}
 .warehouse-operator-buttons{
     position: fixed;
     top: 0;
@@ -170,6 +175,18 @@ body{
 .storage-button:active{
     transform: scale(1);
 }
+.remove-button{
+    position: relative;
+    float: right;
+    border-radius: 0 0 0 1rem;
+    background: #d91919;
+    color: black;
+    border: black;
+}
+.remove-button:active{
+    background: red;
+    transform: scale(1);
+ }
 .text-info{
     padding-inline: 1rem;
 }
@@ -211,5 +228,32 @@ body{
     overflow-x: clip;
 }
 .transaction-view-button{
-    width: 15rem;
+    width: 20vw;
+}
+.selected-button{
+    background: var(--main-color);
+    color: black;
+}
+.image-email{
+    margin-inline: 1rem;
+    background: var(--black);
+    mask-size: cover;
+    width: 2.5rem;
+    height: 2.5rem;
+    -webkit-mask-image: url(../../public/images/envelope.svg);
+    mask-image: url(../../public/images/envelope.svg);
+}
+.image-logo{
+    background: var(--black);
+    -webkit-mask-image: url(../../public/images/WareDrop_logoSVG.svg);
+    mask-image: url(../../public/images/WareDrop_logoSVG.svg);
+    mask-size: cover;
+    width: 20rem;
+    height: 15rem;
+}
+.contact-container{
+    background: linear-gradient(90deg, var(--secondary-color), var(--main-color));
+    border-radius: 1rem;
+    border: 3px solid var(--black);
+    overflow: clip;
 }
