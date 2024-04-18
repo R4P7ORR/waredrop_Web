@@ -66,12 +66,12 @@ export class UserDto{
     @IsNotEmpty()
     userId: number
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description: 'The email of a user'
     })
     @IsString()
-    @IsNotEmpty()
-    userEmail: string
+    @IsOptional()
+    userEmail?: string
 }
 
 @Injectable()
