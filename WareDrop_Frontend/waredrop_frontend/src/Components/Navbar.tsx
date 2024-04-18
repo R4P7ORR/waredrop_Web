@@ -12,13 +12,13 @@ function Navbar({setCurrentPage}: NavbarProps){
     const {isAdmin} = useContext(warehouseContext);
     const [timeLeft, setTimeLeft] = useState<number>(900000);
     const [timerTick, setTimerTick] = useState(60000);
-    const logOutTime = Number.parseInt(localStorage.getItem("loginDate")!) + 1800000;
+    const logOutTime = Number.parseInt(localStorage.getItem("loginDate")!) + 100000;
 
     useEffect(() => {
         setTimeLeft(logOutTime - Date.now());
-        if (timeLeft < 120000){
+        if (timeLeft < 200000){
             setTimerTick(1000);
-        } else if(timeLeft < 600000 && timeLeft > 120000){
+        } else if(timeLeft < 600000 && timeLeft > 180000){
             setTimerTick(20000);
         }
         const timer = setInterval(() => {
