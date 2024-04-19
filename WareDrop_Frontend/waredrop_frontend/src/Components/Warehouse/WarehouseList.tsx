@@ -75,13 +75,8 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
     return (
         <div className="container-warehouse container-box" id={warehouse_id.toString()}>
             <div className="container-header">
-                <h2>{warehouse_name.toUpperCase()}</h2>
-                <hr className="hr-left no-margin"/>
                 <div className="align-horizontal">
-                    <div>
-                        <h4 className="text-dim-yellow">{location}</h4>
-                        <h4 className="text-light">{assignedUser}</h4>
-                    </div>
+                    <h2 style={{marginRight: "0.5rem"}}>{warehouse_name.toUpperCase()}</h2>
                     {(editingWarehouse && overlayType !== "empty") &&
                         <button className="button-modify" onClick={() => {
                             setOverlayType("warehouseEditForm");
@@ -107,6 +102,9 @@ function WarehouseList({assigned_user_id, warehouse_id, warehouse_name, location
                         </button>
                     }
                 </div>
+                <hr className="hr-left no-margin"/>
+                <h4 className="text-dim-yellow">{location}</h4>
+                <h4 className="text-light">{assignedUser}</h4>
                 {overlayType !== "empty" ?
                     !viewInTransit?
                     <button style={{marginBottom: "0.5rem", borderRadius: "1rem 1rem 0 1rem", width: "7.4rem"}} onClick={() => {
