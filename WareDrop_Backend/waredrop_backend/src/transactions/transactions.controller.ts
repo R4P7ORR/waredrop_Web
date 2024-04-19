@@ -6,7 +6,14 @@ import {Request} from "express";
 import {PermissionGuard} from "../auth/guards/permission.guard";
 import {RequiredPermission} from "../auth/guards/permission.decorator";
 import {WarehouseDto} from "../warehouses/warehouses.service";
-import {ApiTags} from "@nestjs/swagger";
+import {
+    ApiBadRequestResponse,
+    ApiBearerAuth, ApiForbiddenResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags,
+    ApiUnauthorizedResponse
+} from "@nestjs/swagger";
 
 @ApiTags('Transactions')
 @Controller('transactions')
@@ -15,12 +22,22 @@ export class TransactionsController {
                 private readonly jwt: JwtDecoder,
     ) { }
 
+    @ApiOperation({summary: 'New transaction', description: 'Creates a new transaction'})
+    @ApiOkResponse({description: 'Transaction created'})
+    @ApiBadRequestResponse({description: 'In the error message, it says which value failed the validation and why'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiBearerAuth()
     @Post()
     @UseGuards(JwtAuthGuard)
     addTrans(@Body() newTrans: Transaction){
         return this.service.createTrans(newTrans);
     }
 
+    @ApiOperation({summary: 'All completed (Admin)', description: 'Returns all completed transaction'})
+    @ApiOkResponse({description: 'Returns the transaction(s)'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiForbiddenResponse({description: 'The user is not an admin'})
+    @ApiBearerAuth()
     @Get()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
@@ -28,6 +45,11 @@ export class TransactionsController {
         return this.service.getAllCompletedTrans();
     }
 
+    @ApiOperation({summary: 'All active (Admin)', description: 'Returns all transaction which are in progress'})
+    @ApiOkResponse({description: 'Returns the transaction(s)'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiForbiddenResponse({description: 'The user is not an admin'})
+    @ApiBearerAuth()
     @Get('/active')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'All'}])
@@ -35,12 +57,19 @@ export class TransactionsController {
         return this.service.getAllActiveTrans();
     }
 
+    @ApiOperation({summary: 'Of warehouse', description: 'Returns all transaction of a warehouse'})
+    @ApiOkResponse({description: 'Returns the transaction(s)'})
     @Get('/warehouse/:id')
     getTransOfWarehouse(@Param('id') warehouseIdString: string){
         const warehouse: WarehouseDto = {warehouseId: parseInt(warehouseIdString)}
         return this.service.getTransOfWarehouse(warehouse);
     }
 
+    @ApiOperation({summary: 'All available (Admin | Worker)', description: 'Returns all transaction which are not assigned to workers'})
+    @ApiOkResponse({description: 'Returns the transaction(s)'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiForbiddenResponse({description: 'The user is not an admin or worker'})
+    @ApiBearerAuth()
     @Get('/available')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
@@ -48,6 +77,11 @@ export class TransactionsController {
         return this.service.getAvailableTrans();
     }
 
+    @ApiOperation({summary: 'Of worker (Admin | Worker)', description: 'Returns all transaction which are assigned to a specific worker'})
+    @ApiOkResponse({description: 'Returns the transaction(s)'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiForbiddenResponse({description: 'The user is not an admin or worker'})
+    @ApiBearerAuth()
     @Get('/worker')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
@@ -56,6 +90,11 @@ export class TransactionsController {
         return this.service.getAllTransByWorker({userId: user.sub.id, userEmail: user.sub.email});
     }
 
+    @ApiOperation({summary: 'Done by (Admin | Worker)', description: 'Returns all transaction which are done by a specific worker'})
+    @ApiOkResponse({description: 'Returns the transaction(s)'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiForbiddenResponse({description: 'The user is not an admin or worker'})
+    @ApiBearerAuth()
     @Get('/doneBy')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
@@ -64,6 +103,12 @@ export class TransactionsController {
         return this.service.getTransDone({userId: user.sub.id, userEmail: user.sub.email});
     }
 
+    @ApiOperation({summary: 'Done (Admin | Worker)', description: 'Finalizes a transaction by updating the arrived_date property'})
+    @ApiOkResponse({description: 'Updates the transaction'})
+    @ApiBadRequestResponse({description: 'In the error message, it says which value failed the validation and why'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiForbiddenResponse({description: 'The user is not an admin or worker'})
+    @ApiBearerAuth()
     @Patch()
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])
@@ -71,6 +116,12 @@ export class TransactionsController {
         return this.service.updateTrans(updateInput)
     }
 
+    @ApiOperation({summary: 'Assign worker (Admin | Worker)', description: 'Assigns a worker to a transaction'})
+    @ApiOkResponse({description: 'Worker assigned'})
+    @ApiBadRequestResponse({description: 'In the error message, it says which value failed the validation and why'})
+    @ApiUnauthorizedResponse({description: 'The request came from an unauthorized user or the token expired'})
+    @ApiForbiddenResponse({description: 'The user is not an admin or worker'})
+    @ApiBearerAuth()
     @Patch('/assignWorker')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @RequiredPermission([{permissionName: 'Transactions'}, {permissionName: 'All'}])

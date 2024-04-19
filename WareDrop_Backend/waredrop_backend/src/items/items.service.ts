@@ -33,14 +33,16 @@ export class CreateItemDto {
 
 export class UpdateItemDto{
     @ApiProperty({
-        description: 'The id of the item which will be updated'
+        description: 'The id of the item which will be updated',
+        default: 1
     })
     @IsNumber()
     @IsNotEmpty()
     itemId: number
 
     @ApiProperty({
-        description: 'The updated quantity'
+        description: 'The updated quantity',
+        default: 3
     })
     @IsNumber()
     @IsNotEmpty()
