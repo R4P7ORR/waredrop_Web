@@ -1,7 +1,9 @@
+import ErrorPage from "../Components/ErrorPage";
+
 function Unauthorized(){
     return (
         <div className="app">
-            *unauthorized*
+            <ErrorPage errorCode={401}/>
         </div>
     )
 }

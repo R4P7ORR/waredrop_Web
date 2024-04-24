@@ -1,8 +1,10 @@
-const NotFound: React.FC = () => {
+import ErrorPage from "../Components/ErrorPage";
+
+function Notfound() {
     return (
         <div className="app">
-            *Notfound page goes here*
+            <ErrorPage errorCode={404}/>
         </div>
     )
 }
-export default NotFound;
+export default Notfound;
