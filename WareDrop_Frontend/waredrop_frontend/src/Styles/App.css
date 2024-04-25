@@ -244,9 +244,42 @@ hr{
   overflow: hidden;
 }
 .error-page-top{
+  z-index: 1;
   background: url("../../public/images/errorPage_top.png");
   background-size: cover;
   position: absolute;
-  width: 110%;
-  height: 110%;
+  width: 100%;
+  height: 100%;
+}
+.error-notfound{
+  background: url("../../public/images/errorCode_404.png") center no-repeat;
+  background-size: contain;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.error-unauthorized{
+  background: url("../../public/images/errorCode_401.png") center no-repeat;
+  background-size: contain;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.error-page-bottom{
+  z-index: -1;
+  background: url("../../public/images/errorPage_bottom.png");
+  background-size: cover;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.error-button{
+  z-index: 10;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  width: 20%;
+  border-radius: 2rem;
 }
