@@ -17,6 +17,8 @@
 7. A test mappában lévő `dbScript.txt` fájl sql utasításait adjuk ki az adatbázisunkba
 6. Mindezek után indítsuk el a programot a `npm run start` paranccsal (ha watch mode-ban szeretnénk elindítani, akkor a `npm run start:dev` parancsal futtassuk)
 
+Swagger dokumentáció címe: `localhost:3001/doc`
+
 ## Frontend futtatás
 1. Navigáljunk a projekt mappájába és nyissuk meg a WareDrop_Frontend/waredrop_frontend mappába
 2. Adjuk ki a `npm install` parancsot
