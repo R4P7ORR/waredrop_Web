@@ -4,12 +4,14 @@ import {useContext, useEffect, useState} from "react";
 import Warehouse from "../Components/Warehouse/Warehouse";
 import WarehouseList from "../Components/Warehouse/WarehouseList";
 import WarehouseContext from "../Contexts/WarehouseContext";
+import {useNavigate} from "react-router-dom";
 
 interface WarehouseDisplayProps{
     loginToken: string;
     setCurrentPage: (page: string) => void;
 }
 function WarehouseDisplay({loginToken, setCurrentPage}: WarehouseDisplayProps) {
+    const navigate = useNavigate();
     const {
         warehouseList, setWarehouseList,
         overlayType, setOverlayType,
@@ -25,12 +27,20 @@ function WarehouseDisplay({loginToken, setCurrentPage}: WarehouseDisplayProps) {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
                     setWarehouseList(res.data);
+                }).catch(error => {
+                    if (error.response.status === 401){
+                        navigate('/unauthorized');
+                    }
                 });
             } else {
                 axios.get('http://localhost:3001/warehouses/user', {
                     headers: {authorization: "Bearer " + loginToken}
                 }).then(res => {
                     setWarehouseList(res.data);
+                }).catch(error => {
+                    if (error.response.status === 401){
+                        navigate('/unauthorized');
+                    }
                 });
             }
         }

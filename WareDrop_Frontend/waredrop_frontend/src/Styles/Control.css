@@ -87,6 +87,11 @@ body{
 .users-id{
     width: 15%;
 }
+.sort-header:hover{
+    height: 100%;
+    transition: color 100ms ease-in-out;
+    color: var(--secondary-color);
+ }
 .user-role-checkers{
     position: relative;
     left: -1.3rem;

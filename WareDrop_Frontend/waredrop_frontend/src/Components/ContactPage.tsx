@@ -1,5 +1,3 @@
-import phone from '../../public/images/phone.svg';
-
 function ContactPage () {
     return (
         <div className="contact-container">
@@ -18,9 +16,7 @@ function ContactPage () {
                 <div className="image-email"/>
                 <h1 className="text-spaced">peetya.77@gmail.com</h1>
             </div>
-            <div style={{height: "100px"}}>
-
-            </div>
+            <div style={{height: "100px"}}/>
         </div>
     )
 }

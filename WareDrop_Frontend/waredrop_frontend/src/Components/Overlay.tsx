@@ -3,12 +3,14 @@ import axios from "axios";
 import WarehouseContext from "../Contexts/WarehouseContext";
 import Item from "./Warehouse/Item";
 import swal from "sweetalert";
+import {useNavigate} from "react-router-dom";
 
 interface OverlayProps{
     loginToken: string;
 }
 
 function Overlay({loginToken}: OverlayProps){
+    const navigate = useNavigate();
     const [nameInput, setNameInput] = useState<string>("");
     const [quantityInput, setQuantityInput] = useState<number>(1);
     const [locationInput, setLocationInput] = useState<string>("");
@@ -33,6 +35,10 @@ function Overlay({loginToken}: OverlayProps){
             }).then((res) => {
                 setNameInput(res.data.warehouse_name);
                 setLocationInput(res.data.location);
+            }).catch(error => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
         }
     }, [selectedId]);
@@ -104,7 +110,10 @@ function Overlay({loginToken}: OverlayProps){
                 setSelectedItems([]);
                 setOverlayType("none");
                 setFlushValues(flushValues +1);
-            }).catch(() => {
+            }).catch((error) => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
                 swal("Oh-oh!", "Something went wrong!", "error", {
                     buttons: {},
                     timer: 1500,
@@ -138,7 +147,10 @@ function Overlay({loginToken}: OverlayProps){
                 setNameInput("");
                 setLocationInput("");
                 setOverlayType("none");
-            }).catch(() => {
+            }).catch((error) => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
                 swal("Error", "A warehouse with this name already exists!", "error", {
                     buttons: {},
                     timer: 2500,
@@ -160,12 +172,15 @@ function Overlay({loginToken}: OverlayProps){
                 setOverlayType("none");
                 setEditingWarehouse(false);
                 setSelectedId(0);
-            }).catch(() => {
-            swal("Error", "Something went wrong :(", "error", {
-                buttons: {},
-                timer: 3000,
+            }).catch((error) => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
+                swal("Error", "Something went wrong :(", "error", {
+                    buttons: {},
+                    timer: 3000,
+                });
             });
-        });
         swal("Great!", "Successfully updated warehouse details!", "success", {
             buttons: {},
             timer: 2500,
@@ -186,7 +201,10 @@ function Overlay({loginToken}: OverlayProps){
             setLocationInput("");
             setOverlayType("none");
             setDeletingWarehouse(false);
-        }).catch(() => {
+        }).catch((error) => {
+            if (error.response.status === 401){
+                navigate('/unauthorized');
+            }
             swal("Error", "Something went wrong :(", "error", {
                 buttons: {},
                 timer: 3000,
@@ -253,7 +271,10 @@ function Overlay({loginToken}: OverlayProps){
                     setSelectedItems([]);
                     setOverlayType("none");
                     setFlushValues(flushValues + 1);
-                }).catch(() => {
+                }).catch((error) => {
+                    if(error.response.status === 401){
+                        navigate('/unauthorized');
+                    }
                     swal("Oh-oh!", "Something went wrong :(", "error", {
                         buttons: {},
                         timer: 2500

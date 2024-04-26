@@ -1,10 +1,10 @@
 import ErrorPage from "../Components/ErrorPage";
 
-function Notfound() {
+function Unauthorized(){
     return (
         <div className="app">
-            <ErrorPage errorCode={404}/>
+            <ErrorPage errorCode={401}/>
         </div>
     )
 }
-export default Notfound;
+export default Unauthorized;
