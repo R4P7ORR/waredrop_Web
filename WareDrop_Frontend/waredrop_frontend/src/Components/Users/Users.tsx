@@ -3,12 +3,14 @@ import {useContext, useEffect, useState} from "react";
 import User from "./User";
 import UsersDisplay from "../../Displays/UsersDisplay";
 import WarehouseContext from "../../Contexts/WarehouseContext";
+import {useNavigate} from "react-router-dom";
 
 interface UsersProps{
     loginToken: string;
 }
 
 function Users({loginToken}: UsersProps){
+    const navigate = useNavigate();
     const {users, setUsers, overlayType} = useContext(WarehouseContext);
 
     useEffect(() => {
@@ -17,6 +19,10 @@ function Users({loginToken}: UsersProps){
                 headers: {authorization: "Bearer " + loginToken}
             }).then(res => {
                 setUsers(res.data);
+            }).catch(error => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
         }
     }, [loginToken, overlayType]);
@@ -44,9 +50,9 @@ function Users({loginToken}: UsersProps){
             {users.length === 0? <h1 style={{textAlign: "center"}}>There are no other users!</h1>:<>
                 <div className="align-horizontal">
                     <div className="item-name clickable align-horizontal">
-                        <h3 className="users-id" onClick={() => SortUsers("id")}>ID</h3>
-                        <h3 className="users-details" onClick={() => SortUsers("name")}>NAME</h3>
-                        <h3 className="users-details" onClick={() => SortUsers("email")}>EMAIL</h3>
+                        <h3 className="users-id sort-header" onClick={() => SortUsers("id")}>ID</h3>
+                        <h3 className="users-details sort-header" onClick={() => SortUsers("name")}>NAME</h3>
+                        <h3 className="users-details sort-header" onClick={() => SortUsers("email")}>EMAIL</h3>
                     </div>
                     <div className="user-role-checkers">
                         <h3>ADMIN/WORKER</h3>

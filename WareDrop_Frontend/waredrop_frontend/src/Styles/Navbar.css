@@ -110,9 +110,21 @@
     border-radius: 0 0 0 3rem;
     background: var(--main-color);
     color: black;
+    font-size: 0.8rem;
     transition: background-color 100ms, color 100ms;
 }
 .button-logout:hover{
     background: var(--dark-gray);
     color: var(--main-color);
+}
+.navbar-logout-timer{
+    pointer-events: none;
+    position: absolute;
+    display: flex;
+    top: 0;
+    right: 7.5rem;
+}
+.counter-timer{
+    margin: 0;
+    font-size: 2rem;
 }

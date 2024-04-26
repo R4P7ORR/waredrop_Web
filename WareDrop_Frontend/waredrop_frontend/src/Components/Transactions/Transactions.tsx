@@ -3,13 +3,14 @@ import axios from "axios";
 import {useContext, useEffect, useState} from "react";
 import WarehouseContext from "../../Contexts/WarehouseContext";
 import Transaction from "./Transaction";
-import User from "../Users/User";
+import {useNavigate} from "react-router-dom";
 
 interface TransactionProps{
     loginToken: string;
 }
 
 function Transactions({loginToken}: TransactionProps){
+    const navigate = useNavigate();
     const {isAdmin, warehouseList, setOverlayType, setViewTransaction} = useContext(WarehouseContext);
     const [viewCompleted, setViewCompleted] = useState<boolean>(false);
     const [activeTransactions, setActiveTransactions] = useState<Transaction[]>([]);
@@ -21,16 +22,19 @@ function Transactions({loginToken}: TransactionProps){
             }).then(res => {
                 console.log("active ",res.data)
                 setActiveTransactions(res.data);
+            }).catch(error => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
             axios.get('http://localhost:3001/transactions', {
                 headers: {authorization: "Bearer " + loginToken},
             }).then(res => {
                 setCompletedTransactions(res.data);
-            });
-            axios.get('http://localhost:3001/warehouses/all', {
-                headers: {authorization: "Bearer " + loginToken},
-            }).then(res => {
-                console.log(res.data)
+            }).catch(error => {
+                if (error.response.status === 401){
+                    navigate('/unauthorized');
+                }
             });
         } else {
             warehouseList.forEach(warehouse => {
@@ -38,7 +42,11 @@ function Transactions({loginToken}: TransactionProps){
                 ).then(res => {
                     console.log(res.data)
                     setActiveTransactions(res.data);
-                })
+                }).catch(error => {
+                    if (error.response.status === 401){
+                        navigate('/unauthorized');
+                    }
+                });
             })
         }
     }, [loginToken, isAdmin, viewCompleted]);
@@ -58,6 +66,14 @@ function Transactions({loginToken}: TransactionProps){
             select = completedTransactions.filter(trans => trans.trans_id === id);
         } else {
             select = activeTransactions.filter(trans => trans.trans_id === id);
+        }
+        select[0].trans_post_date = (
+            (select[0].trans_post_date!.replace('T', ' ')).slice(0, 19)
+        )
+        if (select[0].trans_arrived_date !== null) {
+            select[0].trans_arrived_date = (
+                (select[0].trans_arrived_date!.replace('T', ' ')).slice(0,19)
+            )
         }
         setViewTransaction(select[0]);
         setOverlayType("transactionDetails");
@@ -119,10 +135,10 @@ function Transactions({loginToken}: TransactionProps){
         <div className="container-users container-box">
                 {warehouseList.length === 0 ? <h1 style={{textAlign: "center"}}>There are no warehouses!</h1> : <>
                 <div className="transaction-line align-horizontal clickable">
-                    <h3 className="transaction-location" onClick={() => SortTransactions("origin")}>Origin</h3>
-                    <h3 className="transaction-location" onClick={() => SortTransactions("destination")}>Destination</h3>
-                    <h3 className="transaction-date" onClick={() => SortTransactions("sent")}>Sent on</h3>
-                    <h3 className="transaction-date" onClick={() => SortTransactions("arrived")}>Arrived on</h3>
+                    <h3 className="transaction-location sort-header" onClick={() => SortTransactions("origin")}>Origin</h3>
+                    <h3 className="transaction-location sort-header" onClick={() => SortTransactions("destination")}>Destination</h3>
+                    <h3 className="transaction-date sort-header" onClick={() => SortTransactions("sent")}>Sent on</h3>
+                    <h3 className="transaction-date sort-header" onClick={() => SortTransactions("arrived")}>Arrived on</h3>
                 </div>
                     <div className="container-body">
                         <div className="transaction-container-inner-body clickable">

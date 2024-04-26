@@ -2,7 +2,6 @@ import {useState} from "react";
 import RegisterDisplay from "../../Displays/RegisterDisplay";
 import axios from "axios";
 import swal from "sweetalert";
-import {isStringObject} from "node:util/types";
 
 interface RegisterProps{
     handleRegister: (className: string) => void;
