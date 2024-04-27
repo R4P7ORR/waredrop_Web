@@ -1,8 +1,8 @@
 function ContactPage () {
     return (
         <div className="contact-container">
-            <div style={{justifyContent: "center"}} className="align-horizontal align-vertical clickable">
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><div className="image-logo"/></a>
+            <div style={{justifyContent: "center"}} className="align-horizontal align-vertical">
+                <div className="image-logo"/>
             </div>
             <div style={{height: "100px", justifyContent: "center"}} className="align-horizontal align-vertical">
                 <div className="image-email"/>

@@ -50,11 +50,11 @@ function WarehouseDisplay({loginToken, setCurrentPage}: WarehouseDisplayProps) {
             {isAdmin&&
                 <div className="warehouse-operator-buttons">
                     <button onClick={() => setOverlayType("warehouseAddForm")}>Add new</button>
-                    <button onClick={() => {
+                    <button className={editingWarehouse?"selected-button": ""} onClick={() => {
                         setEditingWarehouse(!editingWarehouse);
                         setDeletingWarehouse(false);
                     }}>{!editingWarehouse? "Modify" : "Done"}</button>
-                    <button onClick={() => {
+                    <button className={deletingWarehouse?"selected-button": ""}  onClick={() => {
                         setDeletingWarehouse(!deletingWarehouse);
                         setEditingWarehouse(false);
                     }}>{!deletingWarehouse? "Delete" : "Done"}</button>
