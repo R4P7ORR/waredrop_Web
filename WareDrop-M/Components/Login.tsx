@@ -46,6 +46,7 @@ function Login({navigation}) {
         }).then(async (response)=> {
              console.log(response.data)
             await AsyncStorage.setItem('token', response.data.accessToken)
+             await AsyncStorage.setItem('time',Date.now().toString())
              setLoggedIn(true)
              navigation.navigate('StartMenu',{id:-1})
         })

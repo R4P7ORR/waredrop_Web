@@ -73,7 +73,7 @@ let news=route.params.id
                     style={styles.loginBtn}
                 onPress={()=>navigation.navigate('Available')}
                 >
-                    <Text style={styles.TextInput}>Avaliable</Text>
+                    <Text style={styles.TextInput}>Available</Text>
                 </TouchableOpacity>
 
 

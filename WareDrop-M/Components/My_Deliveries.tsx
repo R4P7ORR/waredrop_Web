@@ -54,10 +54,7 @@ const [showAlert,setShowAlert]=useState(false)
             setTransactionId(null)
             console.log("listId: "+listId)
             setShowAlert(false)
-
         }
-
-
 
 
         return(
@@ -89,7 +86,9 @@ const [showAlert,setShowAlert]=useState(false)
                         :
                         <View>
                             {deliveries && origin && target &&
-                                <AvailableSelect target={target} origin={origin} list={deliveries[listId]} back={goBackToMyDeliveries} update={true} url={`${baseUrl}/transactions`} setState={setShowAlert} Back={goBackToMyDeliveries}/>}
+                                <AvailableSelect target={target} origin={origin} list={deliveries[listId]}
+                                                 back={goBackToMyDeliveries} update={true} url={`${baseUrl}/transactions`}
+                                                 setState={setShowAlert} Back={goBackToMyDeliveries}/>}
 
 
                         </View>
