@@ -15,9 +15,10 @@ function AvailableList(props:List){
     return(
         <View style={styles.list}>
             {props.list.map((item) =>
-         <View style={styles.listItem}>
-        <TouchableOpacity
+         <View style={styles.listItem}
          key={item.trans_id}
+         >
+        <TouchableOpacity
         onPress={()=>props.onClick(item.trans_id)}
         >
             <Text style={styles.listText}>

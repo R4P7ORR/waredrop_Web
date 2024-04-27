@@ -26,7 +26,7 @@ function AvailableSelect(props:ShowList){
 
 
     return(
-        <View>
+        <View style={{marginTop:50}}>
         <Text style={styles.details}>Post Date: {format(props.list.trans_post_date, "yyyy-MM-dd")}</Text>
         {props.list.trans_arrived_date &&
         <Text style={styles.details}>Arrived Date: {format(props.list.trans_arrived_date, "yyyy-MM-dd")} </Text>}

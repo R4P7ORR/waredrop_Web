@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import baseUrl from "../BaseUrl";
 import axios from "axios";
-import React, {ReactNode} from "react";
+import React from "react";
 import TransDTO from "../Interfaces/AvailableShowList";
 import WarehouseDTO from "../Interfaces/Warehouse";
 
@@ -9,7 +8,6 @@ interface TransactionsProps{
     url:string
     setState?:React.Dispatch<React.SetStateAction<TransDTO[]|undefined>>
     setTarget?:React.Dispatch<React.SetStateAction<WarehouseDTO|undefined>>
-
 }
 
 
@@ -33,6 +31,5 @@ async function GetTransactions(props:TransactionsProps){
     } catch (error) {
         console.log("Ez egy error: ", error);
     }
-
 }
 export default GetTransactions
