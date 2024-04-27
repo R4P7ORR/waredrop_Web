@@ -130,6 +130,8 @@ export class TransactionsService {
                 NOT: {
                     trans_arrived_date: null
                 }
+            }, include: {
+                items: true
             }
         });
     }
