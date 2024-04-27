@@ -76,6 +76,7 @@ function Transactions({loginToken}: TransactionProps){
             )
         }
         setViewTransaction(select[0]);
+        console.log(select)
         setOverlayType("transactionDetails");
     }
 

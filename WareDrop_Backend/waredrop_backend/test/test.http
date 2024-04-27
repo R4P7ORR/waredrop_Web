@@ -23,9 +23,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjIsI
 Content-Type: application/json
 
 {
-  "transOriginId": 2,
-  "transTargetId": 1,
-  "itemId": 9
+  "transOriginId": 1,
+  "transTargetId": 2,
+  "itemId": 7
 }
 
 

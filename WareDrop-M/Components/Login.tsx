@@ -46,6 +46,7 @@ function Login({navigation}) {
         }).then(async (response)=> {
              console.log(response.data)
             await AsyncStorage.setItem('token', response.data.accessToken)
+             await AsyncStorage.setItem('time',Date.now().toString())
              setLoggedIn(true)
              navigation.navigate('StartMenu',{id:-1})
         })
@@ -78,14 +79,13 @@ function Login({navigation}) {
                }
                else{
                    if (password == password2) {
-                       axios.post(`${baseUrl}/auth/registerWorker`, {
+                       axios.post(`${baseUrl}/auth/register`, {
                            userName: name,
                            userEmail: email,
                            userPassword: password,
 
                        }).then((response) => {
                            console.log(response.data)
-                           alert('Sikeresen megcsináltad a felhasználót')
                            loginFunction()
 
                        })

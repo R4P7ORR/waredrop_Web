@@ -23,19 +23,19 @@ function Completed_Deliveries({navigation}){
     useEffect(() => {
 
         GetTransactions({url:`${baseUrl}/transactions/doneBy`,setState:setCompletedDeliveries})
-
-            /*    GetOrigin_Target({
+            .then(
+                () =>{GetOrigin_Target({
                     url: `${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_origin_id}`,
                     setTarget: setOrigin,
                     state:completedDeliveries
                 })
-                GetOrigin_Target({
+                 GetOrigin_Target({
                     url: `${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_target_id}`,
                     setTarget: setTarget,
                     state:completedDeliveries
-                }) */
-        getOrigin()
-        getTarget()
+                })}).catch((error)=>{
+            console.log('Fetching error: ',error)
+        })
 
     }, [listId]);
 
@@ -112,7 +112,7 @@ function Completed_Deliveries({navigation}){
                 <View style={styles.page}>
                     <ScrollView style={{height:'80%'}}>
                     {completedDeliveries === undefined||completedDeliveries.length===0 ?
-                        <Text>There aren't any completed transactions </Text>
+                        <Text style={styles.Text}>There aren't any completed transactions </Text>
                         :
                         <AvailableList list={completedDeliveries} onClick={showTransactions}/>}
                     </ScrollView>
