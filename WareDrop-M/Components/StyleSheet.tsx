@@ -1,7 +1,5 @@
 import {StyleSheet} from 'react-native';
 const main_color= '#ffa600';
-const main_color_alpha= 'rgb(255, 166, 0)';
-const secondary_color= '#381ac0';
 const dark_gray= '#171717';
 const dar_blue= '#2e1372';
 const bright_gray= '#2a2a2a';

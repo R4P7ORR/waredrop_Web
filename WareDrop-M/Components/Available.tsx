@@ -11,7 +11,6 @@ import WarehouseDTO from "./Interfaces/Warehouse";
 import AwesomeAlert from "react-native-awesome-alerts";
 import GetTransactions from "./Props/GetTransactions";
 
-
 // @ts-ignore
 function Available({navigation}){
 const [available,setAvailable] =useState<TransDTO[]>()
@@ -20,27 +19,20 @@ const [listId,setlistId]=useState<number|null>(null)
 const [target, setTarget]=useState<WarehouseDTO>()
 const [origin, setOrigin]=useState<WarehouseDTO>()
 const [showAlert,setShowAlert]=useState(false)
-const [timeLeft,setTimeLeft]=useState()
 
-
-
-    useEffect(() => {
-        GetTransactions({url:`${baseUrl}/transactions/available`,setState:setAvailable})
-            .then(()=>{
-                GetTransactions({url:`${baseUrl}/warehouses/warehouse/${available![listId!].trans_origin_id}`, setTarget:setOrigin})
-                GetTransactions({url:`${baseUrl}/warehouses/warehouse/${available![listId!].trans_target_id}`, setTarget:setTarget})
-            }).catch((error)=>{
-            console.log('Fetching error: ',error)
-        })
+useEffect(() => {
+   GetTransactions({url:`${baseUrl}/transactions/available`,setState:setAvailable})
+      .then(()=>{
+         GetTransactions({url:`${baseUrl}/warehouses/warehouse/${available![listId!].trans_origin_id}`, setTarget:setOrigin})
+         GetTransactions({url:`${baseUrl}/warehouses/warehouse/${available![listId!].trans_target_id}`, setTarget:setTarget})
+        }).catch((error)=>{
+       console.log('Fetching error: ',error)
+     })
     }, [listId]);
-
 
     const showTransactions = (id:number) => {
         console.log("Clicked transaction with ID:", id)
         setTransactionId(id)
-
-
-
     };
 
     useEffect(() => {
@@ -50,22 +42,16 @@ const [timeLeft,setTimeLeft]=useState()
         }
     }, [transactionId]);
 
-
     const goBackToAvailable=()=>{
         setlistId(null)
         setTransactionId(null)
-        console.log("listId: "+listId)
         setShowAlert(false)
     }
-
-
-
 
         return(
             <View style={styles.background}>
                 {
                     listId===null ?
-
                 <View style={styles.page} >
                     <ScrollView style={{height:'80%'}}>
                         {available===undefined||available.length===0 ? <Text style={styles.Text}>There aren't any available transactions </Text> :
@@ -74,29 +60,29 @@ const [timeLeft,setTimeLeft]=useState()
                         show={showAlert}
                         title="Transaction successfully accepted"
                         titleStyle={{fontSize:22,color:"#ffa600"}}
-                        useNativeDriver={true}
-                    />
+                        useNativeDriver={true} />
                     </ScrollView>
-
                     <TouchableOpacity
                         style={styles.TouchableOpacity}
                         onPress={()=>navigation.navigate('StartMenu',{id:1})}>
                         <Text style={styles.TextInput}>Go back</Text>
                     </TouchableOpacity>
-
                 </View>
                   :
                         <View style={{marginTop:50}}>
                             {available && target&& origin &&
-                                <AvailableSelect origin={origin} target={target} list={available[listId]} back={goBackToAvailable} update={true} setState={setShowAlert} url={`${baseUrl}/transactions/assignWorker`} Back={goBackToAvailable}/>}
-
-
+                                <AvailableSelect
+                                    origin={origin}
+                                    target={target}
+                                    list={available[listId]}
+                                    back={goBackToAvailable}
+                                    update={true}
+                                    setState={setShowAlert}
+                                    url={`${baseUrl}/transactions/assignWorker`}
+                                    Back={goBackToAvailable}/>}
                         </View>
-
                 }
             </View>
-
-
         );
     }
     export default Available

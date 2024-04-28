@@ -9,12 +9,9 @@ interface GetProps{
     url:string
     setTarget:React.Dispatch<React.SetStateAction<WarehouseDTO|undefined>>
     state:TransDTO[]|undefined
-
 }
 
 async function GetOrigin_Target(props:GetProps){
-
-
         try {
             const storderToken = await AsyncStorage.getItem('token')
             if (storderToken&&props.state) {
@@ -36,8 +33,6 @@ async function GetOrigin_Target(props:GetProps){
         catch (error){
             console.log("Target catch error: ", error)
         }
-
-
 }
 
 export default GetOrigin_Target

@@ -13,30 +13,22 @@ import GetOrigin_Target from "./Props/GetOrigin_Target";
 
 // @ts-ignore
 function Completed_Deliveries({navigation}){
-    const [completedDeliveries,setCompletedDeliveries] =useState<TransDTO[]>()
-    const [transactionId,setTransactionId]=useState<number|null>(null)
-    const [listId,setlistId]=useState<number|null>(null)
-    const [target,setTarget]=useState<WarehouseDTO>()
-    const [origin,setOrigin]=useState<WarehouseDTO>()
+const [completedDeliveries,setCompletedDeliveries] =useState<TransDTO[]>()
+const [transactionId,setTransactionId]=useState<number|null>(null)
+const [listId,setlistId]=useState<number|null>(null)
+const [target,setTarget]=useState<WarehouseDTO>()
+const [origin,setOrigin]=useState<WarehouseDTO>()
 
-
-    useEffect(() => {
-
-        GetTransactions({url:`${baseUrl}/transactions/doneBy`,setState:setCompletedDeliveries})
-            .then(
-                () =>{GetOrigin_Target({
-                    url: `${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_origin_id}`,
-                    setTarget: setOrigin,
-                    state:completedDeliveries
-                })
-                 GetOrigin_Target({
-                    url: `${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_target_id}`,
-                    setTarget: setTarget,
-                    state:completedDeliveries
-                })}).catch((error)=>{
+useEffect(() => {
+ GetTransactions({url:`${baseUrl}/transactions/doneBy`,setState:setCompletedDeliveries})
+   .then(
+     () =>{
+        GetTransactions({url:`${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_origin_id}`, setTarget:setOrigin})
+        GetTransactions({url:`${baseUrl}/warehouses/warehouse/${completedDeliveries![listId!].trans_target_id}`, setTarget:setTarget})
+                }
+            ).catch((error)=>{
             console.log('Fetching error: ',error)
         })
-
     }, [listId]);
 
     const showTransactions = (id:number) =>{
@@ -50,56 +42,6 @@ function Completed_Deliveries({navigation}){
             setlistId(getid)
         }
     }, [transactionId]);
-
-
-    const getOrigin= async ()=> {
-        try {
-            const storderToken = await AsyncStorage.getItem('token')
-            if (storderToken&&completedDeliveries) {
-                axios.get(`${baseUrl}/warehouses/warehouse/${completedDeliveries[listId!].trans_origin_id}`, {
-                    headers: {
-                        Authorization: `Bearer ${storderToken}`
-                    }
-                })
-                    .then((response) => {
-                        const data = response.data;
-                        setOrigin(data)
-                        console.log("Ez az origin: ", data)
-                    })
-                    .catch((error) => {
-                        console.log("Ez az origin error: ", error)
-                    })
-            }
-        }
-        catch (error){
-            console.log("Target catch error: ", error)
-        }
-    }
-
-    const getTarget= async ()=> {
-        try {
-            const storderToken = await AsyncStorage.getItem('token')
-            if (storderToken&&completedDeliveries) {
-                axios.get(`${baseUrl}/warehouses/warehouse/${completedDeliveries[listId!].trans_target_id}`, {
-                    headers: {
-                        Authorization: `Bearer ${storderToken}`
-                    }
-                })
-                    .then((response) => {
-                        const data = response.data;
-                        setTarget(data)
-                        console.log("Ez a target: ", data)
-                        console.log("Ez a target stateben: ", target)
-                    })
-                    .catch((error) => {
-                        console.log("Ez a target error: ", error)
-                    })
-            }
-        }
-        catch (error){
-            console.log("Target catch error: ", error)
-        }
-    }
     const goBackToCompletedDeliveries=()=>{
         setlistId(null)
         setTransactionId(null)

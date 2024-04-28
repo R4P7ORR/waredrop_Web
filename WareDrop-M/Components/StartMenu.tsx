@@ -13,8 +13,6 @@ const [name,setName]=useState('User')
 const [available,setAvailable] =useState<TransDTO[]>()
 const [deliveries,setDeliveries] =useState<TransDTO[]>()
 let news=route.params.id
-
-
     const fetchData = async () => {
         try {
             const storedToken = await AsyncStorage.getItem('token');
@@ -37,65 +35,43 @@ let news=route.params.id
         GetTransactions({url:`${baseUrl}/transactions/worker`,setState:setDeliveries})
         fetchData()
     }, [news]);
-
-
-
     const handleLogout=async ()=>{
         await AsyncStorage.removeItem('token')
         navigation.navigate('Login')
     }
-
-
 
     return(
         <View style={styles.container}>
             <View>
                 <Text style={styles.Text}>Welcome {name}!</Text>
             </View>
-
             <View>
                 <Text style={styles.Text}>Available deliveries: {available?.length}</Text>
             </View>
-
             <View>
                 <Text style={styles.Text}>Your Deliveries: {deliveries?.length}</Text>
             </View>
-
-                <TouchableOpacity
-                    style={styles.loginBtn}
-                onPress={()=>navigation.navigate('My_Deliveries')}
-                >
-                    <Text style={styles.TextInput}>My deliveries</Text>
-                </TouchableOpacity>
-
-
-                <TouchableOpacity
-                    style={styles.loginBtn}
-                onPress={()=>navigation.navigate('Available')}
-                >
-                    <Text style={styles.TextInput}>Available</Text>
-                </TouchableOpacity>
-
-
             <TouchableOpacity
                 style={styles.loginBtn}
-                onPress={()=>navigation.navigate('Completed_Deliveries')}
-            >
+                onPress={()=>navigation.navigate('My_Deliveries')} >
+                <Text style={styles.TextInput}>My deliveries</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={()=>navigation.navigate('Available')} >
+                <Text style={styles.TextInput}>Available</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={()=>navigation.navigate('Completed_Deliveries')} >
                 <Text style={styles.TextInput}>Completed Deliveries</Text>
             </TouchableOpacity>
-
-
             <TouchableOpacity
                 style={styles.loginBtn}
-            onPress={()=>handleLogout()}
-            >
+                onPress={()=>handleLogout()} >
                 <Text style={styles.TextInput}>Log out</Text>
             </TouchableOpacity>
-
-
         </View>
     )
-
-
 }
 export default StartMenu

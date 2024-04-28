@@ -25,11 +25,11 @@ async function GetTransactions(props:TransactionsProps){
                     { props.setState!==undefined ? props.setState(data): props.setTarget!(data);}
                 })
                 .catch((error) => {
-                    console.log("Ez egy error: ", error);
+                    console.log("Ez az axios error: ", error);
                 });
         }
     } catch (error) {
-        console.log("Ez egy error: ", error);
+        console.log("Ez a catch error: ", error);
     }
 }
 export default GetTransactions
