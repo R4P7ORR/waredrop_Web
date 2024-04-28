@@ -8,12 +8,10 @@ interface PatchProps{
     Back:()=>void
     setState:React.Dispatch<React.SetStateAction<boolean>>
     url:string
-
 }
 async function PatchTransactions(props:PatchProps){
     try {
         const storedToken = await AsyncStorage.getItem('token');
-        console.log("Ez a token: " +storedToken)
         if (baseUrl&&storedToken){
             axios.patch(props.url,{
                     transId:props.id
@@ -35,8 +33,6 @@ async function PatchTransactions(props:PatchProps){
     }
     catch (error){
         console.log('try cath error: ' + error)
-
-
     }
 }
 export default PatchTransactions

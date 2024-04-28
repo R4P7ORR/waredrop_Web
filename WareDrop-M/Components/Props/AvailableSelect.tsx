@@ -18,13 +18,8 @@ interface ShowList{
     setState?:React.Dispatch<React.SetStateAction<boolean>>
     url?:string
     Back?:()=>void
-
 }
 function AvailableSelect(props:ShowList){
-
-
-
-
     return(
         <View style={{marginTop:50}}>
         <Text style={styles.details}>Post Date: {format(props.list.trans_post_date, "yyyy-MM-dd")}</Text>
@@ -45,8 +40,7 @@ function AvailableSelect(props:ShowList){
             style={[styles.TouchableOpacity, styles.touchable2 ]}
              onPress={()=>PatchTransactions({id:props.list.trans_id,Back:props.Back!,setState:props.setState!,url:props.url!})}>
              <Text style={styles.TextInput}>Confirm</Text>
-        </TouchableOpacity>
-            }
+        </TouchableOpacity>}
         </View>
         </View>
     )

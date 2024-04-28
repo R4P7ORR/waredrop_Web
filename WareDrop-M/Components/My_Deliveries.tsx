@@ -20,7 +20,6 @@ const [target,setTarget]=useState<WarehouseDTO>()
 const [origin,setOrigin]=useState<WarehouseDTO>()
 const [showAlert,setShowAlert]=useState(false)
 
-
         useEffect( () => {
             GetTransactions({url:`${baseUrl}/transactions/worker`,setState:setDeliveries})
                 .then(()=>{
@@ -31,14 +30,9 @@ const [showAlert,setShowAlert]=useState(false)
             })
         }, [listId]);
 
-
-
         const showTransactions = (id:number) =>{
             console.log("Clicked transaction with ID:", id)
             setTransactionId(id)
-
-
-
         };
 
         useEffect(() => {
@@ -61,36 +55,29 @@ const [showAlert,setShowAlert]=useState(false)
             <View style={styles.background}>
                 {
                     listId===null ?
-
                         <View style={styles.page}>
                             <ScrollView style={{height:'80%'}}>
                             {deliveries === undefined||deliveries.length===0 ?
                                 <Text style={styles.Text}>There aren't any transactions </Text>:
                                 <AvailableList list={deliveries} onClick={showTransactions}/>  }
-
                             <AwesomeAlert
                                 show={showAlert}
                                 title="Transaction successfully completed"
                                 titleStyle={{fontSize:22,color:"#ffa600"}}
-                                useNativeDriver={true}
-
-                            />
+                                useNativeDriver={true} />
                             </ScrollView>
                             <TouchableOpacity
                                 style={styles.TouchableOpacity}
                                 onPress={()=>navigation.navigate('StartMenu',{id:2})}>
                                 <Text style={styles.TextInput}>Go back</Text>
                             </TouchableOpacity>
-
                         </View>
                         :
                         <View>
                             {deliveries && origin && target &&
                                 <AvailableSelect target={target} origin={origin} list={deliveries[listId]}
                                                  back={goBackToMyDeliveries} update={true} url={`${baseUrl}/transactions`}
-                                                 setState={setShowAlert} Back={goBackToMyDeliveries}/>}
-
-
+                                                 setState={setShowAlert} Back={goBackToMyDeliveries} />}
                         </View>
                 }
             </View>

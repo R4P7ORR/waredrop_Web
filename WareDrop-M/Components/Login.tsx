@@ -7,13 +7,13 @@ import baseUrl from "./BaseUrl";
 
 // @ts-ignore
 function Login({navigation}) {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [name, setName] = useState('')
-    const [loginToggle,setLoginToggle]=useState(true)
-    const [password2, setPassword2]=useState('')
-    const [loggedIn,setLoggedIn]=useState(false)
-    const inputRef=useRef<TextInput|null>(null)
+const [email, setEmail] = useState('')
+const [password, setPassword] = useState('')
+const [name, setName] = useState('')
+const [loginToggle,setLoginToggle]=useState(true)
+const [password2, setPassword2]=useState('')
+const [loggedIn,setLoggedIn]=useState(false)
+const inputRef=useRef<TextInput|null>(null)
 
     if (loggedIn) {
         setName('')
@@ -31,18 +31,11 @@ function Login({navigation}) {
             inputRef.current.setNativeProps({ selection: { start: middlePosition, end: middlePosition } });
         }
     }, []);
-
-
     const loginFunction =  () => {
-
-
-        console.log('Elmegy a res-ig')
-        console.log('Írd át a saját ip címedre!!')
         //A baseUrl-t írd át arra az ip címre amin van a backend, mert a localhost nem működik
          axios.post(`${baseUrl}/auth/login`, {
             email: email,
             password: password,
-
         }).then(async (response)=> {
              console.log(response.data)
             await AsyncStorage.setItem('token', response.data.accessToken)
@@ -54,12 +47,8 @@ function Login({navigation}) {
                 console.log(error)
                 alert('Invalid credentials')
             });
-
     }
-
-
     const registerFunction =() =>{
-
         if(!name) {
             alert('Name required')
         }else if (name.length<3) {
@@ -83,14 +72,11 @@ function Login({navigation}) {
                            userName: name,
                            userEmail: email,
                            userPassword: password,
-
                        }).then((response) => {
                            console.log(response.data)
                            loginFunction()
-
                        })
                            .catch(function (error) {
-                               alert('Nem sikerült a felhasználót megcsinálni :(')
                                console.log(error)
                            });
                    }else{
@@ -99,7 +85,6 @@ function Login({navigation}) {
                }
            }
         }
-
     }
     const toggleRegister= ()=>{
         if (loginToggle){
@@ -107,8 +92,6 @@ function Login({navigation}) {
         }else{
             setLoginToggle(true)
         }
-
-
     }
 
     const handleViewPress = () =>{
@@ -148,18 +131,15 @@ function Login({navigation}) {
                 <Text style={styles.TextInput}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() =>toggleRegister()}
-            >
+                onPress={() =>toggleRegister()} >
             <Text style={styles.SimpleText}>Don't have account?</Text>
             </TouchableOpacity>
         </View>
-
             :
             <View style={styles.container}>
                 <Image
                     style={styles.img}
                     source={require("../assets/WareDrop_logo.png")}/>
-
                 <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
                     style={styles.LoginText}
@@ -168,7 +148,6 @@ function Login({navigation}) {
                     value={name}
                     onChangeText={(text:string)=>setName(text)}
                     />
-
                 </View>
                 <View style={styles.inputView} onTouchStart={handleViewPress}>
                     <TextInput
@@ -204,11 +183,8 @@ function Login({navigation}) {
                     onPress={() => registerFunction()}>
                     <Text style={styles.TextInput}>Register</Text>
                 </TouchableOpacity>
-
-
                 <TouchableOpacity
-                    onPress={() =>toggleRegister()}
-                >
+                    onPress={() =>toggleRegister()} >
                     <Text style={styles.SimpleText}>Do you have an account?</Text>
                 </TouchableOpacity>
             </View>
